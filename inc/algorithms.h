@@ -13,7 +13,7 @@ void randomAlg();
 void heuristicAlg();
 void greedyAlg();
 void steepesAlg();
-
+void printResults();
 
 
 #endif /* ALGORITHMS_H_ */
