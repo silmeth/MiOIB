@@ -30,4 +30,6 @@ local.properties
 .texlipse
 
 *.o
+*.sln
+*.project
 Debug/
