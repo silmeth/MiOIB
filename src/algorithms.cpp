@@ -5,7 +5,7 @@
  *      Author: jacek
  */
 
-#include "algorithms.h"
+#include "../inc/algorithms.h"
 
 
 
