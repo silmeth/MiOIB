@@ -7,7 +7,6 @@
 
 #ifdef SILMETH_TEST // define SILMETH_TEST before compile to enable this file
 #include <iostream>
-#include <random>
 
 #include "../inc/algorithms.h"
 #include "../inc/instances.h"
@@ -48,9 +47,9 @@ int main() {
     printSol(sol, sz);
     std::cout << std::endl;
 
-    for(unsigned int i = 1; i <= 4; i++) {
+    for(unsigned int i = 0; i < 10; i++) {
         permRnd = generateRandomPermutation(sol);
-        std::cout << "Permutation #" << i << ": ";
+        std::cout << "Permutation #" << i+1 << ": ";
         printSol(permRnd, sz);
     }
 
@@ -99,14 +98,23 @@ int main() {
     B[9][10] = B[10][9] = 70; B[9][11] = B[11][9] = 86;
     B[10][11] = B[11][10] = 18;
 
+    // solution to be tested:
     int solution[sz] = {7,5,12,2,1,3,9,11,10,6,8,4};
     for(unsigned int i = 0; i < sz; i++)
-        solution[i] --;
+        solution[i]--; // because original solution starts with 1, not 0
 
     int rate = rateSolution(A, B, solution, sz);
-
     std::cout << "\nCost calculated: " << rate << std::endl; // prints 9552 as expected
 
+    // second solution to test changes rating
+    int solution2[sz];
+    for(unsigned int i = 0; i < sz; i++)
+        solution2[i] = solution[i];
+
+    switchElements(solution2, 3, 7);
+
+    std::cout << "\nDifference by rateSolution: " << rateSolution(A, B, solution2, sz) - rate << std::endl;
+    std::cout << "Difference by rateChangeSolution: " << rateChange(A, B, solution, sz, 3, 7) << std::endl; // both return the same as expected
 }
 
 

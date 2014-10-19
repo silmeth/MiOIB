@@ -10,26 +10,24 @@
 #include <random>
 
 /**
- * Initializes all needed values to work on solutions
- * @param size size of the problem (and its solution)
- * @param seed seed for uniform Marsenne Twister 19937 random generator, defaults to 19910401
+ * Initializes all needed values to work on solutions. Calculates size of neighbourhood, creates random
+ * number generator, allocates memory for all needed arrays.
+ * @param size size of the problem (and its solution).
+ * @param seed seed for uniform Marsenne Twister 19937 random generator, defaults to 19910401.
  */
 void opInit(unsigned int size, int seed = 19910401);
 
 /**
  * Returns pointer to a randomly generated solution based on previous one (array of ints).
  * @param solution pointer to the original solution.
- * @param permutation pointer to the space allocated for a permutation.
- * @param sz size of the vector.
- * @param randGen instance of mt19937 random number generator.
+ * @return pointer to array of ints with random solution generated.
  */
 int* generateRandomPermutation(int* solution);
 
 /**
  * Given a solution vector and problem size, returns all 2-opt neighbours.
  * @param solution pointer to the original solution (array of ints).
- * @param neighbours pointer to space allocated for generated neighbours.
- * @param sz size of the solution vector.
+ * @return pointer to array of arrays with all 2-opt neighbours of the solution.
  */
 int** generateAllNeighbours(int* solution);
 

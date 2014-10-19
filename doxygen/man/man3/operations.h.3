@@ -1,0 +1,89 @@
+.TH "operations.h" 3 "Sun Oct 19 2014" "MiOIB" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+operations.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <random>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBopInit\fP (unsigned int size, int seed=19910401)"
+.br
+.ti -1c
+.RI "int * \fBgenerateRandomPermutation\fP (int *\fBsolution\fP)"
+.br
+.ti -1c
+.RI "int ** \fBgenerateAllNeighbours\fP (int *\fBsolution\fP)"
+.br
+.ti -1c
+.RI "void \fBswitchElements\fP (int *\fBsolution\fP, unsigned int pos1, unsigned int pos2)"
+.br
+.ti -1c
+.RI "void \fBopClear\fP ()"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int** generateAllNeighbours (int *solution)"
+Given a solution vector and problem size, returns all 2-opt neighbours\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsolution\fP pointer to the original solution (array of ints)\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+pointer to array of arrays with all 2-opt neighbours of the solution\&. 
+.RE
+.PP
+
+.SS "int* generateRandomPermutation (int *solution)"
+Returns pointer to a randomly generated solution based on previous one (array of ints)\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsolution\fP pointer to the original solution\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+pointer to array of ints with random solution generated\&. 
+.RE
+.PP
+
+.SS "void opClear ()"
+Deallocates all previously allocated data 
+.SS "void opInit (unsigned intsize, intseed = \fC19910401\fP)"
+Initializes all needed values to work on solutions\&. Calculates size of neighbourhood, creates random number generator, allocates memory for all needed arrays\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsize\fP size of the problem (and its solution)\&. 
+.br
+\fIseed\fP seed for uniform Marsenne Twister 19937 random generator, defaults to 19910401\&. 
+.RE
+.PP
+
+.SS "void switchElements (int *solution, unsigned intpos1, unsigned intpos2)"
+Swaps elements in a given solution vector\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsolution\fP pointer to the solution to be changed (array of ints)\&. 
+.br
+\fIpos1\fP position of the first element to be swapped\&. 
+.br
+\fIpos2\fP position of the second element to be swapped\&. 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for MiOIB from the source code\&.
