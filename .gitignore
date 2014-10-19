@@ -10,7 +10,6 @@ tmp/
 local.properties
 .settings/
 .loadpath
-.depend
 *~
 
 # External tool builders
@@ -38,3 +37,5 @@ Debug/
 
 # CodeBlocks project
 *.cbp
+*.layout
+*.depend
