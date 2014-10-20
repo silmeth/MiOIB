@@ -22,7 +22,7 @@ int rateSolution(int** A, int** B, int* solution, unsigned int sz);
  * It makes \f$8n\f$ multiplications.
  * @param A Matrix with flow values between facilities.
  * @param B Matrix with distance values between locations.
- * @param solution Pointer to the solution (array of ints).
+ * @param solution Pointer to the @b original (i.e. previous) solution (array of ints).
  * @param sz Size of the problem and solution.
  * @param pos1 Position of the first element to be swapped.
  * @param pos2 Position of the second element to be swapped.
