@@ -7,7 +7,7 @@
 
 #include "../inc/heuristicAlg.h"
 
-int* genSolution(int* solution) {
+int* heuritsticGenSolution(int* solution) {
     bool* isAUsed = new bool[size];
     bool* isBUsed = new bool[size];
     for(unsigned int i = 0; i < size; i++) {
