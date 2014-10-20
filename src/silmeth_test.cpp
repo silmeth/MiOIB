@@ -23,9 +23,10 @@ void printSol(int* solution, unsigned int sz) {
     }
 }
 
-const unsigned int sz = 12;
+
 
 int main() {
+	const unsigned int sz = 12;
 // TEST OPERATIONS
     // operations init
     opInit(sz);

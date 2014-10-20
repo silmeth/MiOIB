@@ -22,13 +22,13 @@ struct runResult{
 
 extern int** A;
 extern int** B;
-extern int sz;
+extern int size;
 extern int* permutation;
 
 /*
  * Initialise all data structures.
  */
-void algInit(int size, int** matA, int** matB, int* perm);
+void algInit(int sz, int** matA, int** matB, int* perm);
 
 void algClear();
 
