@@ -41,14 +41,14 @@ int main() {
         sol[i] = i;
 
     // test functions and print results
-    int** neighbs = generateAllNeighbours(sol);
+    int** neighbours = generateAllNeighbours(sol);
 
     std::cout << "Original solution: ";
     printSol(sol, sz);
     std::cout << std::endl;
 
     for(unsigned int i = 0; i < 10; i++) {
-        permRnd = generateRandomPermutation(sol);
+        permRnd = generateRandomPermutation();
         std::cout << "Permutation #" << i+1 << ": ";
         printSol(permRnd, sz);
     }
@@ -56,7 +56,7 @@ int main() {
     std::cout << "\nAll neighbours:" << std::endl;
     for(unsigned int i = 0; i < neighSz; i++) {
         std::cout << i << ": ";
-        printSol(neighbs[i], sz);
+        printSol(neighbours[i], sz);
     }
 
     // deallocating everything

@@ -11,6 +11,7 @@
 unsigned int sz;
 unsigned int neighSz;
 int** neighbours;
+int** neighbourSwaps;
 int* permutation;
 std::mt19937 randGen;
 
@@ -20,8 +21,20 @@ void opInit(unsigned int size, int seed) {
     neighSz = sz*(sz-1)/2; // every solution has exactly sz*(sz-1)/2 neighbours
 
     neighbours = new int*[neighSz]; // allocating memory for all neighbours of given solution
-    for(unsigned int i = 0; i < neighSz; i++)
+    neighbourSwaps = new int*[neighSz];
+    for(unsigned int i = 0; i < neighSz; i++) {
         neighbours[i] = new int[sz];
+        neighbourSwaps[i] = new int[2];
+    }
+
+    unsigned int l = 0;
+    for(unsigned int i = 0; i < sz; i++) {
+        for(unsigned int j = i+1; j < sz; j++) {
+            neighbourSwaps[l][0] = i;
+            neighbourSwaps[l][1] = j;
+            l++;
+        }
+    }
 
     permutation = new int[sz]; // allocating memory for random permutation of given solution
 
@@ -50,10 +63,14 @@ int** generateAllNeighbours(int* solution) {
     return neighbours;
 }
 
-int* generateRandomPermutation(int* solution) {
+int* getNeighbourSwaps(unsigned int i) {
+    return neighbourSwaps[i];
+}
+
+int* generateRandomPermutation() {
 // TODO merge two for loops into one to minimize data copying (cf. http://en.wikipedia.org/wiki/Random_permutation#Knuth_shuffles)
     for(unsigned int i = 0; i < sz; i++) { // create copy of solution
-        permutation[i] = solution[i];
+        permutation[i] = i;
     }
 
     for(unsigned int i = 0; i < sz; i++) { // swap elements sz times to randomize solution
