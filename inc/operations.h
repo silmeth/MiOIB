@@ -19,10 +19,9 @@ void opInit(unsigned int size, int seed = 19910401);
 
 /**
  * Returns pointer to a randomly generated solution based on previous one (array of ints).
- * @param solution pointer to the original solution.
  * @return pointer to array of ints with random solution generated.
  */
-int* generateRandomPermutation(int* solution);
+int* generateRandomPermutation();
 
 /**
  * Given a solution vector and problem size, returns all 2-opt neighbours.
@@ -30,6 +29,13 @@ int* generateRandomPermutation(int* solution);
  * @return pointer to array of arrays with all 2-opt neighbours of the solution.
  */
 int** generateAllNeighbours(int* solution);
+
+/**
+ * Find numbers of elements to swap in order to generate i-th neighbour of a solution.
+ * @param i Number of the neighbour.
+ * @return Array int[2] with numbers of elements swapped to generate i-th neighbour.
+ */
+int* getNeighbourSwaps(unsigned int i);
 
 /**
  * Swaps elements in a given solution vector.
