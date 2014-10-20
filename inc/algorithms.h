@@ -18,48 +18,18 @@ struct runResult{
 	int cost;
 	int* permutation;
 	int numberOfSteps;
-	double workTime;
 };
 
-int** A;
-int** B;
-int sz;
-int* permutation;
+extern int** A;
+extern int** B;
+extern int sz;
+extern int* permutation;
 
 /*
  * Initialise all data structures.
  */
-void algInit(int size, int** matA, int** matB, int* permutation);
+void algInit(int size, int** matA, int** matB, int* perm);
 
-/*
- * Runs random algorithm.
- * Returns solution, cost.
- */
-runResult randomAlg();
-
-/*
- * Runs heuristic algorithm.
- * Returns solution, cost.
- */
-
-runResult heuristicAlg();
-/*
- * Runs Greedy Search Algorithm.
- * Returns solution, cost, number of steps.
- */
-
-runResult greedyAlg();
-/*
- * Runs Steepest Search Algorithm.
- * Returns solution, cost, number of steps.
- */
-
-runResult steepestAlg();
-/*
- * Prints results to python-readable format.
- */
-
-void printResults();
-
+void algClear();
 
 #endif /* ALGORITHMS_H_ */

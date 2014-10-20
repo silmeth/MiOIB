@@ -7,9 +7,21 @@
 
 #include "../inc/algorithms.h"
 
-void algInit(int size, int** matA, int** matB, int* permutation){
+int** A;
+int** B;
+int sz;
+int* permutation;
+
+void algInit(int size, int** matA, int** matB, int* perm){
 	sz = size;
 	A = matA;
 	B = matB;
+	permutation = perm;
+}
+
+void algClear(){
+	delete permutation;
+	delete []A;
+	delete []B;
 }
 
