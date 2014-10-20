@@ -10,7 +10,7 @@ runResult randomAlg(void){
 	runResult res;
 	res.numberOfSteps = 1;
 	res.permutation = generateRandomPermutation();
-	res.cost = rateSolution(A, B, permutation, size);
+	res.cost = rateSolution(A, B, algPermutation, size);
 	return res;
 }
 

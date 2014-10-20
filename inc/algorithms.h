@@ -14,7 +14,7 @@
 
 // TODO Where should we measure time? Inside algorithm functions?
 
-struct runResult{
+struct runResult {
 	int cost;
 	int* permutation;
 	int numberOfSteps;
@@ -23,13 +23,11 @@ struct runResult{
 extern int** A;
 extern int** B;
 extern int size;
-extern int* permutation;
+extern int* algPermutation;
 
 /*
  * Initialise all data structures.
  */
 void algInit(int sz, int** matA, int** matB, int* perm);
-
-void algClear();
 
 #endif /* ALGORITHMS_H_ */
