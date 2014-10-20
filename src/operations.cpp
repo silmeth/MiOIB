@@ -85,7 +85,9 @@ int* generateRandomPermutation() {
 void opClear() {
     for(unsigned int i = 0; i < neighSz; i++)
         delete[] neighbours[i];
+        delete[] neighbourSwaps[i];
     delete[] neighbours;
+    delete[] neighbourSwaps;
 
     delete[] permutation;
 }
