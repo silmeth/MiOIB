@@ -9,11 +9,11 @@
 
 int** A;
 int** B;
-int sz;
+int size;
 int* permutation;
 
-void algInit(int size, int** matA, int** matB, int* perm){
-	sz = size;
+void algInit(int sz, int** matA, int** matB, int* perm){
+	size = sz;
 	A = matA;
 	B = matB;
 	permutation = perm;
