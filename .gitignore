@@ -39,3 +39,6 @@ Debug/
 *.cbp
 *.layout
 *.depend
+
+# Doxygen documentation
+doxygen/

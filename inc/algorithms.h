@@ -9,32 +9,56 @@
 #ifndef ALGORITHMS_H_
 #define ALGORITHMS_H_
 
-// TODO Figure out input arguments and output values.
+#include "../inc/operations.h"
+#include "../inc/measures.h"
+
 // TODO Where should we measure time? Inside algorithm functions?
+
+struct runResult{
+	int cost;
+	int* permutation;
+	int numberOfSteps;
+	double workTime;
+};
+
+int** A;
+int** B;
+int sz;
+int* permutation;
+
+/*
+ * Initialise all data structures.
+ */
+void algInit(int size, int** matA, int** matB, int* permutation);
 
 /*
  * Runs random algorithm.
  * Returns solution, cost.
  */
-void randomAlg();
+runResult randomAlg();
+
 /*
  * Runs heuristic algorithm.
  * Returns solution, cost.
  */
-void heuristicAlg();
+
+runResult heuristicAlg();
 /*
  * Runs Greedy Search Algorithm.
  * Returns solution, cost, number of steps.
  */
-void greedyAlg();
+
+runResult greedyAlg();
 /*
  * Runs Steepest Search Algorithm.
  * Returns solution, cost, number of steps.
  */
-void steepestAlg();
+
+runResult steepestAlg();
 /*
  * Prints results to python-readable format.
  */
+
 void printResults();
 
 
