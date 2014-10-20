@@ -31,7 +31,7 @@ void greedyAlg();
  * Runs Steepest Search Algorithm.
  * Returns solution, cost, number of steps.
  */
-void steepesAlg();
+void steepestAlg();
 /*
  * Prints results to python-readable format.
  */
