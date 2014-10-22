@@ -38,5 +38,6 @@ void RandomAlgorithm::run(unsigned int numberOfRuns) {
 		this->result->cost = minCost;
 		auto end = std::chrono::high_resolution_clock::now();
 		this->result->workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1e9;
+		opClear();
 	}
 }
