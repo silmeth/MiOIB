@@ -21,7 +21,8 @@ void HeuristicAlgorithm::run(){
 		this->result->lastPermutation = new unsigned int [this->problemSize];
 		unsigned int* solution = this->result->lastPermutation;
 
-		this->startTime();
+		// Begin measuring time
+		auto begin = std::chrono::high_resolution_clock::now();
 		bool* isAUsed = new bool[this->problemSize];
 	    bool* isBUsed = new bool[this->problemSize];
 	    for(unsigned int i = 0; i < this->problemSize; i++) {
@@ -69,7 +70,8 @@ void HeuristicAlgorithm::run(){
 	        isBUsed[iBMin] = true;
 	        isBUsed[jBMin] = true;
 	    }
-	    this->stopTime();
+	    auto end = std::chrono::high_resolution_clock::now();
+	    this->result->workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1e9;
 	    delete[] isAUsed;
 	    delete[] isBUsed;
 	    this->rateSolution();

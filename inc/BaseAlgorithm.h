@@ -10,6 +10,7 @@
 #include <stddef.h>
 #include <assert.h>
 #include <iostream>
+#include <chrono>
 
 #include "operations.h"
 
@@ -76,16 +77,6 @@ public:
 	int** A;
 	int** B;
 	bool isInitialised;
-protected:
-	/*
-	 * Starts time measurement.
-	 */
-	void startTime();
-	/*
-	 * Stops time measurement.
-	 * Time in seconds elapsed from startTime() is stored in result->workTime.
-	 */
-	void stopTime();
 };
 
 #endif /* BASEALGORITHM_H_ */

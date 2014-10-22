@@ -9,9 +9,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <chrono>
 
 #include "BaseAlgorithm.h"
-#include "measures.h"
 #include "operations.h"
 
 class RandomAlgorithm: public BaseAlgorithm {

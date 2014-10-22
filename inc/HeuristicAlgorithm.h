@@ -9,9 +9,9 @@
 #define HEURISTICALGORITHM_H_
 
 #include <stddef.h>
+#include <chrono>
 
 #include "BaseAlgorithm.h"
-#include "measures.h"
 
 class HeuristicAlgorithm: public BaseAlgorithm {
 public:

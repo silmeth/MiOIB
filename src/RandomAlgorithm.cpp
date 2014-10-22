@@ -21,7 +21,7 @@ void RandomAlgorithm::run(unsigned int numberOfRuns) {
 		this->result->historicalCosts = new unsigned int [numberOfRuns];
 		opInit(this->problemSize);
 		unsigned int minCost;
-		this->startTime();
+		auto begin = std::chrono::high_resolution_clock::now();
 		// First run outside forloop to avoid if inside forloop
 		this->rateSolution();
 		minCost = this->result->cost;
@@ -36,6 +36,7 @@ void RandomAlgorithm::run(unsigned int numberOfRuns) {
 			}
 		}
 		this->result->cost = minCost;
-		this->stopTime();
+		auto end = std::chrono::high_resolution_clock::now();
+		this->result->workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1e9;
 	}
 }

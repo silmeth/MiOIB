@@ -7,6 +7,7 @@
 
 #ifdef SPUTNIK_TEST // define SPUTNIK_TEST before compile to enable this file
 #include <iostream>
+#include <chrono>
 
 #include "../inc/algorithms.h"
 #include "../inc/instances.h"
@@ -88,8 +89,9 @@ void testHeuristicAlgorithm(){
 	HeuristicAlgorithm alg;
 	alg.init(12, A, B);
 	alg.run();
-	std::cout << "Heuristic solution: " << alg.result->cost << " " << std::endl;
 	alg.rateSolution();
+	std::cout << "Heuristic solution: " << alg.result->cost << " " << std::endl;
+	std::cout << "Time to find solution: " << alg.result->workTime << std::endl << std::endl;
 
 	for(int i = 0; i < 12; i++) {
 		delete [] A[i];
@@ -134,19 +136,39 @@ void testRandomAlgorithm(){
 
 	alg.run(10);
 	std::cout << "RandomAlgorithm" << std::endl;
+	std::cout << "Best solution: ";
 	printSol(alg.result->bestPermutation, alg.problemSize);
 	if(alg.result->numberOfSteps < 1000) {
 		std::cout << "Costs: ";
 		printCosts(alg.result->historicalCosts, alg.result->numberOfSteps);
 	}
 	std::cout << "Smallest cost: " << alg.result->cost << std::endl;
+	std::cout << "Time to find solution: " << alg.result->workTime << std::endl << std::endl;
 	alg.clean();
+}
+
+void testTimeMeasurement(){
+	std::cout << "Test time measurement." << std::endl;
+	auto begin = std::chrono::high_resolution_clock::now();
+	int b;
+	for(int i = 0; i < 1e8; i++) {
+		b++;
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	std::cout << "1e8 iterations: " << std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1e9 << "s" << std::endl;
+	begin = std::chrono::high_resolution_clock::now();
+	for(int i = 0; i < 2*1e8; i++) {
+			b++;
+		}
+	end = std::chrono::high_resolution_clock::now();
+	std::cout << "2*1e8 iterations: " << std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1e9 << "s" << std::endl << std::endl;
 }
 
 int main() {
 	testBaseAlgorithm();
 	testHeuristicAlgorithm();
 	testRandomAlgorithm();
+	testTimeMeasurement();
 }
 
 

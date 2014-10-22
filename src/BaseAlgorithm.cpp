@@ -49,17 +49,6 @@ void BaseAlgorithm::init(int size, int** matA, int** matB) {
 	this->isInitialised = true;
 }
 
-/*
- * TODO Implement measuring time.
- */
-
-void BaseAlgorithm::startTime() {
-}
-
-void BaseAlgorithm::stopTime() {
-	this->result->workTime = 1.0;
-}
-
 void BaseAlgorithm::clean(){
 	if(this->result != NULL) {
 		if(this->result->historicalCosts != NULL) {
