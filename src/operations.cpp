@@ -10,9 +10,9 @@
 
 unsigned int sz;
 unsigned int neighSz;
-int** neighbours;
-int** neighbourSwaps;
-int* permutation;
+unsigned int** neighbours;
+unsigned int** neighbourSwaps;
+unsigned int* permutation;
 std::mt19937 randGen;
 
 
@@ -20,11 +20,11 @@ void opInit(unsigned int size, int seed) {
     sz = size;
     neighSz = sz*(sz-1)/2; // every solution has exactly sz*(sz-1)/2 neighbours
 
-    neighbours = new int*[neighSz]; // allocating memory for all neighbours of given solution
-    neighbourSwaps = new int*[neighSz];
+    neighbours = new unsigned int*[neighSz]; // allocating memory for all neighbours of given solution
+    neighbourSwaps = new unsigned int*[neighSz];
     for(unsigned int i = 0; i < neighSz; i++) {
-        neighbours[i] = new int[sz];
-        neighbourSwaps[i] = new int[2];
+        neighbours[i] = new unsigned int[sz];
+        neighbourSwaps[i] = new unsigned int[2];
     }
 
     unsigned int l = 0;
@@ -36,12 +36,12 @@ void opInit(unsigned int size, int seed) {
         }
     }
 
-    permutation = new int[sz]; // allocating memory for random permutation of given solution
+    permutation = new unsigned int[sz]; // allocating memory for random permutation of given solution
 
     randGen.seed(seed); // uniform Marsenne Twister random generator seed
 }
 
-void switchElements(int* solution, unsigned int pos1, unsigned int pos2) {
+void switchElements(unsigned int* solution, unsigned int pos1, unsigned int pos2) {
     if(pos1 != pos2) {
         int tmp = solution[pos1];
         solution[pos1] = solution[pos2];
@@ -49,7 +49,7 @@ void switchElements(int* solution, unsigned int pos1, unsigned int pos2) {
     }
 }
 
-int** generateAllNeighbours(int* solution) {
+unsigned int** generateAllNeighbours(unsigned int* solution) {
     unsigned int l = 0;
     for(unsigned int i = 0; i < sz; i++) {
         for(unsigned int j = i+1; j < sz; j++) {
@@ -63,11 +63,11 @@ int** generateAllNeighbours(int* solution) {
     return neighbours;
 }
 
-int* getNeighbourSwaps(unsigned int i) {
+unsigned int* getNeighbourSwaps(unsigned int i) {
     return neighbourSwaps[i];
 }
 
-int* generateRandomPermutation() {
+unsigned int* generateRandomPermutation() {
 // TODO merge two for loops into one to minimize data copying (cf. http://en.wikipedia.org/wiki/Random_permutation#Knuth_shuffles)
     for(unsigned int i = 0; i < sz; i++) { // create copy of solution
         permutation[i] = i;

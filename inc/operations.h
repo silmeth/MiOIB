@@ -21,21 +21,21 @@ void opInit(unsigned int size, int seed = 19910401);
  * Returns pointer to a randomly generated solution based on previous one (array of ints).
  * @return pointer to array of ints with random solution generated.
  */
-int* generateRandomPermutation();
+unsigned int* generateRandomPermutation();
 
 /**
  * Given a solution vector and problem size, returns all 2-opt neighbours.
  * @param solution pointer to the original solution (array of ints).
  * @return pointer to array of arrays with all 2-opt neighbours of the solution.
  */
-int** generateAllNeighbours(int* solution);
+unsigned int** generateAllNeighbours(unsigned int* solution);
 
 /**
  * Find numbers of elements to swap in order to generate i-th neighbour of a solution.
  * @param i Number of the neighbour.
  * @return Array int[2] with numbers of elements swapped to generate i-th neighbour.
  */
-int* getNeighbourSwaps(unsigned int i);
+unsigned int* getNeighbourSwaps(unsigned int i);
 
 /**
  * Swaps elements in a given solution vector.
@@ -43,7 +43,7 @@ int* getNeighbourSwaps(unsigned int i);
  * @param pos1 position of the first element to be swapped.
  * @param pos2 position of the second element to be swapped.
  */
-void switchElements(int* solution, unsigned int pos1, unsigned int pos2);
+void switchElements(unsigned int* solution, unsigned int pos1, unsigned int pos2);
 
 /**
  * Deallocates all previously allocated data
