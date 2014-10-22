@@ -15,7 +15,7 @@
  * @param sz Size of the problem and solution.
  * @return Integer value with cost.
  */
-int rateSolution(int** A, int** B, int* solution, unsigned int sz);
+int rateSolution(int** A, int** B, unsigned int* solution, unsigned int sz);
 
 /**
  * Returns the difference in cost function if elements on positions pos1 and pos2 switch places in given solution vector.

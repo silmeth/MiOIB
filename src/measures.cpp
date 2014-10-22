@@ -14,7 +14,7 @@
 // (asymmetric, distances and flows between selfs):
 // If both are true, optimize for symmetric without counting for i == j
 // (second for from j = i+1 and return res*2)
-int rateSolution(int** A, int** B, int* solution, unsigned int sz) {
+int rateSolution(int** A, int** B, unsigned int* solution, unsigned int sz) {
     int res = 0;
     for(unsigned int i = 0; i < sz; i++) {
         for(unsigned int j = 0; j < sz; j++) {
