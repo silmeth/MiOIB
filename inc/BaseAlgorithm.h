@@ -22,19 +22,21 @@ enum stopCondition
 struct runResult {
 	unsigned int problemSize;
 	// Cost of the best permutation = solution.
-	int cost;
+	unsigned int cost;
 	// Pointer to the best permutation.
 	unsigned int* bestPermutation;
+	// Pointer to last permutation
+	unsigned int* lastPermutation;
 	/**
 	 * Number of steps needed to find solution.
 	 * If program is run with definiteNumberOfSteps, step in which the best solution was found is stored here.
 	 */
-	int numberOfSteps;
+	unsigned int numberOfSteps;
 	/**
 	 * Stores costs of permutation from each step.
 	 * Needed for plotting improvement of solution over time.
 	 */
-	int* historicalCosts;
+	unsigned int* historicalCosts;
 	// Time needed to get solution
 	double workTime;
 };
@@ -63,6 +65,10 @@ public:
 	 */
 	void clean();
 	/*
+	 * Calculates cost for current result->bestPermutation and stores it in result->cost
+	 */
+	void rateSolution();
+	/*
 	 * Random permutation initialiased in init().
 	 */
 	unsigned int problemSize;
@@ -77,9 +83,9 @@ protected:
 	void startTime();
 	/*
 	 * Stops time measurement.
-	 * @return Time in seconds elapsed from startTime().
+	 * Time in seconds elapsed from startTime() is stored in result->workTime.
 	 */
-	double stopTime();
+	void stopTime();
 };
 
 #endif /* BASEALGORITHM_H_ */

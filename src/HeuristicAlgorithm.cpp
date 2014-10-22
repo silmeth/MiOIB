@@ -18,8 +18,8 @@ HeuristicAlgorithm::~HeuristicAlgorithm() {
 
 void HeuristicAlgorithm::run(){
 	if(this->isInitialised){
-		this->result->bestPermutation = new unsigned int [this->problemSize];
-		unsigned int* solution = this->result->bestPermutation;
+		this->result->lastPermutation = new unsigned int [this->problemSize];
+		unsigned int* solution = this->result->lastPermutation;
 
 		this->startTime();
 		bool* isAUsed = new bool[this->problemSize];
@@ -69,10 +69,10 @@ void HeuristicAlgorithm::run(){
 	        isBUsed[iBMin] = true;
 	        isBUsed[jBMin] = true;
 	    }
-	    this->result->workTime =  this->stopTime();
+	    this->stopTime();
 	    delete[] isAUsed;
 	    delete[] isBUsed;
-	    this->result->cost = rateSolution(this->A, this->B, this->result->bestPermutation, this->problemSize);
+	    this->rateSolution();
 	    this->result->numberOfSteps = 1;
 	    this->result->historicalCosts = NULL;
 	}
