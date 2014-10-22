@@ -118,9 +118,10 @@ int main() {
     std::cout << "\nDifference by rateSolution: " << rateSolution(A, B, solution2, sz) - rate << std::endl;
     std::cout << "Difference by rateChangeSolution: " << rateChange(A, B, solution, sz, 3, 7) << std::endl; // both return the same as expected
 
-    int* algSolution = new int[sz];
-    algInit(sz, A, B, algSolution);
-    std::cout << "Heuristic solution: " << rateSolution(A, B, heuritsticGenSolution(algSolution), sz) << std::endl;
+// 	  Moved all this stuff to class - Jacek
+//    int* algSolution = new int[sz];
+//    algInit(sz, A, B, algSolution);
+//    std::cout << "Heuristic solution: " << rateSolution(A, B, heuritsticGenSolution(algSolution), sz) << std::endl;
 }
 
 #endif // SILMETH_TEST
