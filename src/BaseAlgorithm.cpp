@@ -8,7 +8,6 @@
 #include "../inc/BaseAlgorithm.h"
 
 BaseAlgorithm::BaseAlgorithm() {
-	this->startPermutation = NULL;
 	this->problemSize = 0;
 	this->result = NULL;
 	this->isInitialised = false;

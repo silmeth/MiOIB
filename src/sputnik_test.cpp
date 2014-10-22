@@ -29,18 +29,15 @@ void printSol(int* solution, unsigned int sz) {
 
 void testBaseAlgorithm(){
 	BaseAlgorithm b = BaseAlgorithm();
-	assert(b.startPermutation == NULL);
 	assert(b.result == NULL);
 
 	int** ptrA = new int* [2];
 	int** ptrB = new int* [2];
 	b.init(5, ptrA, ptrB);
-	assert(b.startPermutation != NULL);
 	assert(b.result != NULL);
 	assert(b.problemSize == 5);
 
 	b.clean();
-	assert(b.startPermutation == NULL);
 	assert(b.result == NULL);
 
 	delete [] ptrA;
