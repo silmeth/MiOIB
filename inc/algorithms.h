@@ -14,11 +14,6 @@
 
 // TODO Where should we measure time? Inside algorithm functions?
 
-struct runResult {
-	int cost;
-	int* permutation;
-	int numberOfSteps;
-};
 
 extern int** A;
 extern int** B;

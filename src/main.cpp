@@ -5,6 +5,7 @@
  */
 
 #ifndef SILMETH_TEST
+#ifndef SPUTNIK_TEST
 #include "../inc/algorithms.h"
 #include "../inc/instances.h"
 #include "../inc/measures.h"
@@ -19,5 +20,6 @@ int** neighbours;
 int main() {
 
 }
+#endif // SPUTNIK_TEST
 #endif // SILMETH_TEST
 
