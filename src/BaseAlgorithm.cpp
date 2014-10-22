@@ -11,32 +11,41 @@ BaseAlgorithm::BaseAlgorithm() {
 	this->startPermutation = NULL;
 	this->problemSize = 0;
 	this->result = NULL;
+	this->isInitialised = false;
+	this->A = NULL;
+	this->B = NULL;
 }
 
-BaseAlgorithm::BaseAlgorithm(int size){
+BaseAlgorithm::BaseAlgorithm(int size, int** matA, int** matB){
 	assert(size > 0);
 	this->problemSize = size;
-
+	assert(matA != NULL);
+	assert(matB != NULL);
+	this->A = matA;
+	this->B = matB;
 	// TODO If seed not set in operations, set it here.
 	opInit(this->problemSize);
-	this->startPermutation = generateRandomPermutation();
-
 	this->result = new runResult;
+	this->result->bestPermutation = generateRandomPermutation();
+	this->isInitialised = true;
 }
 
 BaseAlgorithm::~BaseAlgorithm() {
 	this->clean();
 }
 
-void BaseAlgorithm::init(int size){
+void BaseAlgorithm::init(int size, int** matA, int** matB){
 	assert(size > 0);
 	this->problemSize = size;
-
+	assert(matA != NULL);
+	assert(matB != NULL);
+	this->A = matA;
+	this->B = matB;
 	// TODO If seed not set in operations, set it here.
 	opInit(this->problemSize);
-	this->startPermutation = generateRandomPermutation();
-
 	this->result = new runResult;
+	this->result->bestPermutation = generateRandomPermutation();
+	this->isInitialised = true;
 }
 
 /*
@@ -52,15 +61,13 @@ double BaseAlgorithm::stopTime(){
 
 void BaseAlgorithm::clean(){
 	if(this->result != NULL) {
+		if(this->result->historicalCosts != NULL) {
+			delete [] this->result->historicalCosts;
+		}
 		delete [] this->result->bestPermutation;
-		delete [] this->result->historicalCosts;
 		delete this->result;
 		this->result = NULL;
 	}
-	if(this->startPermutation != NULL) {
-		delete [] this->startPermutation;
-		this->startPermutation = NULL;
-	}
+	this->isInitialised = false;
 }
-
 
