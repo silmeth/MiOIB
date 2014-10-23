@@ -217,12 +217,19 @@ void testTimeMeasurement(){
 	std::cout << "2*1e8 iterations: " << std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1e9 << "s" << std::endl << std::endl;
 }
 
+void testInstances(){
+	const char* input = "/home/jacek/Studia/MioIB/workspace/qap/qapdatsol/chr12a.dat";
+	readDataFile(input);
+	delete input;
+}
+
 int main() {
 	testBaseAlgorithm();
 	testHeuristicAlgorithm();
 	testRandomAlgorithm();
 	testTimeMeasurement();
 	testSteepestAlgorithm();
+	testInstances();
 }
 
 
