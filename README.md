@@ -1,6 +1,6 @@
 MiOIB
 =====
-Project for Metaheuristics and Bio-inspired Computing (Poznan University of Technology).
+Project for Metaheuristics and Bio-inspired Computing (Poznań University of Technology).
 Involves testing optimization algorithms for Quadratic assignment problem:
 * Heuristic Algorithm
 * Random Algorithm

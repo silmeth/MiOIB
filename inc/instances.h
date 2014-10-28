@@ -15,10 +15,10 @@
 #include "../strtk/strtk.hpp"
 
 struct instance{
-	unsigned int** A;
-	unsigned int** B;
-	unsigned int problemSize;
-	unsigned int lowestCost;
+    unsigned int** A;
+    unsigned int** B;
+    unsigned int problemSize;
+    unsigned int lowestCost;
 };
 
 instance readDataFile(const char* fileName);

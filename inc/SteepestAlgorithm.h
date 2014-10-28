@@ -18,14 +18,15 @@
 
 
 class SteepestAlgorithm: public BaseAlgorithm {
+private:
+    SteepestAlgorithm();
 public:
-	SteepestAlgorithm();
-	virtual ~SteepestAlgorithm();
-public:
-	void run(stopCondition condition, double value);
-	void repeatedRun(unsigned int repetitions, stopCondition condition, double value);
-	//TODO remove this awful copy
-	unsigned int rateSolution2(int** A, int** B, unsigned int* solution, unsigned int sz);
+    SteepestAlgorithm(int size, int** matA, int** matB, int seed = 19910401);
+    virtual ~SteepestAlgorithm();
+    void run(stopCondition condition, double value);
+    void repeatedRun(unsigned int repetitions, stopCondition condition, double value);
+    //TODO remove this awful copy
+//    unsigned int rateSolution2(int** A, int** B, unsigned int* solution, unsigned int sz);
 };
 
 #endif /* STEEPESTALGORITHM_H_ */

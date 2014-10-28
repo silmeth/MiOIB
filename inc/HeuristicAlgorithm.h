@@ -14,11 +14,13 @@
 #include "BaseAlgorithm.h"
 
 class HeuristicAlgorithm: public BaseAlgorithm {
+private:
+    HeuristicAlgorithm();
 public:
-	HeuristicAlgorithm();
-	virtual ~HeuristicAlgorithm();
+    HeuristicAlgorithm(int size, int** matA, int** matB, int seed=19910401);
+    virtual ~HeuristicAlgorithm();
 public:
-	void run();
+    void run();
 };
 
 #endif /* HEURISTICALGORITHM_H_ */

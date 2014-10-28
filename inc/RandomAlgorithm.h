@@ -12,13 +12,16 @@
 #include <chrono>
 
 #include "BaseAlgorithm.h"
-#include "operations.h"
+//#include "operations.h"
 
 class RandomAlgorithm: public BaseAlgorithm {
 public:
-	RandomAlgorithm();
-	virtual ~RandomAlgorithm();
-	void run(unsigned int numberOfRuns);
+private:
+    RandomAlgorithm();
+public:
+    RandomAlgorithm(int size, int** matA, int** matB, int seed=19910401);
+    virtual ~RandomAlgorithm();
+    void run(unsigned int numberOfRuns);
 };
 
 #endif /* RANDOMALGORITHM_H_ */

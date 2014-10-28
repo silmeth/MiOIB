@@ -6,38 +6,39 @@
 
 #include "../inc/RandomAlgorithm.h"
 
-RandomAlgorithm::RandomAlgorithm() {
-	// TODO Auto-generated constructor stub
+RandomAlgorithm::RandomAlgorithm(int size, int** matA, int** matB, int seed) : BaseAlgorithm(size, matA, matB, seed) {
 
 }
 
 RandomAlgorithm::~RandomAlgorithm() {
-	// TODO Auto-generated destructor stub
+    // TODO Auto-generated destructor stub
 }
 
 void RandomAlgorithm::run(unsigned int numberOfRuns) {
-	if(this->isInitialised){
-		this->result->numberOfSteps = numberOfRuns;
-		this->result->historicalCosts = new unsigned int [numberOfRuns];
-		opInit(this->problemSize);
-		unsigned int minCost;
-		auto begin = std::chrono::high_resolution_clock::now();
-		// First run outside forloop to avoid if inside forloop
-		this->rateSolution();
-		minCost = this->result->cost;
-		this->result->historicalCosts[0] = this->result->cost;
-		for(unsigned int i = 1; i < numberOfRuns; i++){
-			this->result->lastPermutation = generateRandomPermutation();
-			this->rateSolution();
-			this->result->historicalCosts[i] = this->result->cost;
-			if(this->result->cost < minCost){
-				memcpy(this->result->bestPermutation, this->result->lastPermutation, sizeof(unsigned int) * this->problemSize);
-				minCost = this->result->cost;
-			}
-		}
-		this->result->cost = minCost;
-		auto end = std::chrono::high_resolution_clock::now();
-		this->result->workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1e9;
-		opClear();
-	}
+    if(isInitialised) {
+        result->numberOfSteps = numberOfRuns;
+        result->historicalCosts = new unsigned int[numberOfRuns];
+
+        int minCost;
+        auto begin = std::chrono::high_resolution_clock::now();
+
+        // First run outside for loop to avoid if inside for loop
+        rateSolution();
+        minCost = result->cost;
+        result->historicalCosts[0] = result->cost;
+        for(unsigned int i = 1; i < numberOfRuns; i++) {
+            generateRandomPermutation();
+            result->lastPermutation = randomSolution;
+            rateSolution();
+            result->historicalCosts[i] = result->cost;
+            if(result->cost < minCost) {
+                memcpy(result->bestPermutation, result->lastPermutation, sizeof(unsigned int) * problemSize);
+                minCost = result->cost;
+            }
+        }
+        result->cost = minCost;
+        auto end = std::chrono::high_resolution_clock::now();
+        result->workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1e9;
+        delete[] result->historicalCosts;
+    }
 }

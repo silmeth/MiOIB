@@ -42,3 +42,5 @@ Debug/
 
 # Doxygen documentation
 doxygen/
+
+*.xml
