@@ -27,15 +27,15 @@ ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr) 
         while(getline(inputFile, line)) {
             if(lineCounter == 0) {
                 if(strtk::parse(line, whitespaces, problemSize)) {
-                    A = new unsigned int*[problemSize];
-                    B = new unsigned int*[problemSize];
+                    A = new int*[problemSize];
+                    B = new int*[problemSize];
                 }
             } else if(strtk::parse(line, whitespaces, vecTmp)) {
                 // Or old fashion way:
                 // for(std::vector<unsigned int>::iterator n = vecTmp.begin()...
                 for(unsigned int n : vecTmp) {
                     if(!AParsed) {
-                        if(j == 0) A[i] = new unsigned int[problemSize];
+                        if(j == 0) A[i] = new int[problemSize];
                         A[i][j] = n;
                         if(++j >= problemSize) {
                             j = 0;
@@ -45,7 +45,7 @@ ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr) 
                             }
                         }
                     } else if(i < problemSize) {
-                        if(j == 0) B[i] = new unsigned int[problemSize];
+                        if(j == 0) B[i] = new int[problemSize];
                         B[i][j] = n;
                         if(++j >= problemSize) {
                             j = 0;

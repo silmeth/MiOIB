@@ -17,6 +17,8 @@
 #include "../inc/SteepestAlgorithm.h"
 #include "../inc/GreedyAlgorithm.h"
 
+#include "../inc/Lab1.h"
+
 const unsigned int size = 12;
 
 int rateSol(int** A, int** B, unsigned int* solution, unsigned int sz) {
@@ -219,6 +221,9 @@ int main() {
     testGreedyAlgorithm(size, A, B);
     testTimeMeasurement();
     testInstances();
+
+    Lab1 lab;
+    lab.task2();
 
     for(int i = 0; i < 12; i++) {
         delete[] A[i];

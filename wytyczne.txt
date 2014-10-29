@@ -1,0 +1,23 @@
+Elementy obowiązkowe w sprawozdaniu:
+
+krótki opis problemu, jego zastosowań i interpretacji, złożoności - do 20 linijek
+
+opis użytych operatorów sąsiedztwa (co najmniej jeden), wielkość sąsiedztwa (Kom: domyślnie 2-opt)
+
+porównanie działania 4 algorytmów i rodzajów sąsiedztw na wszystkich instancjach problemów ( greedy, steepest, heurystyka (duże liczby nie łączą się z dużymi liczbami), losowy)
+odległość od optimum ( wg jakiej miary? - może być własna miara odległości/bliskości; (najlepsze-optimum)/optimum; najlepsze/optimum; gruba rozkmina z laboratorium), przypadek średni i najlepszy (a dla chętnych również najgorszy). Dla średnich oceniamy stabilność wyników (na wykresy średnich nanosimy odchylenia standardowe) -  pokazać na wykresie jakość w zależności od rozmiaru instancji (x - numery instancji, odległości na osi x stałe lub zależne od rozmiaru instancji; czy skala logarytmiczna nie da lepszych wyników?; na wykresy nanieść odchylanie standardowe; dla najlepszej instancji bez odchyleń standardowych)
+czas działania - średni surowy czas działania, wykres jak wcześnie j
+jakość/czas - efektywność algorytmów (proszę zaproponować dobrą miarę), wykres na obu kryteriach i wybór niezdominowanych instancji; możliwość: chmurki punktóœ dla różnych instancji (jak się zachowują rzeczone chmurki?; zamiast wykresu na obu kryteriach forma agregacji (np jakość/czas))
+
+Greedy i Steepest: średnia liczba kroków algorytmu i liczba ocenionych (przejrzanych) rozwiązań, jak rośnie liczba kroków od wielkości instancji?
+Greedy i Steepest - wykres: jakość rozwiązania początkowego vs. jakość rozwiązania końcowego (min. 200 powtórzeń, małe punkty) dla kilku ciekawych instancji; ciekawe to takie, które dają jakieś nieregularności; 1 instancja i 1 algorytm; x - jakość rozwiązania początkowego, y - jakość rozwiązania końcowego; jeżeli chmurka nieregularna - instancja nieciekawa
+
+Greedy i Steepest - zależność (wykres): liczba restartów (do >300) w multi-random vs. średnie i najlepsze z dotychczas znalezionych rozwiązań dla dwóch (max. kilku) wybranych instancji. Czy opłaca się powtarzać uruchamianie? jeśli tak, to ile razy? Spróbuj z kilkoma instancjami, ale jedna wystarczy na piątkę :P
+
+obiektywna ocena podobieństwa znajdowanych rozwiązań lokalnie optymalnych dla dwóch wybranych instancji oraz ocena ich podobieństwa do optimum globalnego Wyświetl podobieństwo instancji; QAP - pokazać, że te same liczby muszą na tych samych pozycjach występować, obliczyć ile faktycznie jest na tych samych pozycjach (wyrazić w %)
+
+wnioski (od ogólnych do szczegółowych) z przeprowadzonych doświadczeń im bardzije ogolne tym bardziej cenne; porównanie ogólne algorytmów na wszystkich instancjach; dla dużych instancji jeden alg jest lepszy od drugiego; 
+
+trudności na jakie napotkano
+
+uzasadnienie wprowadzanych ulepszeń, propozycje udoskonaleń i ich spodziewane efekty

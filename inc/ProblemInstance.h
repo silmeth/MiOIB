@@ -26,8 +26,8 @@ public:
      */
     ProblemInstance(const char* filepath);
     virtual ~ProblemInstance(); /**< Simple destructor.*/
-    unsigned int** A; /**< Pointer to memory where the A matrix is loaded.*/
-    unsigned int** B; /**< Pointer to memory where the B matrix is loaded.*/
+    int** A; /**< Pointer to memory where the A matrix is loaded.*/
+    int** B; /**< Pointer to memory where the B matrix is loaded.*/
     unsigned int problemSize; /**< The size of a problem.*/
     unsigned int lowestCost; /**< Optimal solution cost (if present in a file).*/
 };
