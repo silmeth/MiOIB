@@ -23,7 +23,7 @@ ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr) 
 
     unsigned int lineCounter = 0;
     if(inputFile.is_open()) {
-        std::cout << "Reading problem " << fileName << std::endl;
+//        std::cout << "Reading problem " << fileName << std::endl;
         while(getline(inputFile, line)) {
             if(lineCounter == 0) {
                 if(strtk::parse(line, whitespaces, problemSize)) {

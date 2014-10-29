@@ -28,7 +28,7 @@ enum stopCondition {
 void switchElements(unsigned int* solution, unsigned int pos1, unsigned int pos2);
 
 /**
- * Base class for QAP-solving algorithms. All algorithms inherits from this one.
+ * Base class for QAP-solving algorithms. All algorithms inherit from this one.
  */
 class BaseAlgorithm {
 private:
@@ -94,11 +94,11 @@ public:
      */
     void generateAllNeighbours();
 
+    /**
+     * Generates random permutation of current solution and stores it in BaseAlgorithm::randomSolution.
+     */
     void generateRandomPermutation();
 
-    /*
-     * Random permutation initialised in init().
-     */
     unsigned int problemSize; /**< Given problem's size.*/
     unsigned int neighbourhoodSize; /**< Number of the possible neighbours for given solution size.*/
     unsigned int** neighbours; /**< Dynamically allocated array to store all neighbours of the current solution.*/
