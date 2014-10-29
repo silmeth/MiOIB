@@ -9,7 +9,7 @@
 #include <iostream>
 #include <chrono>
 
-#include "../inc/instances.h"
+#include "../inc/ProblemInstance.h"
 
 #include "../inc/BaseAlgorithm.h"
 #include "../inc/HeuristicAlgorithm.h"
@@ -143,7 +143,12 @@ void testTimeMeasurement() {
 
 void testInstances() {
     const char input[] = "./qapdatsol/chr12a.dat";
-    readDataFile(input);
+    ProblemInstance ins(input);
+    std::cout << "Problem size: " << ins.problemSize << std::endl;
+    std::cout << "A1,1 = " << ins.A[0][0] << std::endl;
+    std::cout << "A10,8 = " << ins.A[9][7] << std::endl;
+    std::cout << "B1,1 = " << ins.B[0][0] << std::endl;
+    std::cout << "B6,8 = " << ins.B[5][7] << std::endl << std::endl;
 }
 
 int main() {

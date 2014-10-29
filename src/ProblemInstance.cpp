@@ -16,7 +16,6 @@ ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr) 
     unsigned int j = 0; // cols, or elements in rows
     bool AParsed = false; // Is A matrix done?
 
-    std::cout << "Input file: " << fileName << std::endl;
     std::ifstream inputFile(fileName, std::ifstream::in);
 
     // temporary storage for matrix elements
@@ -28,37 +27,33 @@ ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr) 
         while(getline(inputFile, line)) {
             if(lineCounter == 0) {
                 if(strtk::parse(line, whitespaces, problemSize)) {
-                    std::cout << "Problem size: " << problemSize << std::endl;
-
                     A = new unsigned int*[problemSize];
                     B = new unsigned int*[problemSize];
                 }
-            } else {
-                if(strtk::parse(line, whitespaces, vecTmp)) {
-                    // Or old fashion way:
-                    // for(std::vector<unsigned int>::iterator n = vecTmp.begin()...
-                    for(unsigned int n : vecTmp) {
-                        if(!AParsed) {
-                            if(j == 0) A[i] = new unsigned int[problemSize];
-                            A[i][j] = n;
-                            if(++j >= problemSize) {
-                                j = 0;
-                                if(++i >= problemSize) {
-                                    i = 0;
-                                    AParsed = true;
-                                }
-                            }
-                        } else if(i < problemSize) {
-                            if(j == 0) B[i] = new unsigned int[problemSize];
-                            B[i][j] = n;
-                            if(++j >= problemSize) {
-                                j = 0;
-                                ++i;
+            } else if(strtk::parse(line, whitespaces, vecTmp)) {
+                // Or old fashion way:
+                // for(std::vector<unsigned int>::iterator n = vecTmp.begin()...
+                for(unsigned int n : vecTmp) {
+                    if(!AParsed) {
+                        if(j == 0) A[i] = new unsigned int[problemSize];
+                        A[i][j] = n;
+                        if(++j >= problemSize) {
+                            j = 0;
+                            if(++i >= problemSize) {
+                                i = 0;
+                                AParsed = true;
                             }
                         }
+                    } else if(i < problemSize) {
+                        if(j == 0) B[i] = new unsigned int[problemSize];
+                        B[i][j] = n;
+                        if(++j >= problemSize) {
+                            j = 0;
+                            ++i;
+                        }
                     }
-                    vecTmp.clear();
                 }
+                vecTmp.clear();
             }
             lineCounter++;
         }

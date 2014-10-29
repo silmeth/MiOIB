@@ -144,7 +144,7 @@ void testTimeMeasurement() {
 void testInstances() {
     const char input[] = "./qapdatsol/chr12a.dat";
     ProblemInstance ins(input);
-    std::cout << "instance pr. sz.: " << ins.problemSize << std::endl;
+    std::cout << "Problem size: " << ins.problemSize << std::endl;
     std::cout << "A1,1 = " << ins.A[0][0] << std::endl;
     std::cout << "A10,8 = " << ins.A[9][7] << std::endl;
     std::cout << "B1,1 = " << ins.B[0][0] << std::endl;
