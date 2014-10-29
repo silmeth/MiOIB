@@ -2,24 +2,21 @@
  * HeuristicAlgorithm.cpp
  *
  *  Created on: Oct 22, 2014
- *      Author: jacek
+ *      Author: jacek, silmeth
  */
 
 #include "../inc/HeuristicAlgorithm.h"
 
-HeuristicAlgorithm::HeuristicAlgorithm(int size, int** matA, int** matB, int seed) : BaseAlgorithm(size, matA, matB, seed) {
-
+HeuristicAlgorithm::HeuristicAlgorithm(unsigned int size, int** matA, int** matB, int seed) : BaseAlgorithm(size, matA, matB, seed) {
+    historicalCosts = nullptr;
 }
 
 HeuristicAlgorithm::~HeuristicAlgorithm() {
-    // TODO Auto-generated destructor stub
+
 }
 
 void HeuristicAlgorithm::run() {
     if(isInitialised) {
-        result->lastPermutation = new unsigned int[problemSize];
-        unsigned int* solution = result->lastPermutation;
-
         // Begin measuring time
         auto begin = std::chrono::high_resolution_clock::now();
         bool* isAUsed = new bool[problemSize];
@@ -61,8 +58,8 @@ void HeuristicAlgorithm::run() {
                     }
                 }
             }
-            solution[iAMax] = iBMin;
-            solution[jAMax] = jBMin;
+            curSolution[iAMax] = iBMin;
+            curSolution[jAMax] = jBMin;
 
             isAUsed[iAMax] = true;
             isAUsed[jAMax] = true;
@@ -70,12 +67,11 @@ void HeuristicAlgorithm::run() {
             isBUsed[jBMin] = true;
         }
         auto end = std::chrono::high_resolution_clock::now();
-        result->workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1e9;
+        workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
+        minCost = curCost = rateSolution();
+        memcpy(bestSolution, curSolution, sizeof(unsigned int) * problemSize);
+        numberOfSteps = 1;
         if(isAUsed) delete[] isAUsed;
         if(isBUsed) delete[] isBUsed;
-        rateSolution();
-        result->numberOfSteps = 1;
-        result->historicalCosts = NULL;
-        delete[] result->lastPermutation;
     }
 }

@@ -2,7 +2,7 @@
  * BaseAlgorithm.cpp
  *
  *  Created on: Oct 22, 2014
- *      Author: jacek
+ *      Author: jacek, silmeth
  */
 
 #include "../inc/BaseAlgorithm.h"
@@ -15,10 +15,7 @@ void switchElements(unsigned int* solution, unsigned int pos1, unsigned int pos2
     }
 }
 
-BaseAlgorithm::BaseAlgorithm(int size, int** matA, int** matB, int seed) : problemSize(size), neighbourhoodSize(size*(size-1)/2),
-                randGen(seed), A(matA), B(matB) {
-    assert(neighbourhoodSize == size*(size-1)/2);
-    assert(size > 0);
+void BaseAlgorithm::initHelp() {
     neighbours = new unsigned int*[neighbourhoodSize];
     neighbourSwaps = new unsigned int*[neighbourhoodSize];
 
@@ -36,18 +33,34 @@ BaseAlgorithm::BaseAlgorithm(int size, int** matA, int** matB, int seed) : probl
         }
     }
 
-    assert(matA != NULL);
-    assert(matB != NULL);
+    assert(A != NULL);
+    assert(B != NULL);
     // TODO If seed not set in operations, set it here.
 
-//    curSolution = new unsigned int[problemSize];
     randomSolution = new unsigned int[problemSize];
+    curSolution = new unsigned int[problemSize];
+    bestSolution = new unsigned int[problemSize];
 
-    result = new runResult;
     generateRandomPermutation();
-    result->bestPermutation = randomSolution;
-    result->lastPermutation = randomSolution;
+    memcpy(curSolution, randomSolution, sizeof(unsigned int)*problemSize);
+    memcpy(bestSolution, randomSolution, sizeof(unsigned int)*problemSize);
+
     isInitialised = true;
+}
+
+BaseAlgorithm::BaseAlgorithm(unsigned int size, int** matA, int** matB, int seed) : problemSize(size), neighbourhoodSize(size*(size-1)/2),
+                randGen(seed), A(matA), B(matB) {
+    assert(neighbourhoodSize == size*(size-1)/2);
+    assert(size > 0);
+    initHelp();
+}
+
+void BaseAlgorithm::init(unsigned int size, int** matA, int** matB, int seed) {
+    clean();
+    A = matA; B = matB; problemSize = size; randGen.seed(seed); neighbourhoodSize = size*(size-1)/2;
+    assert(neighbourhoodSize == size*(size-1)/2);
+    assert(size > 0);
+    initHelp();
 }
 
 BaseAlgorithm::~BaseAlgorithm() {
@@ -56,11 +69,6 @@ BaseAlgorithm::~BaseAlgorithm() {
 
 void BaseAlgorithm::clean() {
     if(isInitialised) {
-        if(result != NULL) {
-            delete result;
-            result = NULL;
-        }
-
         if(neighbours) {
             for(unsigned int i = 0; i < neighbourhoodSize; i++) {
                 if(neighbours[i]) delete[] neighbours[i];
@@ -75,41 +83,59 @@ void BaseAlgorithm::clean() {
             delete[] neighbourSwaps;
         }
 
-    //    if(curSolution) delete[] curSolution;
+        if(curSolution) delete[] curSolution;
+        if(bestSolution) delete[] bestSolution;
         if(randomSolution) delete[] randomSolution;
         isInitialised = false;
     }
 }
 
 int BaseAlgorithm::rateSolution(unsigned int* solution) {
-    if(!solution) solution = result->lastPermutation;
-    result->cost = 0;
+    if(!solution) solution = curSolution;
+    int cost = 0;
     for(unsigned int i = 0; i < problemSize; i++) {
         for(unsigned int j = 0; j < problemSize; j++) {
-            result->cost += A[i][j]*B[solution[i]][solution[j]];
+            cost += A[i][j]*B[solution[i]][solution[j]];
         }
     }
-    return result->cost;
+    return cost;
 }
 
 int BaseAlgorithm::rateNeighbour(unsigned int id) {
-    int res = 0;
+    int diffCost = 0;
     unsigned int pos1 = neighbourSwaps[id][0];
     unsigned int pos2 = neighbourSwaps[id][1];
     for(unsigned int i = 0; i < problemSize; i++) {
-        // subtract previous elements
-        res -= A[pos1][i]*B[result->lastPermutation[pos1]][result->lastPermutation[i]];
-        res -= A[i][pos1]*B[result->lastPermutation[i]][result->lastPermutation[pos1]];
-        res -= A[pos2][i]*B[result->lastPermutation[pos2]][result->lastPermutation[i]];
-        res -= A[i][pos2]*B[result->lastPermutation[i]][result->lastPermutation[pos2]];
+        if(i == pos1) {
+            // subtract previous elements
+            diffCost -= A[pos1][pos1]*B[curSolution[pos1]][curSolution[pos1]];
+            diffCost -= A[pos2][pos1]*B[curSolution[pos2]][curSolution[pos1]];
+            diffCost -= A[pos1][pos2]*B[curSolution[pos1]][curSolution[pos2]];
 
-        // add new elements
-        res += A[pos1][i]*B[result->lastPermutation[pos2]][result->lastPermutation[i]];
-        res += A[i][pos1]*B[result->lastPermutation[i]][result->lastPermutation[pos2]];
-        res += A[pos2][i]*B[result->lastPermutation[pos1]][result->lastPermutation[i]];
-        res += A[i][pos2]*B[result->lastPermutation[i]][result->lastPermutation[pos1]];
+            // add new elements
+            diffCost += A[pos1][pos1]*B[curSolution[pos2]][curSolution[pos2]];
+            diffCost += A[pos2][pos1]*B[curSolution[pos1]][curSolution[pos2]];
+            diffCost += A[pos1][pos2]*B[curSolution[pos2]][curSolution[pos1]];
+        } else if(i == pos2) {
+            // subtract previous elements
+            diffCost -= A[pos2][pos2]*B[curSolution[pos2]][curSolution[pos2]];
+
+            // add new elements
+            diffCost += A[pos2][pos2]*B[curSolution[pos1]][curSolution[pos1]];
+        } else {
+            diffCost -= A[pos1][i]*B[curSolution[pos1]][curSolution[i]];
+            diffCost -= A[i][pos1]*B[curSolution[i]][curSolution[pos1]];
+            diffCost -= A[pos2][i]*B[curSolution[pos2]][curSolution[i]];
+            diffCost -= A[i][pos2]*B[curSolution[i]][curSolution[pos2]];
+
+            // add new elements
+            diffCost += A[pos1][i]*B[curSolution[pos2]][curSolution[i]];
+            diffCost += A[i][pos1]*B[curSolution[i]][curSolution[pos2]];
+            diffCost += A[pos2][i]*B[curSolution[pos1]][curSolution[i]];
+            diffCost += A[i][pos2]*B[curSolution[i]][curSolution[pos1]];
+        }
     }
-    return res;
+    return diffCost;
 }
 
 void BaseAlgorithm::generateAllNeighbours() {
@@ -118,11 +144,19 @@ void BaseAlgorithm::generateAllNeighbours() {
         for(unsigned int j = i+1; j < problemSize; j++) {
             assert(i != j);
             // copy old solution to new location
-            memcpy(neighbours[l], result->lastPermutation, sizeof(unsigned int)*problemSize);
+            memcpy(neighbours[l], curSolution, sizeof(unsigned int)*problemSize);
             switchElements(neighbours[l], i, j);  // swap elements, creating permuted neighbour
             l++;
         }
     }
+}
+
+unsigned int* BaseAlgorithm::generateNeighbour(unsigned int id) {
+    unsigned int pos1 = neighbourSwaps[id][0];
+    unsigned int pos2 = neighbourSwaps[id][1];
+    memcpy(neighbours[id], curSolution, sizeof(unsigned int)*problemSize);
+    switchElements(neighbours[id], pos1, pos2);
+    return neighbours[id];
 }
 
 void BaseAlgorithm::generateRandomPermutation() {

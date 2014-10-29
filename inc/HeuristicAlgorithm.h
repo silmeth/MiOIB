@@ -17,7 +17,7 @@ class HeuristicAlgorithm: public BaseAlgorithm {
 private:
     HeuristicAlgorithm();
 public:
-    HeuristicAlgorithm(int size, int** matA, int** matB, int seed=19910401);
+    HeuristicAlgorithm(unsigned int size, int** matA, int** matB, int seed=19910401);
     virtual ~HeuristicAlgorithm();
 public:
     void run();

@@ -14,7 +14,7 @@
 #include <string>
 #include "../strtk/strtk.hpp"
 
-struct instance{
+struct instance {
     unsigned int** A;
     unsigned int** B;
     unsigned int problemSize;

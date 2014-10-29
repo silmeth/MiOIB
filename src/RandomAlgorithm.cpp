@@ -6,39 +6,48 @@
 
 #include "../inc/RandomAlgorithm.h"
 
-RandomAlgorithm::RandomAlgorithm(int size, int** matA, int** matB, int seed) : BaseAlgorithm(size, matA, matB, seed) {
+RandomAlgorithm::RandomAlgorithm(unsigned int size, int** matA, int** matB, unsigned int numberOfRuns, int seed)
+                    : BaseAlgorithm(size, matA, matB, seed) {
+    numberOfSteps = numberOfRuns;
+    historicalCosts = new int[numberOfSteps];
+}
 
+void RandomAlgorithm::init(unsigned int size, int** matA, int** matB, unsigned int numberOfRuns, int seed) {
+    clean();
+    BaseAlgorithm::init(size, matA, matB, seed);
+    numberOfSteps = numberOfRuns;
+    historicalCosts = new int[numberOfSteps];
 }
 
 RandomAlgorithm::~RandomAlgorithm() {
-    // TODO Auto-generated destructor stub
+    clean();
 }
 
-void RandomAlgorithm::run(unsigned int numberOfRuns) {
+void RandomAlgorithm::clean() {
     if(isInitialised) {
-        result->numberOfSteps = numberOfRuns;
-        result->historicalCosts = new unsigned int[numberOfRuns];
+        if(historicalCosts) delete[] historicalCosts;
+        BaseAlgorithm::clean();
+    }
+}
 
-        int minCost;
+void RandomAlgorithm::run() {
+    if(isInitialised) {
         auto begin = std::chrono::high_resolution_clock::now();
 
         // First run outside for loop to avoid if inside for loop
-        rateSolution();
-        minCost = result->cost;
-        result->historicalCosts[0] = result->cost;
-        for(unsigned int i = 1; i < numberOfRuns; i++) {
+        minCost = curCost = rateSolution();
+        historicalCosts[0] = curCost;
+        for(unsigned int i = 1; i < numberOfSteps; i++) {
             generateRandomPermutation();
-            result->lastPermutation = randomSolution;
-            rateSolution();
-            result->historicalCosts[i] = result->cost;
-            if(result->cost < minCost) {
-                memcpy(result->bestPermutation, result->lastPermutation, sizeof(unsigned int) * problemSize);
-                minCost = result->cost;
+            memcpy(curSolution, randomSolution, sizeof(unsigned int) * problemSize);
+            historicalCosts[i] = rateSolution();
+            if(historicalCosts[i] < minCost) {
+                memcpy(bestSolution, curSolution, sizeof(unsigned int) * problemSize);
+                minCost = historicalCosts[i];
             }
         }
-        result->cost = minCost;
         auto end = std::chrono::high_resolution_clock::now();
-        result->workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1e9;
-        delete[] result->historicalCosts;
+        workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
+        curCost = historicalCosts[numberOfSteps-1];
     }
 }

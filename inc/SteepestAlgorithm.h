@@ -11,22 +11,21 @@
 #include <iostream>
 
 #include "BaseAlgorithm.h"
-#include "operations.h"
-#include "measures.h"
 #include <stdio.h>
 #include <string.h>
-
 
 class SteepestAlgorithm: public BaseAlgorithm {
 private:
     SteepestAlgorithm();
+    stopCondition cond;
+    int stopVal;
 public:
-    SteepestAlgorithm(int size, int** matA, int** matB, int seed = 19910401);
+    SteepestAlgorithm(unsigned int size, int** matA, int** matB, stopCondition condition, int value, int seed = 19910401);
+    virtual void init(unsigned int size, int** matA, int** matB, stopCondition condition, int value, int seed = 19910401);
     virtual ~SteepestAlgorithm();
-    void run(stopCondition condition, double value);
-    void repeatedRun(unsigned int repetitions, stopCondition condition, double value);
-    //TODO remove this awful copy
-//    unsigned int rateSolution2(int** A, int** B, unsigned int* solution, unsigned int sz);
+    virtual void clean();
+    void run();
+    void repeatedRun(unsigned int repetitions);
 };
 
 #endif /* STEEPESTALGORITHM_H_ */
