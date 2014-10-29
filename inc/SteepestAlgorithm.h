@@ -2,7 +2,6 @@
  * SteepestAlgorithm.h
  *
  *  Created on: Oct 22, 2014
- *      Author: jacek
  */
 
 #ifndef STEEPESTALGORITHM_H_

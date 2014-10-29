@@ -2,7 +2,6 @@
  * SteepestAlgorithm.cpp
  *
  *  Created on: Oct 22, 2014
- *      Author: jacek
  */
 
 #include "../inc/SteepestAlgorithm.h"
