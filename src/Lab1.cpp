@@ -42,9 +42,10 @@ void Lab1::task2() {
 			randAlgCosts.push_back((double)randAlg.minCost);
 		}
 		steepAlg.repeatedRun(repetitions);
-		for(int j = 0; j < repetitions; j++) {
-			steepAlgCosts.push_back((double)steepAlg.historicalCosts[j]);
-		}
+		// !!! Historical costs aren't stored for repeated run. If needed, might be added, later. !!!
+//		for(int j = 0; j < repetitions; j++) {
+//			steepAlgCosts.push_back((double)steepAlg.historicalCosts[j]);
+//		}
 	}
 	//unsigned int size, int** matA, int** matB, unsigned int numberOfRuns, int seed=19910401
 	for(int i = 0; i < numberOfInstances; i++) {
