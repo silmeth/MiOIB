@@ -6,7 +6,7 @@
 
 #include "../inc/ProblemInstance.h"
 
-ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr) {
+ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr), problemSize(0) {
     const char whitespaces[]  = " \t\r\n\f";
 //    const char whitespaces_and_punctuation[]  = " \t\r\n\f;,=";
     std::string line;
@@ -15,22 +15,28 @@ ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr) 
     unsigned int i = 0; // rows
     unsigned int j = 0; // cols, or elements in rows
     bool AParsed = false; // Is A matrix done?
+    bool sizeSet = false;
 
     std::ifstream inputFile(fileName, std::ifstream::in);
 
     // temporary storage for matrix elements
     std::vector<unsigned int> vecTmp;
 
-    unsigned int lineCounter = 0;
+//    unsigned int lineCounter = 0;
     if(inputFile.is_open()) {
 //        std::cout << "Reading problem " << fileName << std::endl;
         while(getline(inputFile, line)) {
-            if(lineCounter == 0) {
-                if(strtk::parse(line, whitespaces, problemSize)) {
-                    A = new int*[problemSize];
-                    B = new int*[problemSize];
+            if(!sizeSet) {
+                if(strtk::parse(line, whitespaces, vecTmp)) {
+                    if(vecTmp.size() > 0) {
+                        problemSize = vecTmp[0];
+                        A = new int*[problemSize];
+                        B = new int*[problemSize];
+                        vecTmp.erase(vecTmp.begin());
+                        sizeSet = true;
+                    }
                 }
-            } else if(strtk::parse(line, whitespaces, vecTmp)) {
+            } else if(strtk::parse(line, whitespaces, vecTmp) && problemSize > 0) {
                 // Or old fashion way:
                 // for(std::vector<unsigned int>::iterator n = vecTmp.begin()...
                 for(unsigned int n : vecTmp) {
@@ -55,7 +61,7 @@ ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr) 
                 }
                 vecTmp.clear();
             }
-            lineCounter++;
+//            lineCounter++;
         }
         inputFile.close();
     }
