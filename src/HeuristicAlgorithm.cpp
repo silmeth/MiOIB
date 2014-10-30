@@ -27,7 +27,8 @@ void HeuristicAlgorithm::run() {
         }
 
         for(unsigned int k = 0; k < problemSize; k++) {
-            bool first = true;
+            bool firstA = true;
+            bool firstB = true;
             int iAMax = 0;
             int jAMax = 0;
             int AMax = 0;
@@ -37,34 +38,36 @@ void HeuristicAlgorithm::run() {
             for(unsigned int i = 0; i < problemSize; i++) {
                 for(unsigned int j = 0; j < problemSize; j++) {
                     if(i != j) {
-                        if(first) {
+                        if(firstA && !isAUsed[i] && !isAUsed[j]) {
                             AMax = A[i][j];
                             iAMax = i;
                             jAMax = j;
-                            BMin = B[i][j];
-                            iBMin = i;
-                            jBMin = j;
-                            first = false;
-                        } else {
-                            if(A[i][j] > AMax && !isAUsed[i] && !isAUsed[j]) {
-                                iAMax = i;
-                                jAMax = j;
-                            }
-                            if(B[i][j] < BMin /* && !isBUsed[i] && !isBUsed[j]*/) {
+                            firstA = false;
+                        } else if(!isAUsed[i] && !isAUsed[j] && A[i][j] > AMax) {
+                            iAMax = i;
+                            jAMax = j;
+                        }
+                        if(firstB && !isBUsed[i] && !isBUsed[j]) {
+                                BMin = B[i][j];
                                 iBMin = i;
                                 jBMin = j;
-                            }
+                                firstB = false;
+                        } else if(!isBUsed[i] && !isBUsed[j] && B[i][j] < BMin) {
+                                iBMin = i;
+                                jBMin = j;
                         }
                     }
                 }
             }
-            curSolution[iAMax] = iBMin;
-            curSolution[jAMax] = jBMin;
+            if(!firstA && !firstB) {
+                curSolution[iAMax] = iBMin;
+                curSolution[jAMax] = jBMin;
 
-            isAUsed[iAMax] = true;
-            isAUsed[jAMax] = true;
-            isBUsed[iBMin] = true;
-            isBUsed[jBMin] = true;
+                isAUsed[iAMax] = true;
+                isAUsed[jAMax] = true;
+                isBUsed[iBMin] = true;
+                isBUsed[jBMin] = true;
+            }
         }
         auto end = std::chrono::high_resolution_clock::now();
         workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
