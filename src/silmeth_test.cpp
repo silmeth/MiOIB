@@ -15,6 +15,9 @@
 #include "../inc/HeuristicAlgorithm.h"
 #include "../inc/RandomAlgorithm.h"
 #include "../inc/SteepestAlgorithm.h"
+#include "../inc/GreedyAlgorithm.h"
+
+#include "../inc/Lab1.h"
 
 const unsigned int size = 12;
 
@@ -124,6 +127,35 @@ void testSteepestAlgorithm(unsigned int size, int** A, int** B) {
     std::cout << "Time to find solution: " << alg.workTime << std::endl << std::endl;
 }
 
+void testGreedyAlgorithm(unsigned int size, int** A, int** B) {
+    GreedyAlgorithm alg(size, A, B, DEFINITE_NUM_OF_STEPS, 30);
+
+    alg.run();
+    std::cout << "Greedy solution: " << std::endl;
+    printSol(alg.bestSolution, alg.problemSize);
+    std::cout << "Greedy solution cost: " << alg.minCost << std::endl;
+    std::cout << "Greedy tested cost: " << rateSol(A, B, alg.bestSolution, alg.problemSize) << std::endl;
+    if(alg.numberOfSteps < 100) {
+        std::cout << "Costs: ";
+        printCosts(alg.historicalCosts, alg.numberOfSteps);
+    }
+    std::cout << "Steps to find solution: " << alg.numberOfSteps << std::endl;
+    std::cout << "Time to find solution: " << alg.workTime << std::endl << std::endl;
+
+    std::cout << "Repeated run of GreedyAlgorithm" << std::endl;
+
+    alg.repeatedRun(200);
+    std::cout << "Greedy solution: " << std::endl;
+    printSol(alg.bestSolution, alg.problemSize);
+    std::cout << "Greedy solution cost: " << alg.minCost << std::endl;
+    if(alg.numberOfSteps < 100) {
+        std::cout << "Costs: ";
+        printCosts(alg.historicalCosts, alg.numberOfSteps);
+    }
+    std::cout << "Steps to find solution: " << alg.numberOfSteps << std::endl;
+    std::cout << "Time to find solution: " << alg.workTime << std::endl << std::endl;
+}
+
 void testTimeMeasurement() {
     std::cout << "Test time measurement." << std::endl;
     auto begin = std::chrono::high_resolution_clock::now();
@@ -186,8 +218,12 @@ int main() {
     testHeuristicAlgorithm(size, A, B);
     testRandomAlgorithm(size, A, B);
     testSteepestAlgorithm(size, A, B);
+    testGreedyAlgorithm(size, A, B);
     testTimeMeasurement();
     testInstances();
+
+    Lab1 lab;
+    lab.task2();
 
     for(int i = 0; i < 12; i++) {
         delete[] A[i];

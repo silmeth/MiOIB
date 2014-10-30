@@ -38,18 +38,21 @@ void GreedyAlgorithm::run() {
 		if(cond == DEFINITE_NUM_OF_STEPS) {
 			numberOfSteps = stopVal;
 			auto begin = std::chrono::high_resolution_clock::now();
+            std::uniform_int_distribution<unsigned int> dist(0, neighbourhoodSize-1);
 
 			bool betterSolutionFound = true;
 			int currentNeighCost;
 			for(unsigned int i = 1; i < numberOfSteps; i++) {
+                unsigned int r = dist(randGen); // random for randomly chosen first neighbour
 				if(betterSolutionFound) {
 					betterSolutionFound = false;
-					for(unsigned int n = 0; n < neighbourhoodSize; n++) {
+					for(unsigned int k = 0; k < neighbourhoodSize; k++) {
+                        unsigned int n = (r+k)%neighbourhoodSize;
 						generateNeighbour(n);
 						currentNeighCost = curCost + rateNeighbour(n);
 						if(currentNeighCost < curCost) {
 							curCost = currentNeighCost;
-							memcpy(curSolution, neighbours[int(n)], sizeof(unsigned int) * problemSize);
+							memcpy(curSolution, neighbours[n], sizeof(unsigned int) * problemSize);
 							historicalCosts[i] = curCost;
 							betterSolutionFound = true;
 							break;
