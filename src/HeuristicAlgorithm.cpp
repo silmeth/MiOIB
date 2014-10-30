@@ -26,7 +26,7 @@ void HeuristicAlgorithm::run() {
             isBUsed[i] = false;
         }
 
-        for(unsigned int k = 0; k < problemSize; k++) {
+        for(unsigned int k = 0; k < problemSize/2; k++) {
             bool firstA = true;
             bool firstB = true;
             int iAMax = 0;
@@ -68,6 +68,19 @@ void HeuristicAlgorithm::run() {
                 isBUsed[iBMin] = true;
                 isBUsed[jBMin] = true;
             }
+        }
+
+        // Need one more element for odd-sized problems
+        if(problemSize%2 != 0) {
+            // for last not used values
+            unsigned int lastA = problemSize; // impossible value to check for errors
+            unsigned int lastB = problemSize;
+            for(unsigned int i = 0; i < problemSize; i++) {
+                if(!isAUsed[i]) lastA = i;
+                if(!isBUsed[i]) lastB = i;
+            }
+            assert(lastA < problemSize && lastB < problemSize); // assert valid values
+            curSolution[lastA] = lastB;
         }
         auto end = std::chrono::high_resolution_clock::now();
         workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
