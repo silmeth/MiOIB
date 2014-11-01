@@ -34,11 +34,11 @@ void SteepestAlgorithm::run() {
     if(isInitialised) {
         minCost = curCost = rateSolution();
         historicalCosts[0] = curCost;
+        numberOfSteps = stopVal; // If steepest doesn't stop before reaching stopVal
         if(cond == DEFINITE_NUM_OF_STEPS) {
-            numberOfSteps = stopVal;
             auto begin = std::chrono::high_resolution_clock::now();
 
-            for(unsigned int i = 1; i < numberOfSteps; i++) {
+            for(unsigned int i = 1; i < stopVal; i++) {
                 generateAllNeighbours();
                 int lowestCostNeighIndex = -1;
                 int minNeighCost = curCost;
