@@ -22,6 +22,13 @@
 #include <boost/tuple/tuple.hpp>
 #include "gnuplot-iostream.h"
 
+enum typeOfAlgorithm {
+	GREEDY,
+	STEEPEST,
+	RANDOM,
+	HEURISTIC
+};
+
 /**
  * Requires libraries: -lboost_iostreams -lboost_system -lboost_filesystem
  */
@@ -40,6 +47,18 @@ public:
 	 * Wykres 5: średnia liczba kroków algorytmu. Liczba ocenionych (przejrzanych) rozwiązań.
 	 */
 	void task2(void);
+	/**
+	 * Calculates mean of values in vector.
+	 * \param vec Input vector.
+	 * \return Mean of vector values.
+	 */
+	double mean(std::vector<double> vec);
+	/**
+	 * Calculates standard deviation of values in vector.
+	 * \param vec Input vector.
+	 * \return Mean of vector values.
+	 */
+	double stdDev(std::vector<double> vec);
 };
 
 #endif /* LAB1_H_ */
