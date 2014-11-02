@@ -9,6 +9,8 @@
 #include <iostream>
 #include <chrono>
 
+//#include <gnuplot-iostream.h>
+
 #include "../inc/ProblemInstance.h"
 
 #include "../inc/BaseAlgorithm.h"
@@ -99,7 +101,7 @@ void testRandomAlgorithm(unsigned int size, int** A, int** B) {
 }
 
 void testSteepestAlgorithm(unsigned int size, int** A, int** B) {
-    SteepestAlgorithm alg(size, A, B, DEFINITE_NUM_OF_STEPS, 30);
+    SteepestAlgorithm alg(size, A, B, DEFINITE_NUM_OF_STEPS, 1000);
 
     alg.run();
     std::cout << "Steepest solution: " << std::endl;
@@ -115,7 +117,7 @@ void testSteepestAlgorithm(unsigned int size, int** A, int** B) {
 
     std::cout << "Repeated run of SteepestAlgorithm" << std::endl;
 
-    alg.repeatedRun(200);
+    alg.repeatedRun(30);
     std::cout << "Steepest solution: " << std::endl;
     printSol(alg.bestSolution, alg.problemSize);
     std::cout << "Steepest solution cost: " << alg.minCost << std::endl;
@@ -128,7 +130,7 @@ void testSteepestAlgorithm(unsigned int size, int** A, int** B) {
 }
 
 void testGreedyAlgorithm(unsigned int size, int** A, int** B) {
-    GreedyAlgorithm alg(size, A, B, DEFINITE_NUM_OF_STEPS, 30);
+    GreedyAlgorithm alg(size, A, B, DEFINITE_NUM_OF_STEPS, 1000);
 
     alg.run();
     std::cout << "Greedy solution: " << std::endl;
@@ -144,7 +146,7 @@ void testGreedyAlgorithm(unsigned int size, int** A, int** B) {
 
     std::cout << "Repeated run of GreedyAlgorithm" << std::endl;
 
-    alg.repeatedRun(200);
+    alg.repeatedRun(30);
     std::cout << "Greedy solution: " << std::endl;
     printSol(alg.bestSolution, alg.problemSize);
     std::cout << "Greedy solution cost: " << alg.minCost << std::endl;
@@ -184,21 +186,23 @@ void testInstances() {
 }
 
 int main() {
-    ProblemInstance problem("./qapdatsol/chr15c.dat");
+    ProblemInstance problem("./qapdatsol/had14.dat");
 
     int** A = problem.A;
     int** B = problem.B;
     unsigned int size = problem.problemSize;
 
 //    testBaseAlgorithm(size, A, B);
-    testHeuristicAlgorithm(size, A, B);
-    testRandomAlgorithm(size, A, B);
-    testSteepestAlgorithm(size, A, B);
+//    testHeuristicAlgorithm(size, A, B);
+//    testRandomAlgorithm(size, A, B);
     testGreedyAlgorithm(size, A, B);
-    testTimeMeasurement();
-    testInstances();
+    testSteepestAlgorithm(size, A, B);
+//    testTimeMeasurement();
+//    testInstances();
 
     Lab1 lab;
-    lab.task2();
+    lab.task();
+
+
 }
 #endif // SILMETH_TEST

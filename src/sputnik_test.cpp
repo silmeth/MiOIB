@@ -184,16 +184,16 @@ void testInstances() {
 }
 
 void testLab() {
-	Lab1 lab;
-	std::vector<double> vals;
-	for(int i = 0; i < 7; ++i) {
-		vals.push_back((double)i);
-	}
-	std::cout << "Mean of ints from 0 to 6: " << lab.mean(vals) << " should be: 3.0" << std::endl;
-	std::cout << "Standard deviation of ints from 0 to 6: " << lab.stdDev(vals) << " should be: 2.16025" << std::endl;
-	assert(lab.mean(vals) == 3.0);
-	assert(lab.stdDev(vals) > 2.1);
-	assert(lab.stdDev(vals) < 2.3);
+    Lab1 lab;
+    std::vector<double> vals;
+    for(int i = 0; i < 7; ++i) {
+        vals.push_back((double)i);
+    }
+    std::cout << "Mean of ints from 0 to 6: " << lab.mean(vals) << " should be: 3.0" << std::endl;
+    std::cout << "Standard deviation of ints from 0 to 6: " << lab.stdDev(vals) << " should be: 2.16025" << std::endl;
+    assert(lab.mean(vals) == 3.0);
+    assert(lab.stdDev(vals) > 2.1);
+    assert(lab.stdDev(vals) < 2.3);
 }
 
 int main() {

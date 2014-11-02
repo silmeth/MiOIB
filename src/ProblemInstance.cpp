@@ -69,20 +69,20 @@ ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr),
     std::string fileNameStr(fileName);
     fileNameStr.replace(fileNameStr.end()-3, fileNameStr.end(), "sln");
     std::ifstream inputSolutionFile(fileNameStr.c_str(), std::ifstream::in);
-	if(inputSolutionFile.is_open()) {
-		while(getline(inputSolutionFile, line)) {
-			if(!lowestCostSet) {
-				if(strtk::parse(line, whitespaces, vecTmp)) {
-					if(vecTmp.size() > 1) {
-						lowestCost = vecTmp[1];
-						lowestCostSet = true;
-						vecTmp.clear();
-					}
-				}
-			}
-		}
-		inputSolutionFile.close();
-	}
+    if(inputSolutionFile.is_open()) {
+        while(getline(inputSolutionFile, line)) {
+            if(!lowestCostSet) {
+                if(strtk::parse(line, whitespaces, vecTmp)) {
+                    if(vecTmp.size() > 1) {
+                        lowestCost = vecTmp[1];
+                        lowestCostSet = true;
+                        vecTmp.clear();
+                    }
+                }
+            }
+        }
+        inputSolutionFile.close();
+    }
 }
 
 ProblemInstance::~ProblemInstance() {
