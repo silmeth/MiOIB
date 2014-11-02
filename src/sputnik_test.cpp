@@ -237,7 +237,7 @@ int main() {
     testLab();
 
     Lab1 lab;
-    lab.task2();
+    lab.task();
     std::cout << "--- End of tests ---";
 
     for(int i = 0; i < 12; i++) {

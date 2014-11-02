@@ -37,16 +37,21 @@ public:
 	Lab1();
 	virtual ~Lab1();
 	/**
-	 * Dla różnych problemów 30 uruchomień dla różnych wielkości problemu
-	 * Oś x to wielkości instancji
-	 * Wykres 1: Najlepsze wyniki
-	 *           Może być wykresem punktowym z połączonymi liniami.
-	 * Wykres 2: Średnie wyniki i odchylenia standardowe.
-	 * Wykres 3: Sredni surowy czas działania + odchylenia standardowe.
-	 * Wykres 4: Jakość(czas). Wybór niezdominowanych instancji. Są jakieś chmurki punktów?
-	 * Wykres 5: średnia liczba kroków algorytmu. Liczba ocenionych (przejrzanych) rozwiązań.
+	 * Number of repetitions to run algorithms.
 	 */
-	void task2(void);
+	int repetitions = 200;
+	std::vector<std::string> problemNames;
+	/**
+	 * Runs all four algorithms and collects data needen for plotting charts listed below.
+	 *
+	 * Chart 1: Quality = f(instance size). Max, mean and std dev range.
+	 * Chart 2: Operation time = f(instance size). Mean and std dev range.
+	 * Chart 3: Quality = f(operation time). 1 chart for 1 algorithm.
+	 * Chart 4: Step number = f(instance size). Only Greedy and Steepest.
+	 * Chart 5: Final solution cost = f(initial solution cost). Only Greedy and Steepest.
+	 * Chart 6: ?? Number of checked permutations. Only Greedy and Steepest.
+	 */
+	void task(void);
 	/**
 	 * Calculates mean of values in vector.
 	 * \param vec Input vector.
@@ -59,6 +64,15 @@ public:
 	 * \return Mean of vector values.
 	 */
 	double stdDev(std::vector<double> vec);
+private:
+	/**
+	 * Number of instances read from input files.
+	 */
+	int numberOfInstances;
+	/**
+	 * Path to instance file.
+	 */
+	char input[50];
 };
 
 #endif /* LAB1_H_ */

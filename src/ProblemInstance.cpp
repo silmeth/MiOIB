@@ -6,7 +6,7 @@
 
 #include "../inc/ProblemInstance.h"
 
-ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr), problemSize(0) {
+ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr), problemSize(0), lowestCost(0) {
     const char whitespaces[]  = " \t\r\n\f";
 //    const char whitespaces_and_punctuation[]  = " \t\r\n\f;,=";
     std::string line;
@@ -16,7 +16,7 @@ ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr),
     unsigned int j = 0; // cols, or elements in rows
     bool AParsed = false; // Is A matrix done?
     bool sizeSet = false;
-
+    bool lowestCostSet = false;
     std::ifstream inputFile(fileName, std::ifstream::in);
 
     // temporary storage for matrix elements
@@ -65,6 +65,24 @@ ProblemInstance::ProblemInstance(const char* fileName) : A(nullptr), B(nullptr),
         }
         inputFile.close();
     }
+
+    std::string fileNameStr(fileName);
+    fileNameStr.replace(fileNameStr.end()-3, fileNameStr.end(), "sln");
+    std::ifstream inputSolutionFile(fileNameStr.c_str(), std::ifstream::in);
+	if(inputSolutionFile.is_open()) {
+		while(getline(inputSolutionFile, line)) {
+			if(!lowestCostSet) {
+				if(strtk::parse(line, whitespaces, vecTmp)) {
+					if(vecTmp.size() > 1) {
+						lowestCost = vecTmp[1];
+						lowestCostSet = true;
+						vecTmp.clear();
+					}
+				}
+			}
+		}
+		inputSolutionFile.close();
+	}
 }
 
 ProblemInstance::~ProblemInstance() {

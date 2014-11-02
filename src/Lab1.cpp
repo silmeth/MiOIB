@@ -15,12 +15,8 @@ Lab1::~Lab1() {
 
 }
 
-void Lab1::task2() {
-	int repetitions = 200;
-	int numberOfInstances;
-	char input[50];
-	std::vector<std::string> problemNames;
-	problemNames.push_back("chr12a");
+void Lab1::task() {
+	problemNames.push_back("tai35b");
 	problemNames.push_back("chr15a");
 	problemNames.push_back("chr18a");
 	numberOfInstances = problemNames.size();
@@ -43,7 +39,7 @@ void Lab1::task2() {
 	// Means of worktime spent by each algorithm on each instance
 	double** workTimeMeans;
 	// Number of steps done for each instance (will depend on the number of repetitions)
-	double** numberOfSteps;
+	unsigned int** numberOfSteps;
 	bestSolutions = new double* [numberOfInstances];
 	solutionStdDev = new double* [numberOfInstances];
 	solutionMeans = new double* [numberOfInstances];
@@ -52,12 +48,12 @@ void Lab1::task2() {
 	numberOfSteps = new unsigned int* [numberOfInstances];
 	for(int i = 0; i < numberOfInstances; ++i) {
 		// 3 is sum of Steepes, Greedy and Random
-		bestSolutions[i] = new double* [4];
-		solutionStdDev[i] = new double* [3];
-		solutionMeans[i] = new double* [3];
-		workTimeStdDev[i] = new double* [3];
-		workTimeMeans[i] = new double* [3];
-		numberOfSteps[i] = new unsigned int* [2];
+		bestSolutions[i] = new double [4];
+		solutionStdDev[i] = new double [3];
+		solutionMeans[i] = new double [3];
+		workTimeStdDev[i] = new double [3];
+		workTimeMeans[i] = new double [3];
+		numberOfSteps[i] = new unsigned int [2];
 	}
 
 	for(int i = 0; i < numberOfInstances; ++i) {
@@ -104,7 +100,7 @@ void Lab1::task2() {
 		bestSolutions[i][GREEDY] = *std::min_element(greedyAlgCosts.begin(), greedyAlgCosts.end());
 		bestSolutions[i][STEEPEST] = *std::min_element(steepAlgCosts.begin(), steepAlgCosts.end());
 		bestSolutions[i][RANDOM] = *std::min_element(randAlgCosts.begin(), randAlgCosts.end());
-		bestSolutions[HEURISTIC] = heurAlg.bestSolution / (double)instances[i]->lowestCost;
+		bestSolutions[i][HEURISTIC] = heurAlg.minCost / (double)instances[i]->lowestCost;
 		solutionStdDev[i][GREEDY] = stdDev(greedyAlgCosts);
 		solutionStdDev[i][STEEPEST] = stdDev(steepAlgCosts);
 		solutionStdDev[i][RANDOM] = stdDev(randAlgCosts);
