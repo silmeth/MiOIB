@@ -9,6 +9,7 @@
 
 Lab1::Lab1() {
     // TODO Auto-generated constructor stub
+	numberOfInstances = 0;
 }
 
 Lab1::~Lab1() {
@@ -238,6 +239,8 @@ void Lab1::task() {
         delete [] solutionMeans [i];
         delete []  workTimeStdDev[i];
         delete [] workTimeMeans[i];
+        delete [] numberOfSteps[i];
+        delete instances[i];
     }
     delete [] solutionBest;
     delete [] solutionStdDev;
@@ -245,6 +248,7 @@ void Lab1::task() {
     delete [] instances;
     delete []  workTimeStdDev;
     delete [] workTimeMeans;
+    delete [] numberOfSteps;
 
 }
 
