@@ -9,7 +9,6 @@
 SteepestAlgorithm::SteepestAlgorithm(unsigned int size, int** matA, int** matB, stopCondition condition, int value, int seed)
                     : BaseAlgorithm(size, matA, matB, seed), cond(condition), stopVal(value) {
     historicalCosts = new int[value];
-    numberOfInstances = 0;
 }
 
 void SteepestAlgorithm::init(unsigned int size, int** matA, int** matB, stopCondition condition, int value, int seed) {

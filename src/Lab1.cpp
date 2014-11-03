@@ -69,9 +69,9 @@ void Lab1::task() {
     }
 
     for(int i = 0; i < numberOfInstances; ++i) {
-        RandomAlgorithm randAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, 30);
-        SteepestAlgorithm steepAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 30);
-        GreedyAlgorithm greedyAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 30);
+        RandomAlgorithm randAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, 50);
+        SteepestAlgorithm steepAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 200);
+        GreedyAlgorithm greedyAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 200);
         HeuristicAlgorithm heurAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B);
         std::vector<double> randAlgCosts;
         std::vector<double> steepAlgCosts;
@@ -126,8 +126,8 @@ void Lab1::task() {
         workTimeMeans[i][STEEPEST] = mean(steepAlgWorkTime);
         workTimeMeans[i][RANDOM] = randAlg.workTime / (double)repetitions;
         workTimeMeans[i][HEURISTIC] = heurAlg.workTime;
-        numberOfSteps[i][GREEDY] = mean(greedyAlgNumberOfSteps) * repetitions; // Because I'm to lazy to sum it in loop
-        numberOfSteps[i][STEEPEST] = mean(steepAlgNumberOfSteps) * repetitions;
+        numberOfSteps[i][GREEDY] = mean(greedyAlgNumberOfSteps);
+        numberOfSteps[i][STEEPEST] = mean(steepAlgNumberOfSteps);
     }
 
     std::vector< std::vector<double> > solutionBestVec;
