@@ -67,16 +67,17 @@ void GreedyAlgorithm::run() {
                             break;
                         }
                     }
-                }
-                else {
-                    numberOfSteps = i;
+                } else {
+                    // i-1 because if program executes this block, it means it has unset betterSolutionFound
+                    // in (i-1)-th step and then i has been incremented.
+                    numberOfSteps = i-1;
                     break;
                 }
                 if(i == stopVal-1) {
-                    std::cerr << "Greedy: Maximum number of steps has been reached!\n";
+                    std::cerr << "Greedy: Maximum number of steps (" << numberOfSteps << ") has been reached!\n";
                 }
             }
-            std::cout << "Greedy no of steps: " << numberOfSteps << std::endl;
+//            std::cout << "Greedy no of steps: " << numberOfSteps << std::endl;
             auto end = std::chrono::high_resolution_clock::now();
             workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
             minCost = curCost;

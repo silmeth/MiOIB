@@ -61,14 +61,16 @@ void SteepestAlgorithm::run() {
                     memcpy(curSolution, neighbours[lowestCostNeighIndex], sizeof(unsigned int) * problemSize);
                     historicalCosts[i] = curCost;
                     if(i == stopVal-1) {
-                        std::cerr << "Steepest: Maximum number of steps has been reached!\n";
+                        std::cerr << "Steepest: Maximum number of steps (" << numberOfSteps << ") has been reached!\n";
                     }
                 } else {
+                    // i (not i-1, as in Greedy), because this implementation does not increment
+                    // i before assigning it into numberOfSteps
                     numberOfSteps = i;
                     break;
                 }
             }
-            std::cout << "Steepest no of steps: " << numberOfSteps << std::endl;
+//            std::cout << "Steepest no of steps: " << numberOfSteps << std::endl;
             auto end = std::chrono::high_resolution_clock::now();
             workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
             minCost = curCost;
