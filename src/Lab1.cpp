@@ -9,6 +9,7 @@
 
 Lab1::Lab1() {
     // TODO Auto-generated constructor stub
+	numberOfInstances = 0;
 }
 
 Lab1::~Lab1() {
@@ -40,7 +41,7 @@ void Lab1::task() {
     }
 
     // Costs of best solutions found by each algorithm for each instance
-    double** bestSolutions;
+    double** solutionBest;
     // Std dev of costs of solutions found by each algorithm for each instance
     double** solutionStdDev;
     // Means of costs of solutions found by each algorithm for each instance
@@ -51,7 +52,7 @@ void Lab1::task() {
     double** workTimeMeans;
     // Number of steps done for each instance (will depend on the number of repetitions)
     unsigned int** numberOfSteps;
-    bestSolutions = new double* [numberOfInstances];
+    solutionBest = new double* [numberOfInstances];
     solutionStdDev = new double* [numberOfInstances];
     solutionMeans = new double* [numberOfInstances];
     workTimeStdDev = new double* [numberOfInstances];
@@ -59,11 +60,11 @@ void Lab1::task() {
     numberOfSteps = new unsigned int* [numberOfInstances];
     for(int i = 0; i < numberOfInstances; ++i) {
         // 3 is sum of Steepes, Greedy and Random
-        bestSolutions[i] = new double [4];
+        solutionBest[i] = new double [4];
         solutionStdDev[i] = new double [3];
         solutionMeans[i] = new double [3];
         workTimeStdDev[i] = new double [3];
-        workTimeMeans[i] = new double [3];
+        workTimeMeans[i] = new double [4];
         numberOfSteps[i] = new unsigned int [2];
     }
 
@@ -108,10 +109,10 @@ void Lab1::task() {
             greedyAlgNumberOfSteps.push_back(greedyAlg.numberOfSteps);
         }
 
-        bestSolutions[i][GREEDY] = *std::max_element(greedyAlgCosts.begin(), greedyAlgCosts.end());
-        bestSolutions[i][STEEPEST] = *std::max_element(steepAlgCosts.begin(), steepAlgCosts.end());
-        bestSolutions[i][RANDOM] = *std::max_element(randAlgCosts.begin(), randAlgCosts.end());
-        bestSolutions[i][HEURISTIC] = (double)instances[i]->lowestCost / heurAlg.minCost;
+        solutionBest[i][GREEDY] = *std::max_element(greedyAlgCosts.begin(), greedyAlgCosts.end());
+        solutionBest[i][STEEPEST] = *std::max_element(steepAlgCosts.begin(), steepAlgCosts.end());
+        solutionBest[i][RANDOM] = *std::max_element(randAlgCosts.begin(), randAlgCosts.end());
+        solutionBest[i][HEURISTIC] = (double)instances[i]->lowestCost / heurAlg.minCost;
         solutionStdDev[i][GREEDY] = stdDev(greedyAlgCosts);
         solutionStdDev[i][STEEPEST] = stdDev(steepAlgCosts);
         solutionStdDev[i][RANDOM] = stdDev(randAlgCosts);
@@ -124,11 +125,12 @@ void Lab1::task() {
         workTimeMeans[i][GREEDY] = mean(greedyAlgWorkTime);
         workTimeMeans[i][STEEPEST] = mean(steepAlgWorkTime);
         workTimeMeans[i][RANDOM] = randAlg.workTime / (double)repetitions;
+        workTimeMeans[i][HEURISTIC] = heurAlg.workTime;
         numberOfSteps[i][GREEDY] = mean(greedyAlgNumberOfSteps) * repetitions; // Because I'm to lazy to sum it in loop
         numberOfSteps[i][STEEPEST] = mean(steepAlgNumberOfSteps) * repetitions;
     }
 
-    std::vector< std::vector<double> > bestSolutionsVec;
+    std::vector< std::vector<double> > solutionBestVec;
     std::vector< std::vector<double> > meanSolutionsVec;
     std::vector< std::vector<double> > stdDevSolutionsVec;
     std::vector<double> instanceSizeVec;
@@ -138,7 +140,7 @@ void Lab1::task() {
         std::vector<double> meanSolTmp;
         std::vector<double> stdDevSolTmp;
         for(unsigned int j = 0; j < numberOfInstances; j++) {
-            bestSolTmp.push_back(bestSolutions[j][i]);
+            bestSolTmp.push_back(solutionBest[j][i]);
             if(i < 3) {
                 meanSolTmp.push_back(solutionMeans[j][i]);
                 stdDevSolTmp.push_back(solutionStdDev[j][i]);
@@ -147,7 +149,7 @@ void Lab1::task() {
             }
         }
 
-        bestSolutionsVec.push_back(bestSolTmp);
+        solutionBestVec.push_back(bestSolTmp);
         meanSolutionsVec.push_back(meanSolTmp);
         stdDevSolutionsVec.push_back(stdDevSolTmp);
     }
@@ -198,22 +200,31 @@ void Lab1::task() {
 
     for(unsigned int i = 0; i < numberOfInstances; i++) {
         randomDataFile << instanceSizeVec[i] << " "
-                       << bestSolutionsVec[RANDOM][i] << " "
+                       << solutionBestVec[RANDOM][i] << " "
                        << meanSolutionsVec[RANDOM][i] << " "
-                       << stdDevSolutionsVec[RANDOM][i] << std::endl;
+                       << stdDevSolutionsVec[RANDOM][i] << " "
+                       << workTimeMeans[i][RANDOM] << " "
+                       << workTimeStdDev[i][RANDOM] << std::endl;
 
         greedyDataFile << instanceSizeVec[i] << " "
-                       << bestSolutionsVec[GREEDY][i] << " "
+                       << solutionBestVec[GREEDY][i] << " "
                        << meanSolutionsVec[GREEDY][i] << " "
-                       << stdDevSolutionsVec[GREEDY][i] << std::endl;
+                       << stdDevSolutionsVec[GREEDY][i] << " "
+                       << workTimeMeans[i][GREEDY] << " "
+                       << workTimeStdDev[i][GREEDY] << " "
+                       << numberOfSteps[i][GREEDY] << std::endl;
 
         steepestDataFile << instanceSizeVec[i] << " "
-                       << bestSolutionsVec[STEEPEST][i] << " "
+                       << solutionBestVec[STEEPEST][i] << " "
                        << meanSolutionsVec[STEEPEST][i] << " "
-                       << stdDevSolutionsVec[STEEPEST][i] << std::endl;
+                       << stdDevSolutionsVec[STEEPEST][i] << " "
+                       << workTimeMeans[i][STEEPEST] << " "
+                       << workTimeStdDev[i][STEEPEST] << " "
+                       << numberOfSteps[i][STEEPEST] << std::endl;
 
         heuristicDataFile << instanceSizeVec[i] << " "
-                       << bestSolutionsVec[HEURISTIC][i] << std::endl;
+                       << solutionBestVec[HEURISTIC][i] << " "
+                       << workTimeMeans[i][HEURISTIC] << std::endl;
     }
 
     randomDataFile.close();
@@ -223,14 +234,22 @@ void Lab1::task() {
 
     //unsigned int size, int** matA, int** matB, unsigned int numberOfRuns, int seed=19910401
     for(int i = 0; i < numberOfInstances; ++i) {
-        delete [] bestSolutions[i];
+        delete [] solutionBest[i];
         delete [] solutionStdDev[i];
         delete [] solutionMeans [i];
+        delete []  workTimeStdDev[i];
+        delete [] workTimeMeans[i];
+        delete [] numberOfSteps[i];
+        delete instances[i];
     }
-    delete [] bestSolutions;
+    delete [] solutionBest;
     delete [] solutionStdDev;
     delete [] solutionMeans;
     delete [] instances;
+    delete []  workTimeStdDev;
+    delete [] workTimeMeans;
+    delete [] numberOfSteps;
+
 }
 
 double Lab1::mean(std::vector<double> vec) {
