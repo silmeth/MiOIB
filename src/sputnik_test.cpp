@@ -227,14 +227,14 @@ int main() {
     B[9][10] = B[10][9] = 70; B[9][11] = B[11][9] = 86;
     B[10][11] = B[11][10] = 18;
 
-    testBaseAlgorithm(size, A, B);
-    testHeuristicAlgorithm(size, A, B);
-    testRandomAlgorithm(size, A, B);
-    testSteepestAlgorithm(size, A, B);
-    testGreedyAlgorithm(size, A, B);
-    testTimeMeasurement();
-    testInstances();
-    testLab();
+//    testBaseAlgorithm(size, A, B);
+//    testHeuristicAlgorithm(size, A, B);
+//    testRandomAlgorithm(size, A, B);
+//    testSteepestAlgorithm(size, A, B);
+//    testGreedyAlgorithm(size, A, B);
+//    testTimeMeasurement();
+//    testInstances();
+//    testLab();
 
     Lab1 lab;
     lab.task();
