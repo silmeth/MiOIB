@@ -35,6 +35,7 @@ void GreedyAlgorithm::run() {
     if(isInitialised) {
         minCost = curCost = rateSolution();
         historicalCosts[0] = curCost;
+        unsigned int sameVal = 0;
         if(cond == DEFINITE_NUM_OF_STEPS) {
             numberOfSteps = stopVal;
             auto begin = std::chrono::high_resolution_clock::now();
@@ -42,7 +43,7 @@ void GreedyAlgorithm::run() {
 
             bool betterSolutionFound = true;
             int currentNeighCost;
-            for(unsigned int i = 1; i < numberOfSteps; i++) {
+            for(unsigned int i = 1; i < stopVal; i++) {
                 unsigned int r = dist(randGen); // random for randomly chosen first neighbour
                 if(betterSolutionFound) {
                     betterSolutionFound = false;
@@ -55,15 +56,27 @@ void GreedyAlgorithm::run() {
                             memcpy(curSolution, neighbours[n], sizeof(unsigned int) * problemSize);
                             historicalCosts[i] = curCost;
                             betterSolutionFound = true;
+                            sameVal = 0;
+                            break;
+                        } else if(currentNeighCost == curCost && sameVal < 3) {
+                            curCost = currentNeighCost;
+                            memcpy(curSolution, neighbours[n], sizeof(unsigned int) * problemSize);
+                            historicalCosts[i] = curCost;
+                            betterSolutionFound = true;
+                            ++sameVal;
                             break;
                         }
                     }
                 }
                 else {
-                    numberOfSteps = i-1;
+                    numberOfSteps = i;
                     break;
                 }
+                if(i == stopVal-1) {
+                    std::cerr << "Greedy: Maximum number of steps has been reached!\n";
+                }
             }
+            std::cout << "Greedy no of steps: " << numberOfSteps << std::endl;
             auto end = std::chrono::high_resolution_clock::now();
             workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
             minCost = curCost;

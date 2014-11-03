@@ -35,6 +35,7 @@ void SteepestAlgorithm::run() {
         minCost = curCost = rateSolution();
         historicalCosts[0] = curCost;
         numberOfSteps = stopVal; // If steepest doesn't stop before reaching stopVal
+        unsigned int sameVal = 0;
         if(cond == DEFINITE_NUM_OF_STEPS) {
             auto begin = std::chrono::high_resolution_clock::now();
 
@@ -45,20 +46,29 @@ void SteepestAlgorithm::run() {
 
                 for(unsigned int n = 0; n < neighbourhoodSize; n++) {
                     int currentNeighCost = curCost + rateNeighbour(n);
-                    if(currentNeighCost <= minNeighCost) {
+                    if(currentNeighCost < minNeighCost) {
                         lowestCostNeighIndex = (int)n;
                         minNeighCost = currentNeighCost;
+                        sameVal = 0;
+                    } else if(currentNeighCost == minNeighCost && sameVal < 3) {
+                        lowestCostNeighIndex = (int)n;
+                        minNeighCost = currentNeighCost;
+                        ++sameVal;
                     }
                 }
                 if(lowestCostNeighIndex > 0) {
                     curCost = minNeighCost;
                     memcpy(curSolution, neighbours[lowestCostNeighIndex], sizeof(unsigned int) * problemSize);
                     historicalCosts[i] = curCost;
+                    if(i == stopVal-1) {
+                        std::cerr << "Steepest: Maximum number of steps has been reached!\n";
+                    }
                 } else {
                     numberOfSteps = i;
                     break;
                 }
             }
+            std::cout << "Steepest no of steps: " << numberOfSteps << std::endl;
             auto end = std::chrono::high_resolution_clock::now();
             workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
             minCost = curCost;
