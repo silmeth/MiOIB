@@ -14,6 +14,7 @@
 \usepackage{icomma}
 \usepackage{textcomp}
 \usepackage{multirow}
+\usepackage{hyperref}
 
 \usepackage{subfig}
 \usepackage{float}
@@ -31,6 +32,8 @@ binary-units, output-decimal-marker = \mbox{,}]{siunitx}
   \renewcommand\tablename{Tabela}
 }
 
+\newtheorem{definition}{Definicja}
+
 \input{_ustawienia.tex}
 
 \begin{document}
@@ -43,23 +46,35 @@ QAP jest problemem kombinatorycznym NP-trudnym.
 Nie istnieją algorytmy pozwalające na rozwiązanie tego problemu w czasie wielomianowym.
 QAP jest matematycznym modelem dla zadania umieszczenia połączonych ze sobą elementów na płytce drukowanej (elektronika) lub wyborze lokalizacji jednostek firmy (administracja).
 Problem można opisać w następujący sposób:
-%TODO Wcięcie poniższego bloku tekstu (jak definicja w książce)
-Istnieje n jednostek i n lokalizacji.
+
+\vspace{0.2 cm}
+\begin{minipage}{0.03\textwidth}
+\mbox{ }
+\end{minipage}
+\hfill
+\begin{minipage}{0.95\textwidth}
+Istnieje $n$ jednostek i $n$ lokalizacji.
 Dla każdej pary jednostek istnieje \emph{dystans}, a dla każdej pary lokalizacji istnieje \emph{przepływ} (nazywany również wagą).
-Przepływ może być np. ilością materiałów transportowanych pomiędzy magazynem a halą produkcyjną lub szerokością ścieżki na płytce drukowanej.
-Zdanie polega na przydzieleniu jednostkom lokalizacji w taki sposób, aby zminimalizować sumę iloczynów dystansów pomiędzy jednostkami i przepływów pomiędzy nimi.
-% --- Koniec wcięcia ---
+Przepływ może być np. ilością materiałów transportowanych pomiędzy magazynem a halą produkcyjną lub szerokością ścieżki
+na~płytce drukowanej.
+Zdanie polega na przydzieleniu jednostkom lokalizacji w~taki sposób, aby~zminimalizować sumę iloczynów dystansów pomiędzy jednostkami
+i~przepływów pomiędzy nimi.
+\end{minipage}
+\vspace{0.2 cm}
 
 Formalna definicja problemu QAP jest następująca:
-Dane są dwa zbiory, $P$ ("jednostki") i $L$ ("lokalizacje"), równych rozmiarów, a także funkcja wagi 
-%TODO Pogrubić R
-$w: P \times P \rightarrow R$ i funkcja odległości $d: L \times L \rightarrow R$.
-Znajdź funkcję przypisującą jednostkom lokalizacje $f: P \rightarrow L$ w taki sposób, że funkcja kosztu:
-%TODO znak zawiera się po a,b
-$$\sum_{a,bP}w(a,b) \cdot d(f(a),f(b))$$
-jest najmniejsza możliwa.
+\begin{definition}
+Dane są dwa zbiory, $P$ (,,jednostki'') i~$L$ (,,lokalizacje''), równych rozmiarów, a~także funkcja wagi 
+$w: P \times P \rightarrow \mathbb{R}$ i~funkcja odległości $d: L \times L \rightarrow \mathbb{R}$.
+Znajdź funkcję przypisującą jednostkom lokalizacje $f: P \rightarrow L$ w~taki sposób, że~funkcja kosztu:
+\begin{equation}
+\sum_{a,b\in P}w(a,b) \cdot d(f(a),f(b))
+\label{eq:qap_cost}
+\end{equation}
+ma~możliwie najmniejszą wartość.
+\end{definition}
 
-Tak zdefiniowana funkcja kosztu intuicyjnie zachęca do umieszczania pozycji o dużym przepływie w niewielkiej odległości.
+Tak zdefiniowana funkcja kosztu intuicyjnie zachęca do umieszczania pozycji o dużym przepływie w~niewielkiej odległości od~siebie.
 
 \subsection{Reprezentacja i operator sąsiedztwa}
 Rozwiązaniem problemu jest permutacja jednostek.
@@ -69,31 +84,42 @@ Użyty operator sąsiedztwa to sąsiedztwo 2-opt, zamieniające miejscami dwa el
 Złożoność obliczeniowa uzyskania wartości kosztu aktualnej permutacji ma charakter $O(n^2)$, gdzie n to rozmiar permutacji.
 Zaimplementowaliśmy funkcję, która sprawdza o ile zmieni się koszt, jeżeli użyjemy operatora sąsiedztwa na danej permutacji.
 Funkcja ta ma złożoność liniową, co pozwoliło przyspieszyć działanie algorytmu.
-%TODO do ilu?
-Gdyby uwzględnić fakt, że większość problemów jest symetryczna, można by zmniejszyć liczbę wymaganych obliczeń.
 
-Rozmiar sąsiedztwa dla operatora 2-opt to $\frac{n \cdot (n-1)}{2}$. 
+Gdyby uwzględnić fakt, że większość problemów jest symetryczna, można by zmniejszyć liczbę wymaganych obliczeń dwukrotnie,
+uwzględniając w~obliczeniach jedynie górną połowę macierzy definiujących koszty zamiast pełnych macierzy.
+Skupiliśmy się jednak na~najbardziej ogólnej postaci QAP.
+
+Rozmiar sąsiedztwa dla operatora 2-opt to $\frac{n \cdot (n-1)}{2}$.
 
 \subsection{Algorytmy}
+Do generowania losowości w~algorytmach użyto generatora liczb pseudolosowych Marsenne Twister 19937,
+a~jego wyjście było przekształcane w~jednorodną dystrybucję w~wymaganym przez nas przedziale.
 Ziarno generatora liczb losowych jest ustawiane na początku działania programu.
 Wartość jest taka sama dla każdego uruchomienia, co gwarantuje powtarzalność eksperymentów.
-%TODO Opisać generator?
-Liczba uruchomień algorytmu losowego była proporcjonalna do rozmiary problemu.
+
+Liczba uruchomień algorytmu losowego była proporcjonalna do rozmiaru problemu.
 Na podstawie czasu wykresu czasu działania stwierdziliśmy, że gwarantuje to czas działania podobny do czasów działania algorytmów Greedy i Steepest.
+
 \subsubsection{Heuristic}
 Algorytm kieruje się heurystyką i ustawia najpierw najbliżej siebie jednostki o największych przepływach.
-W każdym kolejnym kroku dobierana jest największa pozostała jednostka i umieszczana na pozycji, która jest w najmniejszej odległości od już umieszczonych.
+W każdym kolejnym kroku dobierana jest spośród wszystkich pozostałych jednostek para o~największym przepływie
+i~umieszczana na niewykorzystanych do~tej pory lokalizacjach, które są w najmniejszej odległości od~siebie.
+
 \subsubsection{Random}
 Algorytm zwraca losową permutację.
+
 \subsubsection{Greedy}
-Algorytm Greedy wybiera losowe sąsiedztwo i oblicza jego koszt.
-Jeżeli sąsiedztwo ma koszt niższy lub równy aktualnemu rozwiązaniu, to zastępuje ono aktualne rozwiązanie.
-Jeżeli nie, algorytm sprawdza kolejne sąsiedztwo.
-Jeżeli żadne sąsiedztwo nie ma kosztu równego lub niższego, algorytm kończy działanie.
-Aby zapobiec zapętleniu (przechodzieniu pomiędzy dwoma permutacjami o równej ocenie) stosujemy ograniczenie do 3 przejść do sąsiedztwa o równym koszcie.
+Algorytm Greedy wybiera losowego sąsiada i oblicza jego koszt.
+Jeżeli sąsied ma koszt niższy lub równy aktualnemu rozwiązaniu, to zastępuje on aktualne rozwiązanie.
+Jeżeli nie, algorytm sprawdza kolejnego sąsiada.
+Jeżeli żaden sąsiad nie ma kosztu równego lub niższego, algorytm kończy działanie.
+Aby zapobiec zapętleniu (przechodzieniu pomiędzy dwiema permutacjami o~równej ocenie), stosujemy ograniczenie do 3 przejść do sąsiada o~równym koszcie.
+
 \subsubsection{Steepest descent}
-Algorytm działa podobnie jak Greedy z tym, że sprawdza wszystkie sąsiedztwa i spośród nich wybiera to o najniższej wartości funkcji celu.
-Aby zapobiec zapętleniu (przechodzieniu pomiędzy dwoma permutacjami o równej ocenie) stosujemy ograniczenie do 3 przejść do sąsiedztwa o równym koszcie.
+Algorytm działa podobnie jak Greedy, z tym, że~sprawdza wszystkich sąsiadów, i~spośród nich wybiera tego
+o~najniższej wartości funkcji celu.
+Aby zapobiec zapętleniu (przechodzieniu pomiędzy dwiema permutacjami o~równej ocenie),
+stosujemy ograniczenie do~3 przejść do~sąsiada o~równym koszcie.
 
 \section{Eksperymenty}
 \subsection{Instancje problemów}
@@ -115,103 +141,174 @@ Eksperymenty uruchamialiśmy na następujących problemach:
 \item nug21
 \end{enumerate}
 Problemy te posiadają obliczone optimum, co ułatwiło obliczenie jakości uzyskanych przez nas rozwiązań.
-%TODO Link do QAPLIB
-Problemy pochodzą z repozytorium QAPLIB.
+
+Problemy pochodzą z repozytorium QAPLIB\footnote{\url{http://www.opt.math.tu-graz.ac.at/qaplib/}}.
 Źródłem danych są m.in. czas pisania stenotypisty, macierze sąsiedztwa drzew czy testy układów elektronicznych.
 
-Algorytmy Greedy oraz Steepest descent zostały uruchomione 200 razy, a wyniki i parametry działania zagregowane. 
-Algorytm losowy został uruchomiony tyle razy, by czas jego działania odpowiadał rządem wielkości czasowi działania algorytmów Greedy i Steepest descent.
-Poniższe wykresy przedstawiają anlizę pracy i sprawności algorytmów.
+Algorytmy Greedy oraz Steepest descent zostały uruchomione 200 razy, a~wyniki i~parametry działania zagregowane. 
+Algorytm losowy został uruchomiony tyle razy, by~czas jego działania odpowiadał rządem wielkości czasowi działania algorytmów Greedy
+i~Steepest descent.
+Poniższe wykresy przedstawiają anlizę pracy i~sprawności algorytmów.
 \subsection{Jakość działania jako funkcja rozmiaru problemu}
 \subsubsection{Średnia jakość rozwiązania}
-Jakość działania liczona jest jako stosunek kosztu rozwiązania znalezionego do kosztu najlepszego rozwiązania znalezionego przez algorytm.
-Poniższy wykres przedstawia wartości średnie jakości (punkty) oraz wartość 1 odchylenia standardowego (linie pionowe).
+Jakość działania liczona jest jako stosunek kosztu rozwiązania optymalnego do~kosztu rozwiązania znalezionego przez
+algorytm.
+Wykres z~rys.~\ref{fig:qualityvssizemean} przedstawia wartości średnie jakości (punkty) oraz wartość 1 odchylenia standardowego (linie pionowe).
 %Świadomie olewam, że odchylenie standardowe wychodzi poza 1.
+
+\begin{figure}[h!]
 \begin{center}
 \input{./plotQualitySizeMean.tex}
+\caption{Wykres uśrednionej jakości rozwiązania od~rozmiaru problemu}
+\label{fig:qualityvssizemean}
 \end{center}
-%TODO Jaki separator części dziesiętnej stosujemy?
-Z wykresu odczytujemy, że średnia jakość działania algorytmu Random jest dla większości problemów niska i nie przekracza wartości 0.9.  
-Dla 8 z 14 przypadków wartość średnia nie przekracza 0.5, więc znalezione rozwiązania mają co najmniej dwa razy większy koszt.
+\end{figure}
+
+Z wykresu odczytujemy, że średnia jakość działania algorytmu Random jest dla większości problemów niska i nie przekracza wartości \num{0.9}.  
+Dla 8 z 14 przypadków wartość średnia nie przekracza \num{0.5}, więc znalezione rozwiązania mają co najmniej dwa razy większy koszt.
 Dwa najlepsze rozwiązania są dla problemów o rozmiarach 14 i 26.
-Widoczne jest jednak, że są to bardzo proste problemy - algorytmy Greedy i Steepest descent mają wartości średnie prawie równe optimum, z niewidocznym odchyleniem standardowym.
+Widoczne jest jednak, że są to bardzo proste problemy~-- algorytmy Greedy i Steepest descent mają wartości średnie prawie równe optimum,
+z~niewidocznym odchyleniem standardowym.
 
-Algorytm korzystający z heurystyki w każdym przypadku znajduje lepsze lub równie dobre rozwiązanie, co algorytm średnia z algorytmu losowego.
+Algorytm korzystający z heurystyki w~każdym przypadku znajduje lepsze lub równie dobre rozwiązanie, co~algorytm średnia z~algorytmu losowego.
 
-Średnie rozwiązania dla 200 uruchomień dla algorytmów Steepest descent oraz Greeedy mają bardzo podobne, nierozróżnialne wartości.
+Średnie rozwiązania dla~200 uruchomień dla~algorytmów Steepest descent oraz Greeedy mają bardzo podobne, nierozróżnialne wartości.
 
 \subsubsection{Jakość najlepszego znalezionego rozwiązania}
-Poniższy wykres przedstawia jakość najlepszego rozwiązania, znalezionego przez algorytmy, dla poszczególnych instancji.
+Wykres z~rys.~\ref{fig:qualityvssizemax} przedstawia jakość najlepszego rozwiązania, znalezionego przez algorytmy, dla~poszczególnych instancji.
+
+\begin{figure}[h!]
 \begin{center}
 \input{./plotQualitySizeMax.tex}
+\caption{Wykres jakości najlepszego znalezionego rozwiązania od~rozmiaru problemu}
+\label{fig:qualityvssizemax}
 \end{center}
+\end{figure}
+
 Algorytmy Greedy i Steepest descent zwracają bardzo podobne wyniki.
 Jeżeli udało się znaleźć optymalne rozwiązanie, to oba algorytmy je znajdowały.
-Dla problemów, gdzie nie udało się znaleźć optymalnego rozwiązania, Steepest Descent osiągał lepsze rezultaty (np. instancje o wielkości 15, 22, 25).
+Dla problemów, gdzie nie udało się znaleźć optymalnego rozwiązania, Steepest Descent osiągał lepsze rezultaty (np.~instancje o wielkości 15, 22, 25).
 W jednym przypadku (problem chr20a) najlepsze rozwiązanie znalezione przez algorytm Greedy miało lepszą jakość. 
 
 \section{Czas działania w zależności od rozmiaru problemu}
 \subsection{Random, Greedy i Steepest descent}
-Na wykresie przedstawiony jest średnia i wartość jednego odchylenia standardowego czasu potrzebnego na znalezienie rozwiązania dla 200 uruchomień algorytmów Random, Greedy i Steepest Descent.
-Do wyników dopasowaliśmy krzywe wykładnicze.
-Pominęliśmy przy tym dla Greedy i Steepest descent problem o rozmiarze 32, które ze względu na bardzo dużą liczbę zer w macierzy zatrzymywały się po kilku krokach.
-Dla wszystkich trzech algorytmów istnieje widoczna zależność o charakterze wykładniczym.
+Na wykresie z~rys.~\ref{fig:timesize} przedstawiona jest średnia wartość na~znalezienie rozwiązania
+dla~200 uruchomień algorytmów Random, Greedy i~Steepest descent
+i~wartość jednego odchylenia standardowego dla~wszystkich uruchomień.
+
+Do~wyników dopasowaliśmy krzywe kwadratowe w~postaci $ax^2+bx+c$.
+
+W~regresji pominęliśmy problem o rozmiarze 32, ponieważ Greedy i Steepest descent względu na bardzo dużą liczbę zer
+w~macierzach zatrzymywały się po kilku krokach i~wyniki dla~tego problemu bardzo odstawały od~pozostałych.
+
+%TODO: ustalić rzeczywisty charakter krzywej. Dopasowanie jest do kwadratowej.
+%Dla wszystkich trzech algorytmów istnieje widoczna zależność o charakterze wykładniczym.
 
 Problemy posiadają różne krajobrazy rozwiązań.
-Ich charakter może być powodem, dla którego średnie rozwiązania nie układają się dokładnie na przybliżonej charakterystyce, a odchylenia standardowe mają duże wartości.
+Ich charakter może być powodem, dla którego średnie rozwiązania nie układają się dokładnie na przybliżonej charakterystyce,
+a~odchylenia standardowe mają duże wartości.
 %TODO Dopisać jakie są parametry dopasowanej krzywej?
 %TODO Uzuepłnić rozważaniami o złożoności obliczeniowej?
+
+\begin{figure}[h!]
 \begin{center}
 \input{./plotTimeSize.tex}
+\caption{Wykres uśrednionego czasu wykonywania od~rozmiaru problemu}
+\label{fig:timesize}
 \end{center}
+\end{figure}
 
 \subsection{Algorytm heurystyczny}
-Na podstawie wykresu dla algorytmu heurystycznego możemy również wnioskować o zależności wykładniczej.
-Czas obliczenia rozwiązania nie jest dokładnie odwzorowaniem takiej funkcji, bo 
-%TODO Dlaczego problem o rozmiarze els19 ma krótszy czas wykonania dla heurystyki niż chr18a?
+Na podstawie wykresu dla algorytmu heurystycznego, przedstawionego na~rys~\ref{fig:timesizeheuristic},
+widzimy, że~regresja kwadratowa dość dobrze przewiduje czas działania dla~badanych wielkości instancji.
+W~rzeczywistości algorytm heurystyczny wykonuje zagnieżdżone trzy pętle typu for, zależne od~wielkości problemu,
+co~sugerowałoby zależność od~potęgi trzeciej rozmiaru problemu.
+
+Czas obliczenia rozwiązania nie pokrywa się dokładnie z~przybliżoną krzywą, bo~w~zależności od~charakteru problemu,
+kolejne iteracje mogą potrzebować mniejszej liczby operacji na~pamięci dla~znalezienia minimalnej wartości przepływu
+(np.~gdy wszystkie pozostałe do~dyspozycji wartości są sobie równe~-- w~efekcie czego algorytm pomija dużą część kopiowań
+wartości wewnątrz~instrukcji warunkowych i~czas działania jest krótszy).
+
+\begin{figure}[h!]
 \begin{center} 
 \input{./plotTimeSizeHeuristic.tex}
+\caption{Wykres czasu wykonywania alg.~heurystycznego od~rozmiaru problemu}
+\label{fig:timesizeheuristic}
 \end{center}
+\end{figure}
 
 % Po zwiększeniu czasu Randoma jest na wykresie plotTimeSize
 %\input{./plotTimeSizeRandom.tex}
 
 \section{Jakość rozwiązania w zależności od czasu działania}
-Poniżej przedstawiamy dwa wykresy, które pozwalają porównać algorytmy na podstawie czasu ich pracy i osiągniętych rozwiązań.
-Na pierwszym wykresie dla czytelności przedstawiliśmy tylko 4 instancje problemów, drugi wykres zawiera punkty dla wszystkich instancji. 
+Na~rys.~\ref{fig:qualitytime} i~\ref{fig:qualitytimefull} przedstawiamy dwa wykresy,
+które pozwalają porównać algorytmy na~podstawie czasu ich pracy i~osiągniętych rozwiązań.
+Na~pierwszym wykresie dla~czytelności przedstawiliśmy tylko 4 instancje problemów, drugi wykres zawiera punkty dla~wszystkich instancji. 
 Problemowi przypisany jest kształt znacznika, kolor indentyfikuje natomiast algorytm, który osiągnął dany wynik.
 
 Algorytm heurystyczny jest zdecydowanie najszybszy, ale jakość jego rozwiązań jest niska. 
-Tylko w przypadku problemu oznaczonego wypełnioną kropką jakość rozwiązania przekroczyła poziom 0.9.
-Algorytm losowy osiąga gorszcze wyniki niż heurystyczny, pomimo zdecydowanie dłuższego czasu pracy.
+Tylko w przypadku problemu oznaczonego wypełnioną kropką jakość rozwiązania przekroczyła poziom \num{0.9}.
+Algorytm losowy osiąga gorszcze wyniki niż~heurystyczny, pomimo zdecydowanie dłuższego czasu pracy.
 
-Algorytmy Greedy i Steepest osiągają porównywalne wyniki pod względem jakości.
-Rozwiązania "czerwone" znajdują się zawsze na lewo od "zielonych", Greedy potrzebuje więc mniej czasu na osiągnięcie podobnego co Steepest rezultatu.
+Algorytmy Greedy i~Steepest osiągają porównywalne wyniki pod~względem jakości.
+Rozwiązania oznaczone kolorem czerwonym znajdują się zawsze na~lewo od odznaczonych na~zielono,
+Greedy potrzebuje więc mniej czasu na osiągnięcie podobnego, co~Steepest, rezultatu.
 %TODO Dopisać conieco o froncie pareto
+
+\begin{figure}[h!]
 \begin{center}
 \input{./plotQualityTime.tex}
+\caption{Wykres jakości rozwiązania w~funkcji czasu rozwiązania dla~wybranych problemów}
+\label{fig:qualitytime}
 \end{center}
+\end{figure}
+
+\begin{figure}
 \begin{center}
 \input{./plotQualityTimeFull.tex}
+\caption{Wykres jakości rozwiązania w~funkcji czasu rozwiązania dla~wszystkich problemów}
+\label{fig:qualitytimefull}
 \end{center}
+\end{figure}
 
 \section{Średnia liczba kroków w zależności od rozmiaru problemu}
-Średnia liczba kroków wykonywanych przez algorytmy zależy bardzo od krajobrazu rozwiązań.
-Z wykresu wywnioskowaliśmy, że można by dla algorytmy Steepest descen dopasować zależność między liczbą kroków a rozmiarem problemu (poza ekstremalnym przypadkiem problemu esc32.
-Dla algorytmy Greedy zależność nie jest tak łatwa do zbudowania.
-Wszystkie rozwiązania wymagają większej liczby kroków niż w przypadku Steepest descent. 
-Niektóre instancje, jak np. had14, els19 czy bur26a wymagały dużo więcej przejść pomiędzy sąsiadami.
-Algorytm dłużej więc "podróżował" po przestrzeni rozwiązań.
-Biorąc pod uwagę, że dla tych problemów znalezione zostały rozwiązania optymalne (had14 i bur26a) lub bardzo bliskie optimum (els19) oraz bardzo małe odchylenie standardowe wnioskujemy, że krajobraz zawiera mniej lokalnych wypłaszczeń czy lokalnych minimów.
+Średnia liczba kroków wykonywanych przez algorytmy zależy bardzo od~krajobrazu rozwiązań.
+Z wykresu z~rys.~\ref{fig:stepssize} wywnioskowaliśmy, że~można by dla algorytmu Steepest descent dopasować zależność między liczbą kroków
+a~rozmiarem problemu (poza ekstremalnym przypadkiem problemu esc32).
 
+Dla algorytmu Greedy zależność nie jest tak łatwa do zbudowania.
+Wszystkie problemy wymagają większej liczby kroków niż w~przypadku Steepest descent. 
+Niektóre instancje, jak np.~had14, els19 czy~bur26a wymagały dużo więcej przejść pomiędzy sąsiadami.
+Algorytm dłużej więc ,,podróżował'' po~przestrzeni rozwiązań.
+
+Biorąc pod uwagę, że~dla tych problemów znalezione zostały rozwiązania optymalne (had14 i~bur26a)
+lub~bardzo bliskie optimum (els19), a~odchylenia standardowe liczby kroków są bardzo małe, wnioskujemy,
+że~krajobraz zawiera mniej lokalnych wypłaszczeń czy lokalnych minimów i~bliższy jest sytuacji z~globalną wypukłością.
+%TODO zastanowić się nad tą globalną wypukłością
+
+\begin{figure}[h!]
 \begin{center}
 \input{./plotStepsSize.tex}
+\caption{Wykres liczby kroków od~rozmiaru problemu}
+\label{fig:stepssize}
 \end{center}
+\end{figure}
 
+\begin{figure}
 \begin{center}
 \input{./plotInitEndQuality.tex}
-\input{./plotInitEndQualityAll.tex}
+\caption{Wykres jakości rozwiązania najlepszego od~rozwiązania początkowego dla~wybranych problemów}
+\label{fig:initendquality}
 \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+\input{./plotInitEndQualityAll.tex}
+\caption{Wykres jakości rozwiązania najlepszego od~rozwiązania początkowego dla~wszystkich problemów}
+\label{fig:initendqualityall}
+\end{center}
+\end{figure}
 
 \section{Wnioski}
 
