@@ -43,3 +43,7 @@ Debug/
 doxygen/
 
 *.xml
+
+# Gnuplot plots
+sprawozdanie/*.eps
+sprawozdanie/plot*.tex
