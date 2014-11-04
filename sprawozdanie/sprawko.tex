@@ -1,0 +1,58 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[top=0.85in,right=1in,left=1in,bottom=0.85in]{geometry}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\usepackage{mathspec}
+\usepackage{color}
+\usepackage[english,polish]{babel}
+\usepackage[plmath]{polski}
+\usepackage{xltxtra}
+\usepackage{icomma}
+\usepackage{textcomp}
+\usepackage{multirow}
+
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{pdfpages}
+
+%\usepackage{minted}
+
+\usepackage{graphicx}
+
+\usepackage{booktabs}
+\usepackage[exponent-product = \cdot, per-mode = fraction,%
+binary-units, output-decimal-marker = \mbox{,}]{siunitx}
+
+\addto\captionspolish{%
+  \renewcommand\tablename{Tabela}
+}
+
+\author{Benedykt Jaworski (99893), Jacek Jankowski (99410)}
+
+\title{MiOIB\\ 
+\large{{\bf Sprawozdanie}}} 
+
+\date{3 litopada 2014}
+
+\begin{document}
+\begin{center}
+\input{./plotQualitySizeMean.tex}
+
+\input{./plotQualitySizeMax.tex}
+
+\input{./plotTimeSize.tex}
+ 
+\input{./plotTimeSizeHeuristic.tex}
+ 
+\input{./plotTimeSizeRandom.tex}
+
+\input{./plotQualityTime.tex}
+
+\input{./plotQualityTimeFull.tex}
+
+\input{./plotStepsSize.tex}
+\end{center}
+\end{document}
