@@ -47,3 +47,8 @@ doxygen/
 # Gnuplot plots
 sprawozdanie/*.eps
 sprawozdanie/plot*.tex
+
+sprawozdanie/sprawko.aux
+sprawozdanie/sprawko.log
+sprawozdanie/sprawko.synctex.gz
+sprawozdanie/sprawko.pdf

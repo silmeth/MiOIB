@@ -69,7 +69,7 @@ void Lab1::task() {
     }
 
     for(int i = 0; i < numberOfInstances; ++i) {
-        RandomAlgorithm randAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, 50);
+        RandomAlgorithm randAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, 50000/15*instances[i]->problemSize);
         SteepestAlgorithm steepAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 200);
         GreedyAlgorithm greedyAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 200);
         HeuristicAlgorithm heurAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B);

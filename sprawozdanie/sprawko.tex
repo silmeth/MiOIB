@@ -30,14 +30,12 @@ binary-units, output-decimal-marker = \mbox{,}]{siunitx}
   \renewcommand\tablename{Tabela}
 }
 
-\author{Benedykt Jaworski (99893), Jacek Jankowski (99410)}
-
-\title{MiOIB\\ 
-\large{{\bf Sprawozdanie}}} 
-
-\date{3 litopada 2014}
+\input{_ustawienia.tex}
 
 \begin{document}
+
+\input{_tytulowa.tex}
+
 \begin{center}
 \input{./plotQualitySizeMean.tex}
 
@@ -47,7 +45,8 @@ binary-units, output-decimal-marker = \mbox{,}]{siunitx}
  
 \input{./plotTimeSizeHeuristic.tex}
  
-\input{./plotTimeSizeRandom.tex}
+% Po zwiększeniu czasu Randoma jest na wykresie plotTimeSize
+%\input{./plotTimeSizeRandom.tex}
 
 \input{./plotQualityTime.tex}
 
