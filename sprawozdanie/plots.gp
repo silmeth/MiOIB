@@ -1,7 +1,7 @@
 # Quality vs Size mean
 set term qt 0 persist
 
-set yrange [0:1]
+set yrange [0:1.2]
 set xrange [10:34]
 
 set xtics 4
@@ -139,7 +139,7 @@ set term qt 5 persist
 
 set key inside bottom right
 
-set yrange [0:1]
+set yrange [0:1.2]
 set ytics 0.2
 set mytics 2
 
@@ -147,7 +147,7 @@ set ylabel "$\\underrightarrow{\\textrm{jakość}}$"
 set format y "\\num{%g}"
 
 set xlabel "$\\underleftarrow{t\\textrm{ [s]}}$"
-set xrange [1e-7:0.004]
+set xrange [1e-5:0.01]
 set format x "\\num{%g}"
 set xtics 10
 set mxtics 10
@@ -191,7 +191,7 @@ set term qt 6 persist
 
 set key below
 
-set yrange [0:1]
+set yrange [0:1.2]
 set ytics 0.2
 set mytics 2
 
@@ -199,7 +199,7 @@ set ylabel "$\\underrightarrow{\\textrm{jakość}}$"
 set format y "\\num{%g}"
 
 set xlabel "$\\underleftarrow{t\\textrm{ [s]}}$"
-set xrange [1e-7:0.004]
+set xrange [1e-5:0.01]
 set format x "\\num{%g}"
 set xtics 10
 set mxtics 10

@@ -126,6 +126,7 @@ Poniższe wykresy przedstawiają anlizę pracy i sprawności algorytmów.
 \subsubsection{Średnia jakość rozwiązania}
 Jakość działania liczona jest jako stosunek kosztu rozwiązania znalezionego do kosztu najlepszego rozwiązania znalezionego przez algorytm.
 Poniższy wykres przedstawia wartości średnie jakości (punkty) oraz wartość 1 odchylenia standardowego (linie pionowe).
+%Świadomie olewam, że odchylenie standardowe wychodzi poza 1.
 \begin{center}
 \input{./plotQualitySizeMean.tex}
 \end{center}
@@ -176,6 +177,17 @@ Czas obliczenia rozwiązania nie jest dokładnie odwzorowaniem takiej funkcji, b
 %\input{./plotTimeSizeRandom.tex}
 
 \section{Jakość rozwiązania w zależności od czasu działania}
+Poniżej przedstawiamy dwa wykresy, które pozwalają porównać algorytmy na podstawie czasu ich pracy i osiągniętych rozwiązań.
+Na pierwszym wykresie dla czytelności przedstawiliśmy tylko 4 instancje problemów, drugi wykres zawiera punkty dla wszystkich instancji. 
+Problemowi przypisany jest kształt znacznika, kolor indentyfikuje natomiast algorytm, który osiągnął dany wynik.
+
+Algorytm heurystyczny jest zdecydowanie najszybszy, ale jakość jego rozwiązań jest niska. 
+Tylko w przypadku problemu oznaczonego wypełnioną kropką jakość rozwiązania przekroczyła poziom 0.9.
+Algorytm losowy osiąga gorszcze wyniki niż heurystyczny, pomimo zdecydowanie dłuższego czasu pracy.
+
+Algorytmy Greedy i Steepest osiągają porównywalne wyniki pod względem jakości.
+Rozwiązania "czerwone" znajdują się zawsze na lewo od "zielonych", Greedy potrzebuje więc mniej czasu na osiągnięcie podobnego co Steepest rezultatu.
+%TODO Dopisać conieco o froncie pareto
 \begin{center}
 \input{./plotQualityTime.tex}
 \end{center}
@@ -184,6 +196,14 @@ Czas obliczenia rozwiązania nie jest dokładnie odwzorowaniem takiej funkcji, b
 \end{center}
 
 \section{Średnia liczba kroków w zależności od rozmiaru problemu}
+Średnia liczba kroków wykonywanych przez algorytmy zależy bardzo od krajobrazu rozwiązań.
+Z wykresu wywnioskowaliśmy, że można by dla algorytmy Steepest descen dopasować zależność między liczbą kroków a rozmiarem problemu (poza ekstremalnym przypadkiem problemu esc32.
+Dla algorytmy Greedy zależność nie jest tak łatwa do zbudowania.
+Wszystkie rozwiązania wymagają większej liczby kroków niż w przypadku Steepest descent. 
+Niektóre instancje, jak np. had14, els19 czy bur26a wymagały dużo więcej przejść pomiędzy sąsiadami.
+Algorytm dłużej więc "podróżował" po przestrzeni rozwiązań.
+Biorąc pod uwagę, że dla tych problemów znalezione zostały rozwiązania optymalne (had14 i bur26a) lub bardzo bliskie optimum (els19) oraz bardzo małe odchylenie standardowe wnioskujemy, że krajobraz zawiera mniej lokalnych wypłaszczeń czy lokalnych minimów.
+
 \begin{center}
 \input{./plotStepsSize.tex}
 \end{center}
