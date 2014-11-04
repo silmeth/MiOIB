@@ -311,3 +311,83 @@ set term epslatex color size 15cm, 10cm
 set output "./plotStepsSize.tex"
 replot
 
+#------------------------------
+# END QUALITY vs INIT QUALITY 1 INSTANCE
+# !!! problems' sizes: 12 and 16 !!!
+set term qt 8 persist
+
+set key below
+
+set yrange [0:1.2]
+set ytics 0.2
+set mytics 2
+
+set ylabel "jakość końcowa"
+set format y "\\num{%g}"
+
+set xlabel "jakość początkowa"
+set xrange [0:1.2]
+set format x "\\num{%g}"
+set xtics 0.2
+set mxtics 5
+
+set grid xtics ytics mxtics mytics ls 1 lw 1.7 linecolor rgbcolor "#8b8989", lw 0.7 lc rgbcolor "#8b8989"
+
+set pointsize 1
+
+# problems' sizes: 12 and 16
+plot "<(sed -n '1,15p' /tmp/initCostsData)" using 2:3 title "steepest" linecolor rgb "green" pointtype 1, \
+     "<(sed -n '1,15p' /tmp/initCostsData)" using 4:5 title "greedy" linecolor rgb "red" pointtype 1, \
+     "<(sed -n '1601,1615p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 15, \
+     "<(sed -n '1601,1615p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 15
+
+set term epslatex color size 16.5cm, 13cm
+set output "./plotInitEndQuality.tex"
+replot
+
+#------------------------------
+# END QUALITY vs INIT QUALITY 1 INSTANCE
+# !!! problems' sizes: many !!!
+set term qt 9 persist
+
+set key below
+
+set yrange [0:1.2]
+set ytics 0.2
+set mytics 2
+
+set ylabel "jakość końcowa"
+set format y "\\num{%g}"
+
+set xlabel "jakość początkowa"
+set xrange [0:1.2]
+set format x "\\num{%g}"
+set xtics 0.2
+set mxtics 5
+
+set grid xtics ytics mxtics mytics ls 1 lw 1.7 linecolor rgbcolor "#8b8989", lw 0.7 lc rgbcolor "#8b8989"
+
+set pointsize 1
+
+
+plot "<(sed -n '1,15p' /tmp/initCostsData)" using 2:3 title "steepest" linecolor rgb "green" pointtype 1, \
+     "<(sed -n '1,15p' /tmp/initCostsData)" using 4:5 title "greedy" linecolor rgb "red" pointtype 1, \
+     "<(sed -n '201,215p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 4, \
+     "<(sed -n '201,215p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 4, \
+     "<(sed -n '401,415p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 10, \
+     "<(sed -n '401,415p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 10, \
+     "<(sed -n '601,615p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 19, \
+     "<(sed -n '601,615p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 19, \
+     "<(sed -n '801,815p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 2, \
+     "<(sed -n '801,815p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 2, \
+     "<(sed -n '1601,1615p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 15, \
+     "<(sed -n '1601,1615p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 15
+
+set term epslatex color size 16.5cm, 13cm
+set output "./plotInitEndQualityAll.tex"
+replot
+
+
+unset pointsize
+unset logscale x
+

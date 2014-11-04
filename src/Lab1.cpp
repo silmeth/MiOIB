@@ -68,18 +68,27 @@ void Lab1::task() {
         numberOfSteps[i] = new unsigned int [2];
     }
 
+    std::vector< std::vector<double> > steepAlgInitCosts;
+    std::vector< std::vector<double> > steepAlgEndCosts;
+    std::vector< std::vector<double> > greedyAlgInitCosts;
+    std::vector< std::vector<double> > greedyAlgEndCosts;
+
     for(int i = 0; i < numberOfInstances; ++i) {
+    	std::vector<double> tempVec;
+    	steepAlgInitCosts.push_back(tempVec);
+    	greedyAlgInitCosts.push_back(tempVec);
+    	steepAlgEndCosts.push_back(tempVec);
+    	greedyAlgEndCosts.push_back(tempVec);
+
         RandomAlgorithm randAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, 50000/15*instances[i]->problemSize);
         SteepestAlgorithm steepAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 200);
         GreedyAlgorithm greedyAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 200);
         HeuristicAlgorithm heurAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B);
         std::vector<double> randAlgCosts;
         std::vector<double> steepAlgCosts;
-        std::vector<double> steepAlgInitCosts;
         std::vector<double> steepAlgNumberOfSteps;
         std::vector<double> steepAlgWorkTime;
         std::vector<double> greedyAlgCosts;
-        std::vector<double> greedyAlgInitCosts;
         std::vector<double> greedyAlgNumberOfSteps;
         std::vector<double> greedyAlgWorkTime;
 
@@ -94,17 +103,19 @@ void Lab1::task() {
             // Ugly use of memcpy(), we should change run() method of each algorithm
             steepAlg.generateRandomPermutation();
             memcpy(steepAlg.curSolution, steepAlg.randomSolution, sizeof(unsigned int) * steepAlg.problemSize);
-            steepAlgInitCosts.push_back(steepAlg.rateSolution());
+            steepAlgInitCosts[i].push_back((double)instances[i]->lowestCost / steepAlg.rateSolution());
             steepAlg.run();
             steepAlgCosts.push_back((double)instances[i]->lowestCost / steepAlg.minCost);
+            steepAlgEndCosts[i].push_back((double)instances[i]->lowestCost / steepAlg.minCost);
             steepAlgWorkTime.push_back(steepAlg.workTime);
             steepAlgNumberOfSteps.push_back(steepAlg.numberOfSteps);
 
             greedyAlg.generateRandomPermutation();
             memcpy(greedyAlg.curSolution, greedyAlg.randomSolution, sizeof(unsigned int) * greedyAlg.problemSize);
-            greedyAlgInitCosts.push_back(greedyAlg.rateSolution());
+            greedyAlgInitCosts[i].push_back((double)instances[i]->lowestCost / greedyAlg.rateSolution());
             greedyAlg.run();
             greedyAlgCosts.push_back((double)instances[i]->lowestCost / greedyAlg.minCost);
+            greedyAlgEndCosts[i].push_back((double)instances[i]->lowestCost / greedyAlg.minCost);
             greedyAlgWorkTime.push_back(greedyAlg.workTime);
             greedyAlgNumberOfSteps.push_back(greedyAlg.numberOfSteps);
         }
@@ -193,10 +204,12 @@ void Lab1::task() {
     std::ofstream greedyDataFile;
     std::ofstream steepestDataFile;
     std::ofstream heuristicDataFile;
+    std::ofstream initCostsDataFile;
     randomDataFile.open("/tmp/randomData", std::ios::out);
     greedyDataFile.open("/tmp/greedyData", std::ios::out);
     steepestDataFile.open("/tmp/steepestData", std::ios::out);
     heuristicDataFile.open("/tmp/heuristicData", std::ios::out);
+    initCostsDataFile.open("/tmp/initCostsData", std::ios::out);
 
     for(unsigned int i = 0; i < numberOfInstances; i++) {
         randomDataFile << instanceSizeVec[i] << " "
@@ -225,12 +238,21 @@ void Lab1::task() {
         heuristicDataFile << instanceSizeVec[i] << " "
                        << solutionBestVec[HEURISTIC][i] << " "
                        << workTimeMeans[i][HEURISTIC] << std::endl;
+
+        for(unsigned int j = 0; j < repetitions; ++j) {
+			initCostsDataFile << instanceSizeVec[i] << " "
+						   << steepAlgInitCosts[i][j] << " "
+						   << steepAlgEndCosts[i][j] << " "
+						   << greedyAlgInitCosts[i][j] << " "
+						   << greedyAlgEndCosts[i][j] << std::endl;
+        }
     }
 
     randomDataFile.close();
     greedyDataFile.close();
     steepestDataFile.close();
     heuristicDataFile.close();
+    initCostsDataFile.close();
 
     //unsigned int size, int** matA, int** matB, unsigned int numberOfRuns, int seed=19910401
     for(int i = 0; i < numberOfInstances; ++i) {
