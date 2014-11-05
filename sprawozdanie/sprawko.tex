@@ -27,6 +27,7 @@
 \usepackage{booktabs}
 \usepackage[exponent-product = \cdot, per-mode = fraction,%
 binary-units, output-decimal-marker = \mbox{,}]{siunitx}
+%\usepackage[section]{placeins}
 
 \addto\captionspolish{%
   \renewcommand\tablename{Tabela}
@@ -124,7 +125,7 @@ stosujemy ograniczenie do~3 przejść do~sąsiada o~równym koszcie.
 \section{Eksperymenty}
 \subsection{Instancje problemów}
 Eksperymenty uruchamialiśmy na następujących problemach:
-\begin{enumerate}
+\begin{tightenum}
 \item bur26a
 \item chr12a
 \item chr15a
@@ -139,7 +140,7 @@ Eksperymenty uruchamialiśmy na następujących problemach:
 \item esc32
 \item kra30a
 \item nug21
-\end{enumerate}
+\end{tightenum}
 Problemy te posiadają obliczone optimum, co ułatwiło obliczenie jakości uzyskanych przez nas rozwiązań.
 
 Problemy pochodzą z repozytorium QAPLIB\footnote{\url{http://www.opt.math.tu-graz.ac.at/qaplib/}}.
@@ -157,7 +158,7 @@ Wykres z~rys.~\ref{fig:qualityvssizemean} przedstawia wartości średnie jakośc
 Wyniki nie mają rozkładu normalnego, dlatego do interpretacji odchylenia standardowego powinniśmy podchodzić ostrożnie.
 Zakresy odchylenia standardowego mogą przekraczać wartość \num{1.0}.
 Dla problemu esc32 wynika to ze skupienia jakości rozwiązań w okolicy rozwiązania optymalnego i niewielu rozwiązań o znacznie odbiegającej jakości.
-\begin{figure}[h!]
+\begin{figure}[!htpb]
 \begin{center}
 \input{./plotQualitySizeMean.tex}
 \caption{Wykres uśrednionej jakości rozwiązania od~rozmiaru problemu}
@@ -178,7 +179,7 @@ Algorytm korzystający z heurystyki w~każdym przypadku znajduje lepsze lub rów
 \subsubsection{Jakość najlepszego znalezionego rozwiązania}
 Wykres z~rys.~\ref{fig:qualityvssizemax} przedstawia jakość najlepszego rozwiązania, znalezionego przez algorytmy, dla~poszczególnych instancji.
 
-\begin{figure}[h!]
+\begin{figure}[!htpb]
 \begin{center}
 \input{./plotQualitySizeMax.tex}
 \caption{Wykres jakości najlepszego znalezionego rozwiązania od~rozmiaru problemu}
@@ -211,7 +212,7 @@ a~odchylenia standardowe mają duże wartości.
 %TODO Dopisać jakie są parametry dopasowanej krzywej?
 %TODO Uzuepłnić rozważaniami o złożoności obliczeniowej?
 
-\begin{figure}[h!]
+\begin{figure}[!htpb]
 \begin{center}
 \input{./plotTimeSize.tex}
 \caption{Wykres uśrednionego czasu wykonywania od~rozmiaru problemu}
@@ -230,7 +231,7 @@ kolejne iteracje mogą potrzebować mniejszej liczby operacji na~pamięci dla~zn
 (np.~gdy wszystkie pozostałe do~dyspozycji wartości są sobie równe~-- w~efekcie czego algorytm pomija dużą część kopiowań
 wartości wewnątrz~instrukcji warunkowych i~czas działania jest krótszy).
 
-\begin{figure}[h!]
+\begin{figure}[!htpb]
 \begin{center} 
 \input{./plotTimeSizeHeuristic.tex}
 \caption{Wykres czasu wykonywania alg.~heurystycznego od~rozmiaru problemu}
@@ -256,7 +257,7 @@ Rozwiązania oznaczone kolorem czerwonym znajdują się zawsze na~lewo od odznac
 Greedy potrzebuje więc mniej czasu na osiągnięcie podobnego, co~Steepest, rezultatu.
 %TODO Dopisać conieco o froncie pareto
 
-\begin{figure}[h!]
+\begin{figure}[!htpb]
 \begin{center}
 \input{./plotQualityTime.tex}
 \caption{Wykres jakości rozwiązania w~funkcji czasu rozwiązania dla~wybranych problemów}
@@ -287,13 +288,21 @@ lub~bardzo bliskie optimum (els19), a~odchylenia standardowe liczby kroków są 
 że~krajobraz zawiera mniej lokalnych wypłaszczeń czy lokalnych minimów i~bliższy jest sytuacji z~globalną wypukłością.
 %TODO zastanowić się nad tą globalną wypukłością
 
-\begin{figure}[h!]
+\begin{figure}[!htpb]
 \begin{center}
 \input{./plotStepsSize.tex}
 \caption{Wykres liczby kroków od~rozmiaru problemu}
 \label{fig:stepssize}
 \end{center}
 \end{figure}
+
+\section{Jakość rozwiązania najlepszego w~zależności od~początkowego}
+%TODO dopisać nazwy opisywanych problemów
+%TODO poprawić tę sekcję, nie jestem pewien poprawności wniosków (ani ich sformułowania)
+Z wykresów przedstawionych na~rys.~\ref{fig:initendquality} i~\ref{fig:initendqualityall} widać, że~występuje pewna zależność
+między jakością rozwiązania początkowego oraz ostatecznie znalezionego rozwiązania. Widać również, że~punkty dotyczące
+danej instancji problemu skupiają się na~niewielkim obszarze na~wykresie. Oznacza to, że~jakość początkowego, losowego
+rozwiązania bardzo zależy od~testowanej instancji problemu.
 
 \begin{figure}
 \begin{center}
@@ -303,7 +312,14 @@ lub~bardzo bliskie optimum (els19), a~odchylenia standardowe liczby kroków są 
 \end{center}
 \end{figure}
 
-\begin{figure}[h!]
+Na~wykresie z~rys.~\ref{fig:initendqualityall} widać, że~dla~większości
+problemów jakość początkowego rozwiązania waha się między \num{0.08} a~\num{0.22}, a~jedynie dla~dwóch przykładowych problemów
+są to wartości powyżej \num{0.4}, a~jakość znalezionego rozwiązania końcowego dla~większości problemów waha się dość istotnie.
+Trudno zatem ocenić, czy zależność między jakością rozwiązania początkowego a~końcowego jest rzeczywistym związkiem przyczynowo-skutkowym
+(jeśli wysoka jakość początkowa, to wysoka jakość końcowa), czy~też wysoka jakość rozwiązania końcowego dla~wspomnianych dwóch problemów
+wynika tylko z~ich charakteru.
+
+\begin{figure}[!htpb]
 \begin{center}
 \input{./plotInitEndQualityAll.tex}
 \caption{Wykres jakości rozwiązania najlepszego od~rozwiązania początkowego dla~wszystkich problemów}
@@ -311,7 +327,12 @@ lub~bardzo bliskie optimum (els19), a~odchylenia standardowe liczby kroków są 
 \end{center}
 \end{figure}
 
-\begin{figure}[h!]
+\section{Poprawa jakości znalezionego rozwiązania w~kolejnych krokach}
+Wykres na~rys.~\ref{fig:steephistkra30a} przedstawia jaką wielkość miary jakości miały rozwiązania w~kolejnych krokach
+algorytmu Steepest descent dla~problemu kra30a. Wykres z~rys.~\ref{fig:greedyhistkra30a} przedstawia analogiczne dane
+dla~algorytmu Greedy. Oba~algorytmy zostały uruchomione 200 razy.
+
+\begin{figure}[!htpb]
 \begin{center}
 \input{./plotSteepestHistorical-kra30a.tex}
 \caption{Wykres jakości rozwiązania w~kolejnych krokach 200 przebiegów algorytmu Steepest descent}
@@ -319,13 +340,30 @@ lub~bardzo bliskie optimum (els19), a~odchylenia standardowe liczby kroków są 
 \end{center}
 \end{figure}
 
-\begin{figure}[h!]
+Z~wykresu \ref{fig:steephistkra30a} widać, że~Steepest descent dość szybko dochodzi do~rozwiązania (liczba kroków bliska wielkości problemu),
+krzywa poprawy jakości ma~charakter eksponencjalny~-- jakość wyraźnie, coraz wolniej z~czasem,
+poprawia się do~pewnej wartości granicznej bliskiej optimum. Nie~zdarza się raczej, by~algorytm zatrzymał się dłużej
+na~jednej wartości i~,,podróżował'' po~rozwiązaniach o~jednakowej ocenie. Dopiero pod~koniec działania algorytmu, gdy~ów
+nie~znajduje już żadnych rozwiązań lepszych od~aktualnego, pozostaje przez kilka kroków przed zakończeniem na~stałej
+wartości jakości.
+
+\begin{figure}[!htpb]
 \begin{center}
 \input{./plotGreedyHistorical-kra30a.tex}
 \caption{Wykres jakości rozwiązania w~kolejnych krokach 200 przebiegów algorytmu Greedy}
 \label{fig:greedyhistkra30a}
 \end{center}
 \end{figure}
+
+Z~wykresu \ref{fig:steephistkra30a} widać, że~Greedy, w~przeciwieństwie do algorytmu Steepest descent, często
+zatrzymuje się na~kilka kroków na~jednej wartości jakości, a~kształt poprawy, choć również przypomina krzywą wykładniczą, jest o~wiele
+bardziej nieregularny. Liczba kroków wykonanych przez Greedy'ego jest kilkakrotnie większa od~liczby kroków algorytmu Steepest descent.
+Jednak obliczenie przejścia w~algorytmie Greedy jest mniej czasochłonne, więc, jak było widać we~wcześniejszych sekcjach sprawozdania,
+ogólny czas wykonywania Greedy'ego jest krótszy.
+
+Oba algorytmy mają dość duży rozrzut jakości rozwiązania początkowego (startują od~podobnych rozwiązań losowych, o~jakościach
+od~\num{0.6} do~ok.~\num{0.75}, różnica \num{0.15}), i~oba zbiegają się do~niezbyt mocno rozrzuconych pod~względem miary jakości rozwiązań końcowych~--
+w~analizowanym przypadku wartości między \num{0.9} a~\num{0.95}, różnica \num{0.05}.
 
 \section{Wnioski}
 

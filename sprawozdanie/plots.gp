@@ -316,7 +316,7 @@ replot
 # !!! problems' sizes: 12 and 16 !!!
 set term qt 8 persist
 
-set key below
+set key inside bottom right
 
 set yrange [0:1.2]
 set ytics 0.2
@@ -350,7 +350,7 @@ replot
 # !!! problems' sizes: many !!!
 set term qt 9 persist
 
-set key below
+set key inside bottom right
 
 set yrange [0:1.2]
 set ytics 0.2
@@ -387,7 +387,4 @@ set term epslatex color size 16.5cm, 13cm
 set output "./plotInitEndQualityAll.tex"
 replot
 
-
 unset pointsize
-unset logscale x
-

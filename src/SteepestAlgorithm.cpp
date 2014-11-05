@@ -53,10 +53,13 @@ void SteepestAlgorithm::run() {
                     } else if(currentNeighCost == minNeighCost && sameVal < 3) {
                         lowestCostNeighIndex = (int)n;
                         minNeighCost = currentNeighCost;
-                        ++sameVal;
+//                        ++sameVal;
                     }
                 }
                 if(lowestCostNeighIndex > 0) {
+                    if(minNeighCost == curCost) {
+                        ++sameVal;
+                    }
                     curCost = minNeighCost;
                     memcpy(curSolution, neighbours[lowestCostNeighIndex], sizeof(unsigned int) * problemSize);
                     historicalCosts[i] = curCost;
