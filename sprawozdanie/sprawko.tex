@@ -155,7 +155,7 @@ Jakość działania liczona jest jako stosunek kosztu rozwiązania optymalnego d
 algorytm.
 Wykres z~rys.~\ref{fig:qualityvssizemean} przedstawia wartości średnie jakości (punkty) oraz wartość 1 odchylenia standardowego (linie pionowe).
 Wyniki nie mają rozkładu normalnego, dlatego do interpretacji odchylenia standardowego powinniśmy podchodzić ostrożnie.
-Zakresy odchylenia standardowego mogą przekraczać wartość \nun{1.0}.
+Zakresy odchylenia standardowego mogą przekraczać wartość \num{1.0}.
 Dla problemu esc32 wynika to ze skupienia jakości rozwiązań w okolicy rozwiązania optymalnego i niewielu rozwiązań o znacznie odbiegającej jakości.
 \begin{figure}[h!]
 \begin{center}
@@ -308,6 +308,22 @@ lub~bardzo bliskie optimum (els19), a~odchylenia standardowe liczby kroków są 
 \input{./plotInitEndQualityAll.tex}
 \caption{Wykres jakości rozwiązania najlepszego od~rozwiązania początkowego dla~wszystkich problemów}
 \label{fig:initendqualityall}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+\input{./plotSteepestHistorical-kra30a.tex}
+\caption{Wykres jakości rozwiązania w~kolejnych krokach 200 przebiegów algorytmu Steepest descent}
+\label{fig:steephistkra30a}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+\input{./plotGreedyHistorical-kra30a.tex}
+\caption{Wykres jakości rozwiązania w~kolejnych krokach 200 przebiegów algorytmu Greedy}
+\label{fig:greedyhistkra30a}
 \end{center}
 \end{figure}
 
