@@ -74,8 +74,10 @@ void Lab1::task() {
     // Length of subvectors is equal to repetitions
     std::vector< std::vector<double> > steepAlgInitCosts;
     std::vector< std::vector<double> > steepAlgEndCosts;
+//    std::vector< std::vector<double> > steepAlgHistoryCosts; // maybe will be useful later
     std::vector< std::vector<double> > greedyAlgInitCosts;
     std::vector< std::vector<double> > greedyAlgEndCosts;
+//    std::vector< std::vector<double> > greedyAlgHistoryCosts; // maybe will be useful later
 
     for(int i = 0; i < numberOfInstances; ++i) {
     	// I don't know how to extend vectors by another vector so I push back an empty one into them
@@ -104,6 +106,23 @@ void Lab1::task() {
             randAlgCosts.push_back((double)instances[i]->lowestCost / (double)randAlg.historicalCosts[j]);
         }
 
+        // Save all historical costs to file
+        // path to saved file: /tmp/historical[AlgorithmName]Data-[instanceName]
+        // format:
+        // no. of steps [space] solution quality [space] no. of run
+        // exemplar usage:
+        // plot "< (sed -n \"/ 0$/p\" /tmp/historicalSteepestData-kra30a)" with linespoints
+        // to plot 0-th run for kra30a instance
+
+        char filepathSteepst[52]; // arbitrary length
+        char filepathGreedy[52];
+        std::ofstream historicalSteepestDataFile;
+        std::ofstream historicalGreedyDataFile;
+        sprintf(filepathSteepst, "/tmp/historicalSteepestData-%s", problemNames.at(i).c_str());
+        sprintf(filepathGreedy, "/tmp/historicalGreedyData-%s", problemNames.at(i).c_str());
+        historicalSteepestDataFile.open(filepathSteepst, std::ios::out);
+        historicalGreedyDataFile.open(filepathGreedy, std::ios::out);
+
         for(int j = 0; j < repetitions; ++j) {
             // Ugly use of memcpy(), we should change run() method of each algorithm
             steepAlg.generateRandomPermutation();
@@ -127,7 +146,19 @@ void Lab1::task() {
             greedyAlgEndCosts[i].push_back((double)instances[i]->lowestCost / greedyAlg.minCost);
             greedyAlgWorkTime.push_back(greedyAlg.workTime);
             greedyAlgNumberOfSteps.push_back(greedyAlg.numberOfSteps);
+
+            for(unsigned int k = 0; k < steepAlg.numberOfSteps; ++k) {
+                historicalSteepestDataFile << k << " " <<
+                    (double)instances[i]->lowestCost / steepAlg.historicalCosts[k] << " " << j << "\n";
+            }
+            for(unsigned int k = 0; k < greedyAlg.numberOfSteps; ++k) {
+                historicalGreedyDataFile << k << " " <<
+                    instances[i]->lowestCost / greedyAlg.historicalCosts[k] << " " << j << "\n";
+            }
         }
+
+        historicalSteepestDataFile.close();
+        historicalGreedyDataFile.close();
 
         solutionBest[i][GREEDY] = *std::max_element(greedyAlgCosts.begin(), greedyAlgCosts.end());
         solutionBest[i][STEEPEST] = *std::max_element(steepAlgCosts.begin(), steepAlgCosts.end());
@@ -148,6 +179,9 @@ void Lab1::task() {
         workTimeMeans[i][HEURISTIC] = heurAlg.workTime;
         numberOfSteps[i][GREEDY] = mean(greedyAlgNumberOfSteps);
         numberOfSteps[i][STEEPEST] = mean(steepAlgNumberOfSteps);
+
+//        steepAlgHistoryCosts.push_back(steepAlgCosts);
+//        greedyAlgHistoryCosts.push_back(greedyAlgCosts);
     }
 
     std::vector< std::vector<double> > solutionBestVec;
