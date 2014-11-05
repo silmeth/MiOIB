@@ -189,10 +189,10 @@ void Lab1::task() {
             }
 
             historicalSteepestGnuplotFile <<
-                "\"< (sed -n \\\"/ " << j << "$/p\\\" " << filepathGreedy << ")\" " <<
+                "\"< (sed -n \\\"/ " << j << "$/p\\\" " << filepathSteepest << ")\" " <<
                 " title \"\" with linespoints linetype 1 linecolor rgb \"green\"";
             historicalGreedyGnuplotFile <<
-                "\"< (sed -n \\\"/ " << j <<"$/p\\\" " << filepathSteepest << ")\" " <<
+                "\"< (sed -n \\\"/ " << j <<"$/p\\\" " << filepathGreedy << ")\" " <<
                 " title \"\" with linespoints linetype 1 linecolor rgb \"red\"";
 
             if(j != repetitions-1) {
