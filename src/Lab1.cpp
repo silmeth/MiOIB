@@ -102,6 +102,13 @@ void Lab1::task() {
         }
 
         // Save all historical costs to file
+        // path to saved file: /tmp/historical[AlgorithmName]Data-[instanceName]
+        // format:
+        // no. of steps [space] solution quality [space] no. of run
+        // exemplar usage:
+        // plot "< (sed -n \"/ 0$/p\" /tmp/historicalSteepestData-kra30a)" with linespoints
+        // to plot 0-th run for kra30a instance
+
         char filepathSteepst[52]; // arbitrary length
         char filepathGreedy[52];
         std::ofstream historicalSteepestDataFile;
@@ -132,10 +139,12 @@ void Lab1::task() {
             greedyAlgNumberOfSteps.push_back(greedyAlg.numberOfSteps);
 
             for(unsigned int k = 0; k < steepAlg.numberOfSteps; ++k) {
-                historicalSteepestDataFile << k << " " << steepAlg.historicalCosts[k] << " " << j << "\n";
+                historicalSteepestDataFile << k << " " <<
+                    (double)instances[i]->lowestCost / steepAlg.historicalCosts[k] << " " << j << "\n";
             }
             for(unsigned int k = 0; k < greedyAlg.numberOfSteps; ++k) {
-                historicalGreedyDataFile << k << " " << greedyAlg.historicalCosts[k] << " " << j << "\n";
+                historicalGreedyDataFile << k << " " <<
+                    instances[i]->lowestCost / greedyAlg.historicalCosts[k] << " " << j << "\n";
             }
         }
 
