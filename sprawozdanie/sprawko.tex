@@ -154,8 +154,9 @@ Poniższe wykresy przedstawiają anlizę pracy i~sprawności algorytmów.
 Jakość działania liczona jest jako stosunek kosztu rozwiązania optymalnego do~kosztu rozwiązania znalezionego przez
 algorytm.
 Wykres z~rys.~\ref{fig:qualityvssizemean} przedstawia wartości średnie jakości (punkty) oraz wartość 1 odchylenia standardowego (linie pionowe).
-%Świadomie olewam, że odchylenie standardowe wychodzi poza 1.
-
+Wyniki nie mają rozkładu normalnego, dlatego do interpretacji odchylenia standardowego powinniśmy podchodzić ostrożnie.
+Zakresy odchylenia standardowego mogą przekraczać wartość \nun{1.0}.
+Dla problemu esc32 wynika to ze skupienia jakości rozwiązań w okolicy rozwiązania optymalnego i niewielu rozwiązań o znacznie odbiegającej jakości.
 \begin{figure}[h!]
 \begin{center}
 \input{./plotQualitySizeMean.tex}
