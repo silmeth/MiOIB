@@ -101,6 +101,16 @@ void Lab1::task() {
             randAlgCosts.push_back((double)instances[i]->lowestCost / (double)randAlg.historicalCosts[j]);
         }
 
+        // Save all historical costs to file
+        char filepathSteepst[52]; // arbitrary length
+        char filepathGreedy[52];
+        std::ofstream historicalSteepestDataFile;
+        std::ofstream historicalGreedyDataFile;
+        sprintf(filepathSteepst, "/tmp/historicalSteepestData-%s", problemNames.at(i).c_str());
+        sprintf(filepathGreedy, "/tmp/historicalGreedyData-%s", problemNames.at(i).c_str());
+        historicalSteepestDataFile.open(filepathSteepst, std::ios::out);
+        historicalGreedyDataFile.open(filepathGreedy, std::ios::out);
+
         for(int j = 0; j < repetitions; ++j) {
             // Ugly use of memcpy(), we should change run() method of each algorithm
             steepAlg.generateRandomPermutation();
@@ -120,7 +130,17 @@ void Lab1::task() {
             greedyAlgEndCosts[i].push_back((double)instances[i]->lowestCost / greedyAlg.minCost);
             greedyAlgWorkTime.push_back(greedyAlg.workTime);
             greedyAlgNumberOfSteps.push_back(greedyAlg.numberOfSteps);
+
+            for(unsigned int k = 0; k < steepAlg.numberOfSteps; ++k) {
+                historicalSteepestDataFile << k << " " << steepAlg.historicalCosts[k] << " " << j << "\n";
+            }
+            for(unsigned int k = 0; k < greedyAlg.numberOfSteps; ++k) {
+                historicalGreedyDataFile << k << " " << greedyAlg.historicalCosts[k] << " " << j << "\n";
+            }
         }
+
+        historicalSteepestDataFile.close();
+        historicalGreedyDataFile.close();
 
         solutionBest[i][GREEDY] = *std::max_element(greedyAlgCosts.begin(), greedyAlgCosts.end());
         solutionBest[i][STEEPEST] = *std::max_element(steepAlgCosts.begin(), steepAlgCosts.end());
@@ -144,24 +164,6 @@ void Lab1::task() {
 
 //        steepAlgHistoryCosts.push_back(steepAlgCosts);
 //        greedyAlgHistoryCosts.push_back(greedyAlgCosts);
-
-        // Save all historical costs to file
-        char filepathSteepst[52]; // arbitrary length
-        char filepathGreedy[52];
-        std::ofstream historicalSteepestDataFile;
-        std::ofstream historicalGreedyDataFile;
-        sprintf(filepathSteepst, "/tmp/historicalSteepestData-%s", problemNames.at(i).c_str());
-        sprintf(filepathGreedy, "/tmp/historicalGreedyData-%s", problemNames.at(i).c_str());
-        historicalSteepestDataFile.open(filepathSteepst, std::ios::out);
-        historicalGreedyDataFile.open(filepathGreedy, std::ios::out);
-        for(unsigned int j = 0; j < steepAlgCosts.size(); ++j) {
-            historicalSteepestDataFile << j << " " << steepAlgCosts[j] << "\n";
-        }
-        for(unsigned int j = 0; j < greedyAlgCosts.size(); ++j) {
-            historicalGreedyDataFile << j << " " << greedyAlgCosts[j] << "\n";
-        }
-        historicalSteepestDataFile.close();
-        historicalGreedyDataFile.close();
     }
 
     std::vector< std::vector<double> > solutionBestVec;
