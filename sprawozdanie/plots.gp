@@ -94,43 +94,25 @@ set output "./plotTimeSize.tex"
 replot
 
 #------------------------------
-# SAME FOR HEURISTIC AND RANDOM
+# SAME FOR HEURISTIC ONLY
 set term qt 3 persist
 
 set yrange [0:1.2e-4]
 set ytics 2e-5
 set mytics 2
 
+unset key
+
 set ylabel "$t$ [s]"
 set format y "\\num{%g}"
 
 set grid xtics ytics mxtics mytics ls 1 lw 1.7 linecolor rgbcolor "#8b8989", lw 0.7 lc rgbcolor "#8b8989"
 
-plot "/tmp/heuristicData" using 1:3 title "heuristic" with points linecolor rgb "blue" pointtype 7, \
+plot "/tmp/heuristicData" using 1:3 title "" with points linecolor rgb "blue" pointtype 7, \
      fheuristic(x) title "" with lines linecolor rgb "blue" linetype 2
 
 set term epslatex color size 15cm, 10cm
 set output "./plotTimeSizeHeuristic.tex"
-replot
-
-#------------------------------
-# SAME FOR !!!ONLY!!! RANDOM
-set term qt 4 persist
-
-set yrange [0:6e-7]
-set ytics 1e-7
-set mytics 2
-
-set ylabel "$t$ [s]"
-set format y "\\num{%g}"
-
-set grid xtics ytics mxtics mytics ls 1 lw 1.7 linecolor rgbcolor "#8b8989", lw 0.7 lc rgbcolor "#8b8989"
-
-plot "/tmp/randomData" using 1:5:6 title "random" with yerrorbars linecolor rgb "black" pointtype 7 linetype 1, \
-     frandom(x) title "" with lines linecolor rgb "black" linetype 2
-
-set term epslatex color size 15cm, 10cm
-set output "./plotTimeSizeRandom.tex"
 replot
 
 #------------------------------
