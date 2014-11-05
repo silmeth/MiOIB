@@ -68,12 +68,17 @@ void Lab1::task() {
         numberOfSteps[i] = new unsigned int [2];
     }
 
+    // Initial cost - cost of first (random) solution in one particular run
+    // End cost - cost of the best permutation found in one particular run
+    // Length of vector is equal to numberOfInstances
+    // Length of subvectors is equal to repetitions
     std::vector< std::vector<double> > steepAlgInitCosts;
     std::vector< std::vector<double> > steepAlgEndCosts;
     std::vector< std::vector<double> > greedyAlgInitCosts;
     std::vector< std::vector<double> > greedyAlgEndCosts;
 
     for(int i = 0; i < numberOfInstances; ++i) {
+    	// I don't know how to extend vectors by another vector so I push back an empty one into them
     	std::vector<double> tempVec;
     	steepAlgInitCosts.push_back(tempVec);
     	greedyAlgInitCosts.push_back(tempVec);
@@ -103,18 +108,22 @@ void Lab1::task() {
             // Ugly use of memcpy(), we should change run() method of each algorithm
             steepAlg.generateRandomPermutation();
             memcpy(steepAlg.curSolution, steepAlg.randomSolution, sizeof(unsigned int) * steepAlg.problemSize);
+            // Initial quality is saved in i-th vector
             steepAlgInitCosts[i].push_back((double)instances[i]->lowestCost / steepAlg.rateSolution());
             steepAlg.run();
             steepAlgCosts.push_back((double)instances[i]->lowestCost / steepAlg.minCost);
+            // End quality is saved in i-th vector
             steepAlgEndCosts[i].push_back((double)instances[i]->lowestCost / steepAlg.minCost);
             steepAlgWorkTime.push_back(steepAlg.workTime);
             steepAlgNumberOfSteps.push_back(steepAlg.numberOfSteps);
 
             greedyAlg.generateRandomPermutation();
             memcpy(greedyAlg.curSolution, greedyAlg.randomSolution, sizeof(unsigned int) * greedyAlg.problemSize);
+            // Initial quality is saved in i-th vector
             greedyAlgInitCosts[i].push_back((double)instances[i]->lowestCost / greedyAlg.rateSolution());
             greedyAlg.run();
             greedyAlgCosts.push_back((double)instances[i]->lowestCost / greedyAlg.minCost);
+            // End quality is saved in i-th vector
             greedyAlgEndCosts[i].push_back((double)instances[i]->lowestCost / greedyAlg.minCost);
             greedyAlgWorkTime.push_back(greedyAlg.workTime);
             greedyAlgNumberOfSteps.push_back(greedyAlg.numberOfSteps);
@@ -204,12 +213,13 @@ void Lab1::task() {
     std::ofstream greedyDataFile;
     std::ofstream steepestDataFile;
     std::ofstream heuristicDataFile;
-    std::ofstream initCostsDataFile;
+    // Stream for initial&end qualities from steepAlgInitCosts, greedyAlgInitCots, steepAlgEndCosts and greedyAlgEndCosts
+    std::ofstream initEndCostsDataFile;
     randomDataFile.open("/tmp/randomData", std::ios::out);
     greedyDataFile.open("/tmp/greedyData", std::ios::out);
     steepestDataFile.open("/tmp/steepestData", std::ios::out);
     heuristicDataFile.open("/tmp/heuristicData", std::ios::out);
-    initCostsDataFile.open("/tmp/initCostsData", std::ios::out);
+    initEndCostsDataFile.open("/tmp/initCostsData", std::ios::out);
 
     for(unsigned int i = 0; i < numberOfInstances; i++) {
         randomDataFile << instanceSizeVec[i] << " "
@@ -239,8 +249,8 @@ void Lab1::task() {
                        << solutionBestVec[HEURISTIC][i] << " "
                        << workTimeMeans[i][HEURISTIC] << std::endl;
 
-        for(unsigned int j = 0; j < repetitions; ++j) {
-			initCostsDataFile << instanceSizeVec[i] << " "
+        for(int j = 0; j < repetitions; ++j) {
+			initEndCostsDataFile << instanceSizeVec[i] << " "
 						   << steepAlgInitCosts[i][j] << " "
 						   << steepAlgEndCosts[i][j] << " "
 						   << greedyAlgInitCosts[i][j] << " "
@@ -252,7 +262,7 @@ void Lab1::task() {
     greedyDataFile.close();
     steepestDataFile.close();
     heuristicDataFile.close();
-    initCostsDataFile.close();
+    initEndCostsDataFile.close();
 
     //unsigned int size, int** matA, int** matB, unsigned int numberOfRuns, int seed=19910401
     for(int i = 0; i < numberOfInstances; ++i) {
