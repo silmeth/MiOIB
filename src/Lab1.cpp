@@ -70,8 +70,10 @@ void Lab1::task() {
 
     std::vector< std::vector<double> > steepAlgInitCosts;
     std::vector< std::vector<double> > steepAlgEndCosts;
+//    std::vector< std::vector<double> > steepAlgHistoryCosts; // maybe will be useful later
     std::vector< std::vector<double> > greedyAlgInitCosts;
     std::vector< std::vector<double> > greedyAlgEndCosts;
+//    std::vector< std::vector<double> > greedyAlgHistoryCosts; // maybe will be useful later
 
     for(int i = 0; i < numberOfInstances; ++i) {
     	std::vector<double> tempVec;
@@ -139,6 +141,27 @@ void Lab1::task() {
         workTimeMeans[i][HEURISTIC] = heurAlg.workTime;
         numberOfSteps[i][GREEDY] = mean(greedyAlgNumberOfSteps);
         numberOfSteps[i][STEEPEST] = mean(steepAlgNumberOfSteps);
+
+//        steepAlgHistoryCosts.push_back(steepAlgCosts);
+//        greedyAlgHistoryCosts.push_back(greedyAlgCosts);
+
+        // Save all historical costs to file
+        char filepathSteepst[52]; // arbitrary length
+        char filepathGreedy[52];
+        std::ofstream historicalSteepestDataFile;
+        std::ofstream historicalGreedyDataFile;
+        sprintf(filepathSteepst, "/tmp/historicalSteepestData-%s", problemNames.at(i).c_str());
+        sprintf(filepathGreedy, "/tmp/historicalGreedyData-%s", problemNames.at(i).c_str());
+        historicalSteepestDataFile.open(filepathSteepst, std::ios::out);
+        historicalGreedyDataFile.open(filepathGreedy, std::ios::out);
+        for(unsigned int j = 0; j < steepAlgCosts.size(); ++j) {
+            historicalSteepestDataFile << j << " " << steepAlgCosts[j] << "\n";
+        }
+        for(unsigned int j = 0; j < greedyAlgCosts.size(); ++j) {
+            historicalGreedyDataFile << j << " " << greedyAlgCosts[j] << "\n";
+        }
+        historicalSteepestDataFile.close();
+        historicalGreedyDataFile.close();
     }
 
     std::vector< std::vector<double> > solutionBestVec;
