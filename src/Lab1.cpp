@@ -109,20 +109,51 @@ void Lab1::task() {
         // Save all historical costs to file
         // path to saved file: /tmp/historical[AlgorithmName]Data-[instanceName]
         // format:
-        // no. of steps [space] solution quality [space] no. of run
+        //     no. of steps [space] solution quality [space] no. of run
         // exemplar usage:
-        // plot "< (sed -n \"/ 0$/p\" /tmp/historicalSteepestData-kra30a)" with linespoints
+        //     plot "< (sed -n \"/ 0$/p\" /tmp/historicalSteepestData-kra30a)" with linespoints
         // to plot 0-th run for kra30a instance
+        // different gp script created for all runs of given problem:
+        //     gnuplot /tmp/historicalSteepestPlots-kra30a.gp
 
-        char filepathSteepst[52]; // arbitrary length
+        char filepathSteepest[52]; // arbitrary length
         char filepathGreedy[52];
+        char filepathSteepestGnuplot[52];
+        char filepathGreedyGnuplot[52];
+
         std::ofstream historicalSteepestDataFile;
         std::ofstream historicalGreedyDataFile;
-        sprintf(filepathSteepst, "/tmp/historicalSteepestData-%s", problemNames.at(i).c_str());
-        sprintf(filepathGreedy, "/tmp/historicalGreedyData-%s", problemNames.at(i).c_str());
-        historicalSteepestDataFile.open(filepathSteepst, std::ios::out);
-        historicalGreedyDataFile.open(filepathGreedy, std::ios::out);
+        std::ofstream historicalSteepestGnuplotFile;
+        std::ofstream historicalGreedyGnuplotFile;
 
+        sprintf(filepathSteepest, "/tmp/historicalSteepestData-%s", problemNames.at(i).c_str());
+        sprintf(filepathGreedy, "/tmp/historicalGreedyData-%s", problemNames.at(i).c_str());
+        sprintf(filepathSteepestGnuplot, "/tmp/historicalSteepestPlots-%s.gp", problemNames.at(i).c_str());
+        sprintf(filepathGreedyGnuplot, "/tmp/historicalGreedyPlots-%s.gp", problemNames.at(i).c_str());
+
+        historicalSteepestDataFile.open(filepathSteepest, std::ios::out);
+        historicalGreedyDataFile.open(filepathGreedy, std::ios::out);
+        historicalSteepestGnuplotFile.open(filepathSteepestGnuplot, std::ios::out);
+        historicalGreedyGnuplotFile.open(filepathGreedyGnuplot, std::ios::out);
+
+        historicalSteepestGnuplotFile << "set term qt persist\n";
+        historicalGreedyGnuplotFile << "set term qt persist\n";
+        historicalSteepestGnuplotFile << "set pointsize 0.3\n";
+        historicalGreedyGnuplotFile << "set pointsize 0.3\n";
+        historicalSteepestGnuplotFile << "set key bottom right\n";
+        historicalGreedyGnuplotFile << "set key bottom right\n";
+
+        historicalSteepestGnuplotFile << "set xlabel \"numer kroku\"\n";
+        historicalSteepestGnuplotFile << "set ylabel \"jakość\"\n";
+
+        historicalGreedyGnuplotFile << "set xlabel \"numer kroku\"\n";
+        historicalGreedyGnuplotFile << "set ylabel \"jakość\"\n";
+
+        historicalSteepestGnuplotFile << "set format y \"\\\\num{%g}\"\n";
+        historicalGreedyGnuplotFile << "set format y \"\\\\num{%g}\"\n";
+
+        historicalSteepestGnuplotFile << "plot ";
+        historicalGreedyGnuplotFile << "plot ";
         for(int j = 0; j < repetitions; ++j) {
             // Ugly use of memcpy(), we should change run() method of each algorithm
             steepAlg.generateRandomPermutation();
@@ -147,18 +178,42 @@ void Lab1::task() {
             greedyAlgWorkTime.push_back(greedyAlg.workTime);
             greedyAlgNumberOfSteps.push_back(greedyAlg.numberOfSteps);
 
+            // Historical data saved in files
             for(unsigned int k = 0; k < steepAlg.numberOfSteps; ++k) {
                 historicalSteepestDataFile << k << " " <<
                     (double)instances[i]->lowestCost / steepAlg.historicalCosts[k] << " " << j << "\n";
             }
             for(unsigned int k = 0; k < greedyAlg.numberOfSteps; ++k) {
                 historicalGreedyDataFile << k << " " <<
-                    instances[i]->lowestCost / greedyAlg.historicalCosts[k] << " " << j << "\n";
+                    (double)instances[i]->lowestCost / greedyAlg.historicalCosts[k] << " " << j << "\n";
             }
+
+            historicalSteepestGnuplotFile <<
+                "\"< (sed -n \\\"/ " << j << "$/p\\\" " << filepathGreedy << ")\" " <<
+                " title \"\" with linespoints linetype 1 linecolor rgb \"green\"";
+            historicalGreedyGnuplotFile <<
+                "\"< (sed -n \\\"/ " << j <<"$/p\\\" " << filepathSteepest << ")\" " <<
+                " title \"\" with linespoints linetype 1 linecolor rgb \"red\"";
+
+            if(j != repetitions-1) {
+                historicalSteepestGnuplotFile << ", \\";
+                historicalGreedyGnuplotFile << ", \\";
+            }
+            historicalSteepestGnuplotFile << "\n";
+            historicalGreedyGnuplotFile << "\n";
         }
+
+        historicalSteepestGnuplotFile << "set term epslatex color size 15cm, 10cm\n";
+        historicalGreedyGnuplotFile << "set term epslatex color size 15cm, 10cm\n";
+        historicalSteepestGnuplotFile << "set output \"./plotSteepestHistorical-" << problemNames.at(i).c_str() << ".tex\"\n";
+        historicalGreedyGnuplotFile << "set output \"./plotGreedyHistorical-" << problemNames.at(i).c_str() << ".tex\"\n";
+        historicalSteepestGnuplotFile << "replot" << std::endl;
+        historicalGreedyGnuplotFile << "replot" << std::endl;
 
         historicalSteepestDataFile.close();
         historicalGreedyDataFile.close();
+        historicalSteepestGnuplotFile.close();
+        historicalGreedyGnuplotFile.close();
 
         solutionBest[i][GREEDY] = *std::max_element(greedyAlgCosts.begin(), greedyAlgCosts.end());
         solutionBest[i][STEEPEST] = *std::max_element(steepAlgCosts.begin(), steepAlgCosts.end());
