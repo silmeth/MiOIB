@@ -330,14 +330,13 @@ Wykres na~rys.~\ref{fig:steephistkra30a} przedstawia jaką wielkość miary jako
 algorytmu Steepest descent dla~problemu kra30a. Wykres z~rys.~\ref{fig:greedyhistkra30a} przedstawia analogiczne dane
 dla~algorytmu Greedy. Oba~algorytmy zostały uruchomione 200 razy.
 
-%\begin{figure}[!htpb]
-%\begin{center}
-%TODO Uzupełnić plots.gp o poniższy wykres
-%\input{./plotSteepestHistorical-kra30a.tex}
-%\caption{Wykres jakości rozwiązania w~kolejnych krokach 200 przebiegów algorytmu Steepest descent}
-%\label{fig:steephistkra30a}
-%\end{center}
-%\end{figure}
+\begin{figure}[!htpb]
+\begin{center}
+\input{./plotSteepestHistorical-kra30a.tex}
+\caption{Wykres jakości rozwiązania w~kolejnych krokach 200 przebiegów algorytmu Steepest descent}
+\label{fig:steephistkra30a}
+\end{center}
+\end{figure}
 
 Z~wykresu \ref{fig:steephistkra30a} widać, że~Steepest descent dość szybko dochodzi do~rozwiązania (liczba kroków bliska wielkości problemu),
 krzywa poprawy jakości ma~charakter eksponencjalny~-- jakość wyraźnie, coraz wolniej z~czasem,
@@ -346,14 +345,13 @@ na~jednej wartości i~,,podróżował'' po~rozwiązaniach o~jednakowej ocenie. D
 nie~znajduje już żadnych rozwiązań lepszych od~aktualnego, pozostaje przez kilka kroków przed zakończeniem na~stałej
 wartości jakości.
 
-%TODO Uzupełnić plots.gp o poniższy wykres
-%\begin{figure}[!htpb]
-%\begin{center}
-%\input{./plotGreedyHistorical-kra30a.tex}
-%\caption{Wykres jakości rozwiązania w~kolejnych krokach 200 przebiegów algorytmu Greedy}
-%\label{fig:greedyhistkra30a}
-%\end{center}
-%\end{figure}
+\begin{figure}[!htpb]
+\begin{center}
+\input{./plotGreedyHistorical-kra30a.tex}
+\caption{Wykres jakości rozwiązania w~kolejnych krokach 200 przebiegów algorytmu Greedy}
+\label{fig:greedyhistkra30a}
+\end{center}
+\end{figure}
 
 Z~wykresu \ref{fig:steephistkra30a} widać, że~Greedy, w~przeciwieństwie do algorytmu Steepest descent, często
 zatrzymuje się na~kilka kroków na~jednej wartości jakości, a~kształt poprawy, choć również przypomina krzywą wykładniczą, jest o~wiele
@@ -372,16 +370,19 @@ W~naszej analizie weźmiemy pod~uwagę dwa kryteria: jakość średniego i~najle
 
 Algorytm heurystyczny pracuje wielokrotnie szybciej niż~algorytmy Steepest~descent i~Greedy.
 Otrzymywane rozwiązania mają koszt średnio dwa razy większy od~minimalnego dla testowanych instancji.
-Jeżeli priorytetem jest krótki czas pracy i~dobra ocena czasu potrzebnego na znalezienie rozwiązania przed rozpoczęciem pracy, to~algorytm heurystyczny jest najlepszym wyborem.
+Jeżeli priorytetem jest krótki i~przewidywalny czas pracypotrzebny na znalezienie rozwiązania przed rozpoczęciem pracy, to~algorytm heurystyczny jest najlepszym wyborem.
 
-Algorytm losowy pracował w~czasie podobnym do~czasu pracy algorytmów Steepest descent oraz Greedy, ale~otrzymywał zawsze gorsze rezultaty.
-Wyjątkami od~tej reguły są zadania o~wielkościach 14, 16~i~26, jednak jego dwaj konkurenci na~tych zadaniach osiągają prawie zawsze optymalne rozwiązania.
-Podsumowując, uważamy, że~algorytm losowy może służyć baza do~porównania jakości działania bardziej rozbudowanych algorytmów, bowiem dobrze obrazuje rodzaj przestrzeni rozwiązań.
-Jeżeli znalezienie rozwiązania jest proste, to~jego wartość średnia jest wyższa niż dla~bardziej skomplikowanych krajobrazów funkcji kosztu.
+Algorytm losowy pracował w~czasie podobnym do~czasu pracy algorytmów Steepest descent oraz Greedy, ale~otrzymywał średnio gorsze
+rezultaty niż~o~wiele szybszy heurystyczny.
+Wyjątkami od~tej reguły są zadania o~wielkościach 14 i~26, jednak Steepest descent i~Greedy na~tych zadaniach osiągają prawie zawsze optymalne rozwiązania.
+Podsumowując, uważamy, że~algorytm losowy może służyć jako baza do~porównania jakości działania bardziej rozbudowanych algorytmów,
+bowiem dobrze obrazuje rodzaj przestrzeni rozwiązań.
+Jeżeli znalezienie rozwiązania jest proste, to~jego wartość średnia jest wyższa niż dla~bardziej skomplikowanych krajobrazów funkcji
+kosztu.
 
-Porównanie algorytmów Greedy i~Steepest descent jest najtrudniejsze.
-Zauważyliśmy, że~Greedy wykonuje więcej kroków, ale~czas pracy jest zawsze krótszy.
-Nie udało nam się znaleźć wśród testowanych instancji problemów, dla których ta cecha byłaby istotną zaletą.
-Osiągane przez niego wyniki są zawsze równe lub~nieznacznie gorsze od~ Steepest descent.
-Z~uwagi na~złożoność obliczeniową algorytm Steepest descent zastosowalibyśmy do~mniejszych problemów, podczas gdy do~większych bardziej odpowiedni byłby Greedy.
+Algorytmy Greedy i~Steepest descent zachowują się bardzo podobnie.
+Zauważyliśmy, że~Greedy wykonuje wielokrotnie więcej kroków, ale~jego czas pracy jest zawsze krótszy.
+Jakość osiąganych przez niego rozwiązań jest porównywalna z~jakością wyników algorytmu Steepest descent.
+Z~uwagi na~te wyniki uważamy, że~należy uznać algorytm Greedy za~lepszy od~algorytmu Steepest, ponieważ osiąga praktycznie jednakowe
+wyniki w~znacząco krótszym czasie.
 \end{document}
