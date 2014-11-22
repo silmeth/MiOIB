@@ -31,6 +31,10 @@ void Lab1::task() {
     problemNames.push_back("had14");
     problemNames.push_back("nug17");
     problemNames.push_back("nug21");
+    problemNames.push_back("tai35b");
+    problemNames.push_back("ste36c");
+    problemNames.push_back("lipa40a");
+    problemNames.push_back("lipa50a");
     numberOfInstances = problemNames.size();
 
     ProblemInstance** instances;
@@ -74,10 +78,10 @@ void Lab1::task() {
     // Length of subvectors is equal to repetitions
     std::vector< std::vector<double> > steepAlgInitCosts;
     std::vector< std::vector<double> > steepAlgEndCosts;
-//    std::vector< std::vector<double> > steepAlgHistoryCosts; // maybe will be useful later
+    std::vector<double> steepAlgSte36Costs; // maybe will be useful later
     std::vector< std::vector<double> > greedyAlgInitCosts;
     std::vector< std::vector<double> > greedyAlgEndCosts;
-//    std::vector< std::vector<double> > greedyAlgHistoryCosts; // maybe will be useful later
+    std::vector<double> greedyAlgSte36Costs; // maybe will be useful later
 
     for(int i = 0; i < numberOfInstances; ++i) {
     	// I don't know how to extend vectors by another vector so I push back an empty one into them
@@ -201,6 +205,24 @@ void Lab1::task() {
             }
             historicalSteepestGnuplotFile << "\n";
             historicalGreedyGnuplotFile << "\n";
+
+            if(problemNames[i] == "ste36c") {
+                if(j == 0) {
+                    steepAlgSte36Costs.push_back(steepAlgCosts[j]);
+                    greedyAlgSte36Costs.push_back(greedyAlgCosts[j]);
+                } else {
+                    if(steepAlgSte36Costs[j-1] < steepAlgCosts[j]) {
+                        steepAlgSte36Costs.push_back(steepAlgCosts[j]);
+                    } else {
+                        steepAlgSte36Costs.push_back(steepAlgSte36Costs[j-1]);
+                    }
+                    if(greedyAlgSte36Costs[j-1] < greedyAlgCosts[j]) {
+                        greedyAlgSte36Costs.push_back(greedyAlgCosts[j]);
+                    } else {
+                        greedyAlgSte36Costs.push_back(greedyAlgSte36Costs[j-1]);
+                    }
+                }
+            }
         }
 
         historicalSteepestGnuplotFile << "set term epslatex color size 15cm, 10cm\n";
@@ -234,9 +256,6 @@ void Lab1::task() {
         workTimeMeans[i][HEURISTIC] = heurAlg.workTime;
         numberOfSteps[i][GREEDY] = mean(greedyAlgNumberOfSteps);
         numberOfSteps[i][STEEPEST] = mean(steepAlgNumberOfSteps);
-
-//        steepAlgHistoryCosts.push_back(steepAlgCosts);
-//        greedyAlgHistoryCosts.push_back(greedyAlgCosts);
     }
 
     std::vector< std::vector<double> > solutionBestVec;
@@ -353,12 +372,27 @@ void Lab1::task() {
     heuristicDataFile.close();
     initEndCostsDataFile.close();
 
+    std::ofstream steepSte36File;
+    std::ofstream greedySte36File;
+    steepSte36File.open("/tmp/steepSte36.dat", std::ios::out);
+    greedySte36File.open("/tmp/greedySte36.dat", std::ios::out);
+
+    for(double v : steepAlgSte36Costs) {
+        steepSte36File << v << "\n";
+    }
+    for(double v : greedyAlgSte36Costs) {
+        greedySte36File << v << "\n";
+    }
+
+    steepSte36File.close();
+    greedySte36File.close();
+
     //unsigned int size, int** matA, int** matB, unsigned int numberOfRuns, int seed=19910401
     for(int i = 0; i < numberOfInstances; ++i) {
         delete [] solutionBest[i];
         delete [] solutionStdDev[i];
         delete [] solutionMeans [i];
-        delete []  workTimeStdDev[i];
+        delete [] workTimeStdDev[i];
         delete [] workTimeMeans[i];
         delete [] numberOfSteps[i];
         delete instances[i];
@@ -367,7 +401,7 @@ void Lab1::task() {
     delete [] solutionStdDev;
     delete [] solutionMeans;
     delete [] instances;
-    delete []  workTimeStdDev;
+    delete [] workTimeStdDev;
     delete [] workTimeMeans;
     delete [] numberOfSteps;
 
