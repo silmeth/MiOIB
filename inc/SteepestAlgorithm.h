@@ -7,8 +7,6 @@
 #ifndef STEEPESTALGORITHM_H_
 #define STEEPESTALGORITHM_H_
 
-#include <iostream>
-
 #include "BaseAlgorithm.h"
 #include <cstdio>
 #include <cstring>

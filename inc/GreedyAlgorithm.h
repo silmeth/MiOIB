@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../inc/BaseAlgorithm.h"
+#include "BaseAlgorithm.h"
 
 class GreedyAlgorithm: public BaseAlgorithm {
 private:
