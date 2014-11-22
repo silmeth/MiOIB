@@ -2,7 +2,7 @@
 set term qt 0 persist
 
 set yrange [0:1.2]
-set xrange [10:34]
+set xrange [10:52]
 
 set xtics 4
 set ytics 0.2
@@ -55,7 +55,7 @@ set term qt 2 persist
 
 set key inside top left
 
-set yrange [0:0.004]
+set yrange [0:0.02]
 set ytics 1e-3
 set mytics 2
 
@@ -66,19 +66,19 @@ set grid xtics ytics mxtics mytics ls 1 lw 1.7 linecolor rgbcolor "#8b8989", lw 
 
 frandom(x) = ar*x**2+br*x+cr
 ar=1e-15; br=1e-10; cr=1e-10;
-fit frandom(x) "<(sed -n -e '1,9p' -e '11,14p' /tmp/randomData)" using 1:5 via ar, br, cr
+fit frandom(x) "<(sed -n -e '1,9p' -e '11,18p' /tmp/randomData)" using 1:5 via ar, br, cr
 
 fgreedy(x) = ag*x**2+bg*x+cg
 ag = 2.4e-6; bg=1e-10; cg=1e-10;
-fit fgreedy(x) "<(sed -n -e '1,9p' -e '11,14p' /tmp/greedyData)" using 1:5 via ag, bg, cg
+fit fgreedy(x) "<(sed -n -e '1,9p' -e '11,18p' /tmp/greedyData)" using 1:5 via ag, bg, cg
 
 fsteepest(x) = as*x**2+bs*x+cs
 as = 2.4e-6; bs=1e-10; cs=1e-10;
-fit fsteepest(x) "<(sed -n -e '1,9p' -e '11,14p' /tmp/steepestData)" using 1:5 via as, bs, cs
+fit fsteepest(x) "<(sed -n -e '1,9p' -e '11,18p' /tmp/steepestData)" using 1:5 via as, bs, cs
 
 fheuristic(x) = ah*x**2+bh*x+ch
 ah=1e-15; bh=1e-10; ch=1e-10;
-fit fheuristic(x) "<(sed -n -e '1,9p' -e '11,14p' /tmp/heuristicData)" using 1:3 via ah, bh, ch
+fit fheuristic(x) "<(sed -n -e '1,9p' -e '11,18p' /tmp/heuristicData)" using 1:3 via ah, bh, ch
 
 plot "/tmp/randomData" using 1:5:6 title "random" with yerrorbars linecolor rgb "black" pointtype 7 linetype 1, \
      frandom(x) title "" with lines linecolor rgb "black" linetype 2, \
@@ -97,7 +97,7 @@ replot
 # SAME FOR HEURISTIC ONLY
 set term qt 3 persist
 
-set yrange [0:1.2e-4]
+set yrange [0:2.2e-4]
 set ytics 2e-5
 set mytics 2
 
@@ -121,7 +121,7 @@ set term qt 5 persist
 
 set key inside bottom right
 
-set yrange [0:1.2]
+set yrange [0:1]
 set ytics 0.2
 set mytics 2
 
@@ -173,7 +173,7 @@ set term qt 6 persist
 
 set key below
 
-set yrange [0:1.2]
+set yrange [0:1]
 set ytics 0.2
 set mytics 2
 
@@ -274,14 +274,14 @@ unset logscale x
 set term qt 7 persist
 
 set key inside top left
-set yrange [0:100]
+set yrange [0:120]
 set ytics 10
 set mytics 2
 
 set ylabel "śr. liczba kroków"
 set format y "\\num{%g}"
 
-set xrange[10:34]
+set xrange[10:52]
 set xlabel "rozmiar problemu"
 
 set grid xtics ytics mxtics mytics ls 1 lw 1.7 linecolor rgbcolor "#8b8989", lw 0.7 lc rgbcolor "#8b8989"
@@ -300,7 +300,7 @@ set term qt 8 persist
 
 set key inside bottom right
 
-set yrange [0:1.2]
+set yrange [0:1.01]
 set ytics 0.2
 set mytics 2
 
@@ -308,7 +308,7 @@ set ylabel "jakość końcowa"
 set format y "\\num{%g}"
 
 set xlabel "jakość początkowa"
-set xrange [0:1.2]
+set xrange [0:1.01]
 set format x "\\num{%g}"
 set xtics 0.2
 set mxtics 5
@@ -334,7 +334,7 @@ set term qt 9 persist
 
 set key inside bottom right
 
-set yrange [0:1.2]
+set yrange [0:1.01]
 set ytics 0.2
 set mytics 2
 
@@ -342,7 +342,7 @@ set ylabel "jakość końcowa"
 set format y "\\num{%g}"
 
 set xlabel "jakość początkowa"
-set xrange [0:1.2]
+set xrange [0:1.01]
 set format x "\\num{%g}"
 set xtics 0.2
 set mxtics 5
@@ -370,3 +370,29 @@ set output "./plotInitEndQualityAll.tex"
 replot
 
 unset pointsize
+
+#------------------------------
+# max quality vs run no
+# problem ste36
+
+set term qt persist
+set pointsize 1
+set key bottom right
+set xlabel "liczba uruchomień"
+set ylabel "maks.~jakość"
+set format y "\\num{%g}"
+
+set ytics 0.02
+set xtics 20
+unset mxtics
+unset mytics
+
+set xrange [0:200]
+set yrange [0.9:1]
+
+plot "/tmp/steepSte36.dat" title "Steepest" with linespoints linetype 1 linecolor rgb "green", \
+     "/tmp/greedySte36.dat" title "Greedy" with linespoints linetype 1 linecolor rgb "red"
+
+set term epslatex color size 16.5cm, 13cm
+set output "./plotQualityRunNo.tex"
+replot

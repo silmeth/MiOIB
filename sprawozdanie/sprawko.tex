@@ -105,9 +105,11 @@ Na podstawie czasu wykresu czasu działania stwierdziliśmy, że gwarantuje to c
 Algorytm kieruje się heurystyką i ustawia najpierw najbliżej siebie jednostki o największych przepływach.
 W każdym kolejnym kroku dobierana jest spośród wszystkich pozostałych jednostek para o~największym przepływie
 i~umieszczana na niewykorzystanych do~tej pory lokalizacjach, które są w najmniejszej odległości od~siebie.
+Algorytm jest w~pełni deterministyczny.
 
 \subsubsection{Random}
-Algorytm zwraca losową permutację.
+Algorytm generuje losową permutację, z~równomiernym rozkładem prawdopodobieństwa~-- każde możliwe rozwiązanie
+ma~jednakowe prawdopodobieństwo wylosowania. Czas jego działania zależny jedynie od~wielkości problemu.
 
 \subsubsection{Greedy}
 Algorytm Greedy wybiera losowego sąsiada i oblicza jego koszt.
@@ -154,7 +156,7 @@ Poniższe wykresy przedstawiają anlizę pracy i~sprawności algorytmów.
 \subsubsection{Średnia jakość rozwiązania}
 Jakość działania liczona jest jako stosunek kosztu rozwiązania optymalnego do~kosztu rozwiązania znalezionego przez
 algorytm.
-Wykres z~rys.~\ref{fig:qualityvssizemean} przedstawia wartości średnie jakości (punkty) oraz wartość 1 odchylenia standardowego (linie pionowe).
+Wykres z~Rys.~\ref{fig:qualityvssizemean} przedstawia wartości średnie jakości (punkty) oraz wartość 1 odchylenia standardowego (linie pionowe).
 Wyniki nie mają rozkładu normalnego, dlatego do interpretacji odchylenia standardowego powinniśmy podchodzić ostrożnie.
 Zakresy odchylenia standardowego mogą przekraczać wartość \num{1.0}.
 Dla problemu esc32 wynika to ze skupienia jakości rozwiązań w okolicy rozwiązania optymalnego i niewielu rozwiązań o znacznie odbiegającej jakości.
@@ -177,7 +179,7 @@ Algorytm korzystający z heurystyki w~każdym przypadku znajduje lepsze lub rów
 Średnie rozwiązania dla~200 uruchomień dla~algorytmów Steepest descent oraz Greeedy mają bardzo podobne, nierozróżnialne wartości.
 
 \subsubsection{Jakość najlepszego znalezionego rozwiązania}
-Wykres z~rys.~\ref{fig:qualityvssizemax} przedstawia jakość najlepszego rozwiązania, znalezionego przez algorytmy, dla~poszczególnych instancji.
+Wykres z~Rys.~\ref{fig:qualityvssizemax} przedstawia jakość najlepszego rozwiązania, znalezionego przez algorytmy, dla~poszczególnych instancji.
 
 \begin{figure}[!htpb]
 \begin{center}
@@ -194,7 +196,7 @@ W jednym przypadku (problem chr20a) najlepsze rozwiązanie znalezione przez algo
 
 \section{Czas działania w zależności od rozmiaru problemu}
 \subsection{Random, Greedy i Steepest descent}
-Na wykresie z~rys.~\ref{fig:timesize} przedstawiona jest średnia wartość czasu potrzebnego na~znalezienie rozwiązania dla~200 uruchomień algorytmów Random, Greedy i~Steepest descent i~wartość jednego odchylenia standardowego dla~wszystkich uruchomień.
+Na wykresie z~Rys.~\ref{fig:timesize} przedstawiona jest średnia wartość czasu potrzebnego na~znalezienie rozwiązania dla~200 uruchomień algorytmów Random, Greedy i~Steepest descent i~wartość jednego odchylenia standardowego dla~wszystkich uruchomień.
 
 Do~wyników dopasowaliśmy krzywe kwadratowe w~postaci $ax^2+bx+c$.
 
@@ -241,7 +243,7 @@ wartości wewnątrz~instrukcji warunkowych i~czas działania jest krótszy).
 %\input{./plotTimeSizeRandom.tex}
 
 \section{Jakość rozwiązania w zależności od czasu działania}
-Na~rys.~\ref{fig:qualitytime} i~\ref{fig:qualitytimefull} przedstawiamy dwa wykresy,
+Na~Rys.~\ref{fig:qualitytime} i~\ref{fig:qualitytimefull} przedstawiamy dwa wykresy,
 które pozwalają porównać algorytmy na~podstawie czasu ich pracy i~osiąganych rozwiązań.
 Na~pierwszym wykresie dla~czytelności przedstawiliśmy tylko 4 instancje problemów, drugi wykres zawiera punkty dla~wszystkich instancji. 
 Problemowi przypisany jest kształt znacznika, kolor indentyfikuje natomiast algorytm, który osiągnął dany wynik.
@@ -266,14 +268,14 @@ Greedy potrzebuje więc mniej czasu na osiągnięcie podobnego, co~Steepest, rez
 \begin{figure}
 \begin{center}
 \input{./plotQualityTimeFull.tex}
-\caption{Wykres jakości rozwiązania w~funkcji czasu rozwiązania dla~wszystkich problemów}
+\caption{Wykres jakości rozwiązania w~funkcji czasu rozwiązania dla~różnych problemów}
 \label{fig:qualitytimefull}
 \end{center}
 \end{figure}
 
 \section{Średnia liczba kroków w zależności od rozmiaru problemu}
 Średnia liczba kroków wykonywanych przez algorytmy zależy bardzo od~krajobrazu rozwiązań.
-Z wykresu z~rys.~\ref{fig:stepssize} wywnioskowaliśmy, że~można by dla algorytmu Steepest descent dopasować zależność między liczbą kroków
+Z wykresu z~Rys.~\ref{fig:stepssize} wywnioskowaliśmy, że~można by dla algorytmu Steepest descent dopasować zależność między liczbą kroków
 a~rozmiarem problemu (poza ekstremalnym przypadkiem problemu esc32).
 
 Dla algorytmu Greedy zależność nie jest tak łatwa do zbudowania.
@@ -297,7 +299,7 @@ lub~bardzo bliskie optimum (els19), a~odchylenia standardowe liczby kroków są 
 \section{Jakość rozwiązania najlepszego w~zależności od~początkowego}
 %TODO dopisać nazwy opisywanych problemów
 %TODO poprawić tę sekcję, nie jestem pewien poprawności wniosków (ani ich sformułowania)
-Z wykresów przedstawionych na~rys.~\ref{fig:initendquality} i~\ref{fig:initendqualityall} widać, że~występuje pewna zależność
+Z wykresów przedstawionych na~Rys.~\ref{fig:initendquality} i~\ref{fig:initendqualityall} widać, że~występuje pewna zależność
 między jakością rozwiązania początkowego oraz ostatecznie znalezionego rozwiązania. Widać również, że~punkty dotyczące
 danej instancji problemu skupiają się na~niewielkim obszarze na~wykresie. Oznacza to, że~jakość początkowego, losowego
 rozwiązania bardzo zależy od~testowanej instancji problemu.
@@ -310,7 +312,7 @@ rozwiązania bardzo zależy od~testowanej instancji problemu.
 \end{center}
 \end{figure}
 
-Na~wykresie z~rys.~\ref{fig:initendqualityall} widać, że~dla~większości
+Na~wykresie z~Rys.~\ref{fig:initendqualityall} widać, że~dla~większości
 problemów jakość początkowego rozwiązania waha się między \num{0.08} a~\num{0.22}, a~jedynie dla~dwóch przykładowych problemów
 są to wartości powyżej \num{0.4}, a~jakość znalezionego rozwiązania końcowego dla~większości problemów waha się dość istotnie.
 Trudno zatem ocenić, czy zależność między jakością rozwiązania początkowego a~końcowego jest rzeczywistym związkiem przyczynowo-skutkowym
@@ -320,14 +322,14 @@ wynika tylko z~ich charakteru.
 \begin{figure}[!htpb]
 \begin{center}
 \input{./plotInitEndQualityAll.tex}
-\caption{Wykres jakości rozwiązania najlepszego od~rozwiązania początkowego dla~wszystkich problemów}
+\caption{Wykres jakości rozwiązania najlepszego od~rozwiązania początkowego dla~różnych problemów}
 \label{fig:initendqualityall}
 \end{center}
 \end{figure}
 
 \section{Poprawa jakości znalezionego rozwiązania w~kolejnych krokach}
-Wykres na~rys.~\ref{fig:steephistkra30a} przedstawia jaką wielkość miary jakości miały rozwiązania w~kolejnych krokach
-algorytmu Steepest descent dla~problemu kra30a. Wykres z~rys.~\ref{fig:greedyhistkra30a} przedstawia analogiczne dane
+Wykres na~Rys.~\ref{fig:steephistkra30a} przedstawia jaką wielkość miary jakości miały rozwiązania w~kolejnych krokach
+algorytmu Steepest descent dla~problemu kra30a. Wykres z~Rys.~\ref{fig:greedyhistkra30a} przedstawia analogiczne dane
 dla~algorytmu Greedy. Oba~algorytmy zostały uruchomione 200 razy.
 
 \begin{figure}[!htpb]
@@ -362,6 +364,17 @@ ogólny czas wykonywania Greedy'ego jest krótszy.
 Oba algorytmy mają dość duży rozrzut jakości rozwiązania początkowego (startują od~podobnych rozwiązań losowych, o~jakościach
 od~\num{0.6} do~ok.~\num{0.75}, różnica \num{0.15}), i~oba zbiegają się do~niezbyt mocno rozrzuconych pod~względem miary jakości rozwiązań końcowych~--
 w~analizowanym przypadku wartości między \num{0.9} a~\num{0.95}, różnica \num{0.05}.
+
+\section{Zależność jakości od~liczby powtórzeń}
+\begin{figure}[!htpb]
+\begin{center}
+\input{./plotQualityRunNo.tex}
+\caption{Wykres maksymalnej jakości rozwiązania dla~kolejnych 200 uruchomień algorytmów Greedy i~Steepest descent na~problemie ste36c}
+\label{fig:qualityrunno}
+\end{center}
+\end{figure}
+
+Z~wykresu na~Rys.~\ref{fig:qualityrunno} widać, że\ldots POPRAWIĆ
 
 \section{Wnioski}
 Głównym pytaniem, jakie zadaliśmy sobie po~wykonaniu doświadczeń było:~który algorytm jest najlepszy?
