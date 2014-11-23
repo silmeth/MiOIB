@@ -16,6 +16,7 @@
 #include "../inc/RandomAlgorithm.h"
 #include "../inc/SteepestAlgorithm.h"
 #include "../inc/GreedyAlgorithm.h"
+#include "../inc/TabuSearchAlgorithm.h"
 
 #include "../inc/Lab1.h"
 
@@ -196,6 +197,24 @@ void testLab() {
     assert(lab.stdDev(vals) < 2.3);
 }
 
+void testTabuSearch() {
+	ProblemInstance inst("./qapdatsol/lipa50a.dat");
+	TabuSearchAlgorithm alg(inst.problemSize, inst.A, inst.B, DEFINITE_NUM_OF_STEPS, 50);
+
+	alg.run();
+	std::cout << "Tabu solution: " << std::endl;
+	printSol(alg.bestSolution, alg.problemSize);
+	std::cout << "Tabu solution cost: " << alg.minCost << std::endl;
+	std::cout << "Tabu tested cost: " << rateSol(inst.A, inst.B, alg.bestSolution, alg.problemSize) << std::endl;
+	std::cout << "Problem lowest cost: " << inst.lowestCost << std::endl;
+	if(alg.numberOfSteps < 100) {
+		std::cout << "Costs: ";
+		printCosts(alg.historicalCosts, alg.numberOfSteps);
+	}
+	std::cout << "Steps to find solution: " << alg.numberOfSteps << std::endl;
+	std::cout << "Time to find solution: " << alg.workTime << std::endl << std::endl;
+}
+
 int main() {
     int** A = new int* [size];
     int** B = new int* [size];
@@ -236,8 +255,9 @@ int main() {
 //    testInstances();
 //    testLab();
 
-    Lab1 lab;
-    lab.task();
+    testTabuSearch();
+//    Lab1 lab;
+//    lab.task();
     std::cout << "--- End of tests ---";
 
     for(int i = 0; i < 12; i++) {
