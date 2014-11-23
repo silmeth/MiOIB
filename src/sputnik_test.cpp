@@ -199,7 +199,7 @@ void testLab() {
 }
 
 void testTabuSearch() {
-	ProblemInstance inst("./qapdatsol/tai100a.dat");
+	ProblemInstance inst("./qapdatsol/lipa20a.dat");
 	TabuSearchAlgorithm alg(inst.problemSize, inst.A, inst.B, DEFINITE_NUM_OF_STEPS, 200);
 
 	alg.run();
@@ -217,7 +217,7 @@ void testTabuSearch() {
 }
 
 void testSimulatedAnnealing() {
-	ProblemInstance inst("./qapdatsol/tai100a.dat");
+	ProblemInstance inst("./qapdatsol/lipa20a.dat");
 	SimmulatedAnnealing alg(inst.problemSize, inst.A, inst.B, DEFINITE_NUM_OF_STEPS, 100000);
 
 	alg.run();

@@ -35,36 +35,43 @@ void SimmulatedAnnealing::run() {
     if(isInitialised) {
         minCost = curCost = rateSolution();
         historicalCosts[0] = curCost;
+        // Number of checked solutions
         unsigned int checkedSolutions = 0;
         unsigned int currentNeighCost;
+        // Iterator
         unsigned int i = 1;
         initTemp(getWorstNeighbourCost());
-        bool improving = true;
+        // How many solutions checked since last improvement.
         unsigned int lastImprovement = 0;
+		unsigned int k = 0;
 
         auto begin = std::chrono::high_resolution_clock::now();
         std::uniform_int_distribution<unsigned int> dist(0, neighbourhoodSize-1);
+        // Generator for comparing with threshold.
         std::uniform_real_distribution<double> solAcc(0.0, 1.0);
-        while(improving && i < stopVal) {
-        	// I chose 10 because I wanted to reduce number of iterations on single temp. level.
-            if(i % (neighbourhoodSize/2) == 0) {
-            	decreaseTemperature(0.9);
+
+        // Only one stop condition, but in code i can be set to stopVal to terminate loop.
+        while(i < stopVal) {
+            if(i % (neighbourhoodSize) == 0) {
+            	decreaseTemperature(0.8);
             }
             unsigned int r = dist(randGen);
 			bool accepted = false;
-			unsigned int k = 0;
+
 			while(!accepted) {
 				if(lastImprovement > 10*neighbourhoodSize) {
-					improving = false;
-					std::cerr << "Reached 10*" << neighbourhoodSize << std::endl;
+					i = stopVal;
+					std::cerr << "Reached 10 * " << neighbourhoodSize << std::endl;
 					break;
 				}
-				unsigned int n = (r+k)%neighbourhoodSize;
+				unsigned int n = (r+k)%neighbourhoodSize; // Iterate over all neighbours unlimited number of times.
 				generateNeighbour(n);
 				checkedSolutions++;
 				currentNeighCost = curCost + rateNeighbour(n);
 				// Check if take this solution
 				float threshold = acceptSolutionThreshold(currentNeighCost);
+
+				// Compare with threshold
 				if(solAcc(randGen) < threshold) {
 					// Add solution
 					accepted = true;
@@ -73,7 +80,6 @@ void SimmulatedAnnealing::run() {
 					historicalCosts[i] = curCost;
 					if(curCost < minCost) {
 						lastImprovement = 0;
-						improving = true;
 						minCost = curCost;
 						memcpy(bestSolution, neighbours[n], sizeof(unsigned int) * problemSize);
 					} else {

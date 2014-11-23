@@ -11,19 +11,19 @@ TabuSearchAlgorithm::TabuSearchAlgorithm(unsigned int size, int** matA, int** ma
                     : BaseAlgorithm(size, matA, matB, seed), cond(condition), stopVal(value) {
     historicalCosts = new int[value];
     // For small problems always take 3 neighbours.
-    if(problemSize < 30) {
-    	bestNeighboursNumber = 3;
-    }
-    else {
-    	bestNeighboursNumber = problemSize/10;
-    }
-    bestNeighboursIndexes = new unsigned int[bestNeighboursNumber];
-    bestNeighboursCosts = new unsigned int[bestNeighboursNumber];
-    tabuSolutionsNumber = problemSize/4;
-    tabuSolutions = new unsigned int * [tabuSolutionsNumber];
-    for(unsigned int i = 0; i < tabuSolutionsNumber; ++i) {
-    	tabuSolutions[i] = new unsigned int [problemSize];
-    }
+     if(problemSize < 30) {
+     	bestNeighboursNumber = 3;
+     }
+     else {
+     	bestNeighboursNumber = problemSize/10;
+     }
+     bestNeighboursIndexes = new unsigned int[bestNeighboursNumber];
+     bestNeighboursCosts = new unsigned int[bestNeighboursNumber];
+     tabuSolutionsNumber = problemSize/4;
+     tabuSolutions = new unsigned int * [tabuSolutionsNumber];
+     for(unsigned int i = 0; i < tabuSolutionsNumber; ++i) {
+     	tabuSolutions[i] = new unsigned int[problemSize];
+     }
 }
 
 void TabuSearchAlgorithm::init(unsigned int size, int** matA, int** matB, stopCondition condition, int value, int seed) {
@@ -45,7 +45,7 @@ void TabuSearchAlgorithm::clean() {
     }
     delete [] bestNeighboursIndexes;
     delete [] bestNeighboursCosts;
-    for(unsigned int i = 0; i < problemSize/4; ++i) {
+    for(unsigned int i = 0; i < tabuSolutionsNumber; ++i) {
     	delete [] tabuSolutions[i];
     }
     delete [] tabuSolutions;
@@ -66,47 +66,32 @@ void TabuSearchAlgorithm::run() {
 			// Iterate over bestNeighboursNumber
 			for(unsigned int n = 0; n < bestNeighboursNumber; n++) {
 				if(!nextSolutionFound){
-					// Last element.
+					//If it's the last one, accept it.
 					if(n == bestNeighboursNumber - 1) {
-						// If all of best neighbours are tabu, take the first one from the list.
-						// Can help to jump out of the local minimum.
-						if(isTabu(bestNeighboursIndexes[n])) {
-//							n = 0;
-							nextSolutionFound = true;
-							sameOrWorseCounter++;
-						}
-						else {
-							nextSolutionFound = true;
-							sameOrWorseCounter++;
-						}
+						nextSolutionFound = true;
+						sameOrWorseCounter++;
 					} else {
 						// Check if it has lower cost than current solution.
-						if(bestNeighboursCosts[n] < curCost) {
+						if(bestNeighboursCosts[i] < curCost) {
 							nextSolutionFound = true;
-							if(bestNeighboursCosts[n] < minCost) {
-								sameOrWorseCounter = 0;
-								minCost = bestNeighboursCosts[n];
-								memcpy(bestSolution, neighbours[bestNeighboursIndexes[n]], sizeof(unsigned int) * problemSize);
-							} else {
-								sameOrWorseCounter++;
-							}
-						} else if(!isTabu(bestNeighboursIndexes[n])) {
+							sameOrWorseCounter = 0;
+							minCost = bestNeighboursCosts[i];
+							memcpy(bestSolution, neighbours[n], sizeof(unsigned int) * problemSize);
+						} else if(!isTabu(n)) {
 							nextSolutionFound = true;
 							sameOrWorseCounter++;
 						}
 					}
-					if(nextSolutionFound) {
-						addTabuSolution(bestNeighboursIndexes[n]);
-						curCost = bestNeighboursCosts[n];
-						memcpy(curSolution, neighbours[bestNeighboursIndexes[n]], sizeof(unsigned int) * problemSize);
-						historicalCosts[i] = curCost;
-						break;
-					}
+				} else {
+					addTabuSolution(n);
+					curCost = bestNeighboursCosts[n];
+					memcpy(curSolution, neighbours[n], sizeof(unsigned int) * problemSize);
+					historicalCosts[i] = curCost;
+					break;
 				}
 			}
-			if(sameOrWorseCounter > 10) {
+			if(sameOrWorseCounter > 9) {
 				numberOfSteps = i;
-				break;
 			}
 		}
 //      std::cout << "Tabu no of steps: " << numberOfSteps << std::endl;
@@ -143,13 +128,12 @@ void TabuSearchAlgorithm::repeatedRun(unsigned int repetitions) {
 
 void TabuSearchAlgorithm::findBestNeighbours() {
 	for(unsigned int i = 0; i < bestNeighboursNumber; ++i) {
-		bestNeighboursCosts[i] = 999999999;
+		bestNeighboursCosts[i] = 1e10;
 	}
 	for(unsigned int n = 0; n < neighbourhoodSize; ++n) {
 		for(unsigned int i = 0; i < bestNeighboursNumber; ++i) {
 			if(rateNeighbour(n) + curCost < bestNeighboursCosts[i]){
 				insertGoodNeighbour(n, i);
-				break;
 			}
 		}
 	}
@@ -157,17 +141,17 @@ void TabuSearchAlgorithm::findBestNeighbours() {
 
 void TabuSearchAlgorithm::insertGoodNeighbour(unsigned int solutionIndex, unsigned int pos) {
 	// Shift one step down.
-	for(unsigned int i = bestNeighboursNumber-1; i > pos ; --i) {
-		bestNeighboursCosts[i] = bestNeighboursCosts[i-1];
-		bestNeighboursIndexes[i] = bestNeighboursIndexes[i-1];
+	for(unsigned int i = pos + 1; i < bestNeighboursNumber-1; ++i) {
+		bestNeighboursCosts[i+1] = bestNeighboursCosts[i];
+		bestNeighboursIndexes[i+1] = bestNeighboursIndexes[i];
 	}
 	bestNeighboursCosts[pos] = rateNeighbour(solutionIndex) + curCost;
 	bestNeighboursIndexes[pos] = solutionIndex;
 }
 
 void TabuSearchAlgorithm::addTabuSolution(unsigned int solutionIndex) {
-	for(unsigned int i = tabuSolutionsNumber - 1; i > 0; --i) {
-		memcpy(tabuSolutions[i], tabuSolutions[i-1], sizeof(unsigned int) * problemSize);
+	for(unsigned int i = 0; i < tabuSolutionsNumber - 1; ++i) {
+		memcpy(tabuSolutions[i+1], tabuSolutions[i], sizeof(unsigned int) * problemSize);
 	}
 	memcpy(tabuSolutions[0], neighbours[solutionIndex], sizeof(unsigned int) * problemSize);
 }
