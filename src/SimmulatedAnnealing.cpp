@@ -9,6 +9,7 @@
 SimmulatedAnnealing::SimmulatedAnnealing(unsigned int size, int** matA, int** matB, stopCondition condition, int value, int seed)
                     : BaseAlgorithm(size, matA, matB, seed), cond(condition), stopVal(value) {
     historicalCosts = new int[value];
+    lowestTemperature = 0.01;
 }
 
 SimmulatedAnnealing::~SimmulatedAnnealing() {
@@ -34,58 +35,64 @@ void SimmulatedAnnealing::run() {
     if(isInitialised) {
         minCost = curCost = rateSolution();
         historicalCosts[0] = curCost;
-        unsigned int sameVal = 0;
-        if(cond == DEFINITE_NUM_OF_STEPS) {
-            numberOfSteps = stopVal;
-            auto begin = std::chrono::high_resolution_clock::now();
-            std::uniform_int_distribution<unsigned int> dist(0, neighbourhoodSize-1);
+        unsigned int checkedSolutions = 0;
+        unsigned int currentNeighCost;
+        unsigned int i = 1;
+        initTemp(getWorstNeighbourCost());
+        bool improving = true;
+        unsigned int lastImprovement = 0;
 
-            bool betterSolutionFound = true;
-            int currentNeighCost;
-            for(unsigned int i = 1; i < stopVal; i++) {
-                unsigned int r = dist(randGen); // random for randomly chosen first neighbour
-                if(betterSolutionFound) {
-                    betterSolutionFound = false;
-                    for(unsigned int k = 0; k < neighbourhoodSize; k++) {
-                        unsigned int n = (r+k)%neighbourhoodSize;
-                        generateNeighbour(n);
-                        currentNeighCost = curCost + rateNeighbour(n);
-                        if(currentNeighCost < curCost) {
-                            curCost = currentNeighCost;
-                            memcpy(curSolution, neighbours[n], sizeof(unsigned int) * problemSize);
-                            historicalCosts[i] = curCost;
-                            betterSolutionFound = true;
-                            sameVal = 0;
-                            break;
-                        } else if(currentNeighCost == curCost && sameVal < 3) {
-                            curCost = currentNeighCost;
-                            memcpy(curSolution, neighbours[n], sizeof(unsigned int) * problemSize);
-                            historicalCosts[i] = curCost;
-                            betterSolutionFound = true;
-                            ++sameVal;
-                            break;
-                        }
-                    }
-                } else {
-                    // i-1 because if program executes this block, it means it has unset betterSolutionFound
-                    // in (i-1)-th step and then i has been incremented.
-                    numberOfSteps = i-1;
-                    break;
-                }
-                if(i == stopVal-1) {
-                    std::cerr << "Greedy: Maximum number of steps (" << numberOfSteps << ") has been reached!\n";
-                }
+        auto begin = std::chrono::high_resolution_clock::now();
+        std::uniform_int_distribution<unsigned int> dist(0, neighbourhoodSize-1);
+        std::uniform_real_distribution<double> solAcc(0.0, 1.0);
+        while(improving && i < stopVal) {
+        	// I chose 10 because I wanted to reduce number of iterations on single temp. level.
+            if(i % (neighbourhoodSize/2) == 0) {
+            	decreaseTemperature(0.9);
             }
-//            std::cout << "Greedy no of steps: " << numberOfSteps << std::endl;
-            auto end = std::chrono::high_resolution_clock::now();
-            workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
-            minCost = curCost;
-            memcpy(bestSolution, curSolution, sizeof(unsigned int) * problemSize);
-        } else if(cond == MIN_IMPROVEMENT) {
-            //TODO Implement minimal improvement stop condition
-        } else {
-            std::cout << "Unknown stop condition." << std::endl;
+            unsigned int r = dist(randGen);
+			bool accepted = false;
+			unsigned int k = 0;
+			while(!accepted) {
+				if(lastImprovement > 10*neighbourhoodSize) {
+					improving = false;
+					std::cerr << "Reached 10*" << neighbourhoodSize << std::endl;
+					break;
+				}
+				unsigned int n = (r+k)%neighbourhoodSize;
+				generateNeighbour(n);
+				checkedSolutions++;
+				currentNeighCost = curCost + rateNeighbour(n);
+				// Check if take this solution
+				float threshold = acceptSolutionThreshold(currentNeighCost);
+				if(solAcc(randGen) < threshold) {
+					// Add solution
+					accepted = true;
+					curCost = currentNeighCost;
+					memcpy(curSolution, neighbours[n], sizeof(unsigned int) * problemSize);
+					historicalCosts[i] = curCost;
+					if(curCost < minCost) {
+						lastImprovement = 0;
+						improving = true;
+						minCost = curCost;
+						memcpy(bestSolution, neighbours[n], sizeof(unsigned int) * problemSize);
+					} else {
+						lastImprovement++;
+					}
+					break;
+				} else {
+					lastImprovement++;
+				}
+				k++;
+			}
+			i++;
+			numberOfSteps = i;
+			if(i == stopVal-1) {
+				std::cerr << "SimulatedAnnealing: Maximum number of steps (" << numberOfSteps << ") has been reached!\n";
+			}
         }
+		auto end = std::chrono::high_resolution_clock::now();
+		workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
     }
 }
 
@@ -113,4 +120,30 @@ void SimmulatedAnnealing::repeatedRun(unsigned int repetitions) {
 	workTime = elapsedTime;
 	numberOfSteps = elapsedSteps;
 	delete[] bestSolTmp;
+}
+
+float SimmulatedAnnealing::initTemp(unsigned int worstNeighbourCost) {
+	temperature = float((curCost - worstNeighbourCost)) / log(0.95);
+	return temperature;
+}
+
+float SimmulatedAnnealing::decreaseTemperature(float multiplier) {
+	temperature *= multiplier;
+	return temperature;
+}
+
+float SimmulatedAnnealing::acceptSolutionThreshold(unsigned int cost) {
+	return exp(float(minCost - cost)/temperature);
+}
+
+unsigned int SimmulatedAnnealing::getWorstNeighbourCost() {
+	double highestCost = -1e9;
+	unsigned int worstNeighbourIndex = 0;
+	for(unsigned int n = 0; n < neighbourhoodSize; ++n) {
+		if(rateNeighbour(n) > highestCost) {
+			highestCost = rateNeighbour(n);
+			worstNeighbourIndex = n;
+		}
+	}
+	return highestCost + curCost;
 }

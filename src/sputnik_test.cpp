@@ -17,6 +17,7 @@
 #include "../inc/SteepestAlgorithm.h"
 #include "../inc/GreedyAlgorithm.h"
 #include "../inc/TabuSearchAlgorithm.h"
+#include "../inc/SimmulatedAnnealing.h"
 
 #include "../inc/Lab1.h"
 
@@ -198,14 +199,32 @@ void testLab() {
 }
 
 void testTabuSearch() {
-	ProblemInstance inst("./qapdatsol/lipa50a.dat");
-	TabuSearchAlgorithm alg(inst.problemSize, inst.A, inst.B, DEFINITE_NUM_OF_STEPS, 50);
+	ProblemInstance inst("./qapdatsol/tai100a.dat");
+	TabuSearchAlgorithm alg(inst.problemSize, inst.A, inst.B, DEFINITE_NUM_OF_STEPS, 200);
 
 	alg.run();
 	std::cout << "Tabu solution: " << std::endl;
 	printSol(alg.bestSolution, alg.problemSize);
 	std::cout << "Tabu solution cost: " << alg.minCost << std::endl;
 	std::cout << "Tabu tested cost: " << rateSol(inst.A, inst.B, alg.bestSolution, alg.problemSize) << std::endl;
+	std::cout << "Problem lowest cost: " << inst.lowestCost << std::endl;
+	if(alg.numberOfSteps < 100) {
+		std::cout << "Costs: ";
+		printCosts(alg.historicalCosts, alg.numberOfSteps);
+	}
+	std::cout << "Steps to find solution: " << alg.numberOfSteps << std::endl;
+	std::cout << "Time to find solution: " << alg.workTime << std::endl << std::endl;
+}
+
+void testSimulatedAnnealing() {
+	ProblemInstance inst("./qapdatsol/tai100a.dat");
+	SimmulatedAnnealing alg(inst.problemSize, inst.A, inst.B, DEFINITE_NUM_OF_STEPS, 100000);
+
+	alg.run();
+	std::cout << "SA solution: " << std::endl;
+	printSol(alg.bestSolution, alg.problemSize);
+	std::cout << "SA solution cost: " << alg.minCost << std::endl;
+	std::cout << "SA tested cost: " << rateSol(inst.A, inst.B, alg.bestSolution, alg.problemSize) << std::endl;
 	std::cout << "Problem lowest cost: " << inst.lowestCost << std::endl;
 	if(alg.numberOfSteps < 100) {
 		std::cout << "Costs: ";
@@ -256,6 +275,7 @@ int main() {
 //    testLab();
 
     testTabuSearch();
+    testSimulatedAnnealing();
 //    Lab1 lab;
 //    lab.task();
     std::cout << "--- End of tests ---";
