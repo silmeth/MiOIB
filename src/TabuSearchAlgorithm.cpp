@@ -65,27 +65,33 @@ void TabuSearchAlgorithm::run() {
 			bool nextSolutionFound = false;
 			// Iterate over bestNeighboursNumber
 			for(unsigned int n = 0; n < bestNeighboursNumber; n++) {
-				if(!nextSolutionFound){
+				if(!nextSolutionFound) {
 					//If it's the last one, accept it.
 					if(n == bestNeighboursNumber - 1) {
 						nextSolutionFound = true;
 						sameOrWorseCounter++;
 					} else {
 						// Check if it has lower cost than current solution.
-						if(bestNeighboursCosts[i] < curCost) {
-							nextSolutionFound = true;
-							sameOrWorseCounter = 0;
-							minCost = bestNeighboursCosts[i];
-							memcpy(bestSolution, neighbours[n], sizeof(unsigned int) * problemSize);
-						} else if(!isTabu(n)) {
+						if(bestNeighboursCosts[n] < curCost) {
+                            if(bestNeighboursCosts[n] < minCost) {
+                                nextSolutionFound = true;
+                                sameOrWorseCounter = 0;
+                                minCost = bestNeighboursCosts[n];
+                                memcpy(bestSolution, neighbours[bestNeighboursIndexes[n]], sizeof(unsigned int) * problemSize);
+                            } else if(!isTabu(bestNeighboursIndexes[n])) {
+                                nextSolutionFound = true;
+                                sameOrWorseCounter = 0;
+                            }
+						} else if(!isTabu(bestNeighboursIndexes[n])) {
 							nextSolutionFound = true;
 							sameOrWorseCounter++;
 						}
 					}
-				} else {
-					addTabuSolution(n);
+				}
+				if(nextSolutionFound) {
+					addTabuSolution(bestNeighboursIndexes[n]);
 					curCost = bestNeighboursCosts[n];
-					memcpy(curSolution, neighbours[n], sizeof(unsigned int) * problemSize);
+					memcpy(curSolution, neighbours[bestNeighboursIndexes[n]], sizeof(unsigned int) * problemSize);
 					historicalCosts[i] = curCost;
 					break;
 				}
