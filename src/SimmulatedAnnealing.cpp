@@ -52,16 +52,14 @@ void SimmulatedAnnealing::run() {
 
         // Only one stop condition, but in code i can be set to stopVal to terminate loop.
         while(i < stopVal) {
-            if(i % (neighbourhoodSize) == 0) {
-            	decreaseTemperature(0.8);
-            }
             unsigned int r = dist(randGen);
 			bool accepted = false;
 
 			while(!accepted) {
 				if(lastImprovement > 10*neighbourhoodSize) {
+                    numberOfSteps = i+1;
 					i = stopVal;
-					std::cerr << "Reached 10 * " << neighbourhoodSize << std::endl;
+//					std::cerr << "SimmulatedAnnealing: Reached 10 * " << neighbourhoodSize << std::endl;
 					break;
 				}
 				unsigned int n = (r+k)%neighbourhoodSize; // Iterate over all neighbours unlimited number of times.
@@ -83,17 +81,22 @@ void SimmulatedAnnealing::run() {
 						minCost = curCost;
 						memcpy(bestSolution, neighbours[n], sizeof(unsigned int) * problemSize);
 					} else {
-						lastImprovement++;
+						++lastImprovement;
 					}
 					break;
 				} else {
-					lastImprovement++;
+					++lastImprovement;
 				}
-				k++;
+				++k;
 			}
-			i++;
-			numberOfSteps = i;
-			if(i == stopVal-1) {
+			++i;
+			if(i <= stopVal) numberOfSteps = i;
+
+			if(i % (neighbourhoodSize) == 0) {
+            	decreaseTemperature(0.8);
+            }
+
+			if(numberOfSteps >= stopVal) {
 				std::cerr << "SimulatedAnnealing: Maximum number of steps (" << numberOfSteps << ") has been reached!\n";
 			}
         }

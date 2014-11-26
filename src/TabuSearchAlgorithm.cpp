@@ -69,7 +69,10 @@ void TabuSearchAlgorithm::run() {
 					//If it's the last one, accept it.
 					if(n == bestNeighboursNumber - 1) {
 						nextSolutionFound = true;
-						sameOrWorseCounter++;
+						if(bestNeighboursCosts[n] >= minCost)
+                            sameOrWorseCounter++;
+                        else
+                            sameOrWorseCounter = 0;
 					} else {
 						// Check if it has lower cost than current solution.
 						if(bestNeighboursCosts[n] < curCost) {
@@ -80,7 +83,7 @@ void TabuSearchAlgorithm::run() {
                                 memcpy(bestSolution, neighbours[bestNeighboursIndexes[n]], sizeof(unsigned int) * problemSize);
                             } else if(!isTabu(bestNeighboursIndexes[n])) {
                                 nextSolutionFound = true;
-                                sameOrWorseCounter = 0;
+                                sameOrWorseCounter++;
                             }
 						} else if(!isTabu(bestNeighboursIndexes[n])) {
 							nextSolutionFound = true;
@@ -93,14 +96,20 @@ void TabuSearchAlgorithm::run() {
 					curCost = bestNeighboursCosts[n];
 					memcpy(curSolution, neighbours[bestNeighboursIndexes[n]], sizeof(unsigned int) * problemSize);
 					historicalCosts[i] = curCost;
+					if(i == stopVal-1) {
+                        // numberOfSteps+1 because it is updated later, so current value should be 1 bigger than it's
+                        // in the memory
+                        std::cerr << "Tabu Search: Maximum number of steps (" << numberOfSteps+1 << ") has been reached!\n";
+                    }
 					break;
 				}
 			}
-			if(sameOrWorseCounter > 9) {
-				numberOfSteps = i;
+			if(sameOrWorseCounter > 10*neighbourhoodSize) {
+				numberOfSteps = i+1;
+				break;
 			}
 		}
-//      std::cout << "Tabu no of steps: " << numberOfSteps << std::endl;
+        std::cout << "Tabu no of steps: " << numberOfSteps << std::endl;
 		auto end = std::chrono::high_resolution_clock::now();
 		workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
     }
