@@ -63,13 +63,15 @@ void Lab1::task() {
     workTimeMeans = new double* [numberOfInstances];
     numberOfSteps = new unsigned int* [numberOfInstances];
     for(int i = 0; i < numberOfInstances; ++i) {
-        // 3 is sum of Steepes, Greedy and Random
-        solutionBest[i] = new double [4];
-        solutionStdDev[i] = new double [3];
-        solutionMeans[i] = new double [3];
-        workTimeStdDev[i] = new double [3];
-        workTimeMeans[i] = new double [4];
-        numberOfSteps[i] = new unsigned int [2];
+        // 6 for Random, Heuristic, Steepest, Greedy, Simulated and TS
+        // 5 for Random, Steepest, Greedy, Simulated and TS
+        // 4 for Steepest, Greedy, Simulated and TS
+        solutionBest[i] = new double [6];
+        solutionStdDev[i] = new double [5];
+        solutionMeans[i] = new double [5];
+        workTimeStdDev[i] = new double [5];
+        workTimeMeans[i] = new double [6];
+        numberOfSteps[i] = new unsigned int [4];
     }
 
     // Initial cost - cost of first (random) solution in one particular run
@@ -83,6 +85,9 @@ void Lab1::task() {
     std::vector< std::vector<double> > greedyAlgEndCosts;
     std::vector<double> greedyAlgSte36Costs; // maybe will be useful later
 
+//    std::vector< std::vector<double> > simAlgInitCosts;
+//    std::vector< std::vector<double> > tabuAlgEndCosts;
+
     for(int i = 0; i < numberOfInstances; ++i) {
     	// I don't know how to extend vectors by another vector so I push back an empty one into them
     	std::vector<double> tempVec;
@@ -90,11 +95,16 @@ void Lab1::task() {
     	greedyAlgInitCosts.push_back(tempVec);
     	steepAlgEndCosts.push_back(tempVec);
     	greedyAlgEndCosts.push_back(tempVec);
+//    	simAlgInitCosts.push_back(tempVec);
+//    	tabuAlgEndCosts.push_back(tempVec);
 
         RandomAlgorithm randAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, 50000/15*instances[i]->problemSize);
         SteepestAlgorithm steepAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 200);
         GreedyAlgorithm greedyAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 200);
         HeuristicAlgorithm heurAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B);
+        SimmulatedAnnealing simAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 500);
+        TabuSearchAlgorithm tabuAlg(instances[i]->problemSize, instances[i]->A, instances[i]->B, DEFINITE_NUM_OF_STEPS, 500);
+
         std::vector<double> randAlgCosts;
         std::vector<double> steepAlgCosts;
         std::vector<double> steepAlgNumberOfSteps;
@@ -102,6 +112,13 @@ void Lab1::task() {
         std::vector<double> greedyAlgCosts;
         std::vector<double> greedyAlgNumberOfSteps;
         std::vector<double> greedyAlgWorkTime;
+
+        std::vector<double> simAlgCosts;
+        std::vector<double> simAlgNumberOfSteps;
+        std::vector<double> simAlgWorkTime;
+        std::vector<double> tabuAlgCosts;
+        std::vector<double> tabuAlgNumberOfSteps;
+        std::vector<double> tabuAlgWorkTime;
 
         heurAlg.run();
 
@@ -182,6 +199,23 @@ void Lab1::task() {
             greedyAlgWorkTime.push_back(greedyAlg.workTime);
             greedyAlgNumberOfSteps.push_back(greedyAlg.numberOfSteps);
 
+            simAlg.generateRandomPermutation();
+            memcpy(simAlg.curSolution, simAlg.randomSolution, sizeof(unsigned int) * simAlg.problemSize);
+//            simAlgInitCosts[i].push_back((double)instances[i]->lowestCost / simAlg.rateSolution());
+            simAlg.run();
+            simAlgCosts.push_back((double)instances[i]->lowestCost / simAlg.minCost);
+
+            simAlgWorkTime.push_back(simAlg.workTime);
+            simAlgNumberOfSteps.push_back(simAlg.numberOfSteps);
+
+            tabuAlg.generateRandomPermutation();
+            memcpy(tabuAlg.curSolution, tabuAlg.randomSolution, sizeof(unsigned int) * tabuAlg.problemSize);
+            tabuAlg.run();
+            tabuAlgCosts.push_back((double)instances[i]->lowestCost / tabuAlg.minCost);
+
+            tabuAlgWorkTime.push_back(tabuAlg.workTime);
+            tabuAlgNumberOfSteps.push_back(tabuAlg.numberOfSteps);
+
             // Historical data saved in files
             for(unsigned int k = 0; k < steepAlg.numberOfSteps; ++k) {
                 historicalSteepestDataFile << k << " " <<
@@ -241,21 +275,38 @@ void Lab1::task() {
         solutionBest[i][STEEPEST] = *std::max_element(steepAlgCosts.begin(), steepAlgCosts.end());
         solutionBest[i][RANDOM] = *std::max_element(randAlgCosts.begin(), randAlgCosts.end());
         solutionBest[i][HEURISTIC] = (double)instances[i]->lowestCost / heurAlg.minCost;
+        solutionBest[i][SIM_ANN] = *std::max_element(simAlgCosts.begin(), simAlgCosts.end());
+        solutionBest[i][TABU] = *std::max_element(tabuAlgCosts.begin(), tabuAlgCosts.end());
+
         solutionStdDev[i][GREEDY] = stdDev(greedyAlgCosts);
         solutionStdDev[i][STEEPEST] = stdDev(steepAlgCosts);
         solutionStdDev[i][RANDOM] = stdDev(randAlgCosts);
+        solutionStdDev[i][SIM_ANN] = stdDev(simAlgCosts);
+        solutionStdDev[i][TABU] = stdDev(tabuAlgCosts);
+
         solutionMeans[i][GREEDY] = mean(greedyAlgCosts);
         solutionMeans[i][STEEPEST] = mean(steepAlgCosts);
         solutionMeans[i][RANDOM] = mean(randAlgCosts);
+        solutionMeans[i][SIM_ANN] = mean(simAlgCosts);
+        solutionMeans[i][TABU] = mean(tabuAlgCosts);
+
         workTimeStdDev[i][GREEDY] = stdDev(greedyAlgWorkTime);
         workTimeStdDev[i][STEEPEST] = stdDev(steepAlgWorkTime);
         workTimeStdDev[i][RANDOM] = 0.0;
+        workTimeStdDev[i][SIM_ANN] = stdDev(simAlgWorkTime);
+        workTimeStdDev[i][TABU] = stdDev(tabuAlgWorkTime);
+
         workTimeMeans[i][GREEDY] = mean(greedyAlgWorkTime);
         workTimeMeans[i][STEEPEST] = mean(steepAlgWorkTime);
         workTimeMeans[i][RANDOM] = randAlg.workTime / (double)repetitions;
         workTimeMeans[i][HEURISTIC] = heurAlg.workTime;
+        workTimeMeans[i][SIM_ANN] = mean(simAlgWorkTime);
+        workTimeMeans[i][TABU] = mean(tabuAlgWorkTime);
+
         numberOfSteps[i][GREEDY] = mean(greedyAlgNumberOfSteps);
         numberOfSteps[i][STEEPEST] = mean(steepAlgNumberOfSteps);
+        numberOfSteps[i][SIM_ANN] = mean(simAlgNumberOfSteps);
+        numberOfSteps[i][TABU] = mean(tabuAlgNumberOfSteps);
     }
 
     std::vector< std::vector<double> > solutionBestVec;
@@ -263,17 +314,20 @@ void Lab1::task() {
     std::vector< std::vector<double> > stdDevSolutionsVec;
     std::vector<double> instanceSizeVec;
 
-    for(unsigned int i = 0; i < 4; ++i) {
+    for(unsigned int i = 0; i < 6; ++i) {
         std::vector<double> bestSolTmp;
         std::vector<double> meanSolTmp;
         std::vector<double> stdDevSolTmp;
         for(unsigned int j = 0; j < numberOfInstances; j++) {
             bestSolTmp.push_back(solutionBest[j][i]);
-            if(i < 3) {
+            if(i != 3) { // 3 is Heuristic and he's a stinky mean deviant bastard who doesn't want to be put in these vectors
                 meanSolTmp.push_back(solutionMeans[j][i]);
                 stdDevSolTmp.push_back(solutionStdDev[j][i]);
             } else {
-                instanceSizeVec.push_back((double)instances[j]->problemSize); // pure black magic, do not bother, keep scrolling
+                instanceSizeVec.push_back((double)instances[j]->problemSize); // Pure black magic, do not bother, keep scrolling.
+                                                                              // Joking, just we need to execute it once for
+                                                                              // given i, no matter which algorithm.
+                                                                              // Can be done for heuristic.
             }
         }
 
@@ -321,12 +375,18 @@ void Lab1::task() {
     std::ofstream greedyDataFile;
     std::ofstream steepestDataFile;
     std::ofstream heuristicDataFile;
+    std::ofstream simDataFile;
+    std::ofstream tabuDataFile;
+
     // Stream for initial&end qualities from steepAlgInitCosts, greedyAlgInitCots, steepAlgEndCosts and greedyAlgEndCosts
     std::ofstream initEndCostsDataFile;
     randomDataFile.open("/tmp/randomData", std::ios::out);
     greedyDataFile.open("/tmp/greedyData", std::ios::out);
     steepestDataFile.open("/tmp/steepestData", std::ios::out);
     heuristicDataFile.open("/tmp/heuristicData", std::ios::out);
+    simDataFile.open("/tmp/simulatedData", std::ios::out);
+    tabuDataFile.open("/tmp/tabuData", std::ios::out);
+
     initEndCostsDataFile.open("/tmp/initCostsData", std::ios::out);
 
     for(unsigned int i = 0; i < numberOfInstances; i++) {
@@ -357,6 +417,22 @@ void Lab1::task() {
                        << solutionBestVec[HEURISTIC][i] << " "
                        << workTimeMeans[i][HEURISTIC] << std::endl;
 
+        simDataFile << instanceSizeVec[i] << " "
+                       << solutionBestVec[SIM_ANN][i] << " "
+                       << meanSolutionsVec[SIM_ANN][i] << " "
+                       << stdDevSolutionsVec[SIM_ANN][i] << " "
+                       << workTimeMeans[i][SIM_ANN] << " "
+                       << workTimeStdDev[i][SIM_ANN] << " "
+                       << numberOfSteps[i][SIM_ANN] << std::endl;
+
+        tabuDataFile << instanceSizeVec[i] << " "
+                       << solutionBestVec[TABU][i] << " "
+                       << meanSolutionsVec[TABU][i] << " "
+                       << stdDevSolutionsVec[TABU][i] << " "
+                       << workTimeMeans[i][TABU] << " "
+                       << workTimeStdDev[i][TABU] << " "
+                       << numberOfSteps[i][TABU] << std::endl;
+
         for(int j = 0; j < repetitions; ++j) {
 			initEndCostsDataFile << instanceSizeVec[i] << " "
 						   << steepAlgInitCosts[i][j] << " "
@@ -370,6 +446,9 @@ void Lab1::task() {
     greedyDataFile.close();
     steepestDataFile.close();
     heuristicDataFile.close();
+    simDataFile.close();
+    tabuDataFile.close();
+
     initEndCostsDataFile.close();
 
     std::ofstream steepSte36File;

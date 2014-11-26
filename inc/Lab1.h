@@ -18,12 +18,16 @@
 #include "../inc/RandomAlgorithm.h"
 #include "../inc/SteepestAlgorithm.h"
 #include "../inc/GreedyAlgorithm.h"
+#include "../inc/SimmulatedAnnealing.h"
+#include "../inc/TabuSearchAlgorithm.h"
 
 enum typeOfAlgorithm {
     GREEDY,
     STEEPEST,
     RANDOM,
-    HEURISTIC
+    HEURISTIC,
+    SIM_ANN,
+    TABU
 };
 
 /**

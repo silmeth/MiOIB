@@ -109,7 +109,7 @@ void TabuSearchAlgorithm::run() {
 				break;
 			}
 		}
-        std::cout << "Tabu no of steps: " << numberOfSteps << std::endl;
+//        std::cout << "Tabu no of steps: " << numberOfSteps << std::endl;
 		auto end = std::chrono::high_resolution_clock::now();
 		workTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/1.e9;
     }

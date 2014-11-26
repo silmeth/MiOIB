@@ -13,6 +13,8 @@
 #include <iostream>
 #include <math.h>
 
+// Right, we know there is an error in class' name.
+// But we don't give a damn.
 class SimmulatedAnnealing: public BaseAlgorithm {
 private:
 	SimmulatedAnnealing();
