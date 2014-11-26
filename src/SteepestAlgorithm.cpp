@@ -56,7 +56,7 @@ void SteepestAlgorithm::run() {
 //                        ++sameVal;
                     }
                 }
-                if(lowestCostNeighIndex > 0) {
+                if(lowestCostNeighIndex >= 0) {
                     if(minNeighCost == curCost) {
                         ++sameVal;
                     }
