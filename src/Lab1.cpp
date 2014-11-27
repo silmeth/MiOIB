@@ -257,6 +257,7 @@ void Lab1::task() {
                     }
                 }
             }
+            std::cerr << "Iteration: " << j << "/" << repetitions << " of instance " << i << " finished." << std::endl;
         }
 
         historicalSteepestGnuplotFile << "set term epslatex color size 15cm, 10cm\n";

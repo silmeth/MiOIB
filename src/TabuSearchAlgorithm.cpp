@@ -10,6 +10,7 @@
 TabuSearchAlgorithm::TabuSearchAlgorithm(unsigned int size, int** matA, int** matB, stopCondition condition, int value, int seed)
                     : BaseAlgorithm(size, matA, matB, seed), cond(condition), stopVal(value) {
     historicalCosts = new int[value];
+    oldestTabuSolution = 0;
     // For small problems always take 3 neighbours.
      if(problemSize < 30) {
      	bestNeighboursNumber = 3;
@@ -52,10 +53,14 @@ void TabuSearchAlgorithm::clean() {
 }
 
 void TabuSearchAlgorithm::run() {
+	/**
+	 * Huge comments are (unluckily) necessary.
+	 */
     if(isInitialised) {
         minCost = curCost = rateSolution();
         historicalCosts[0] = curCost;
-        numberOfSteps = stopVal; // If steepest doesn't stop before reaching stopVal
+        numberOfSteps = stopVal; // If TabuSearch doesn't stop before reaching stopVal
+        // If accepted solution is worse or the same as current, increase this counter. If it's better, zero it.
         unsigned int sameOrWorseCounter = 0;
 		auto begin = std::chrono::high_resolution_clock::now();
 
@@ -68,11 +73,17 @@ void TabuSearchAlgorithm::run() {
 				if(!nextSolutionFound) {
 					//If it's the last one, accept it.
 					if(n == bestNeighboursNumber - 1) {
-						nextSolutionFound = true;
-						if(bestNeighboursCosts[n] >= minCost)
-                            sameOrWorseCounter++;
-                        else
-                            sameOrWorseCounter = 0;
+						if(isTabu(n))
+							// If no move is available, exit.
+							sameOrWorseCounter = neighbourhoodSize*10;
+						else {
+							nextSolutionFound = true;
+							// Punish going in direction which increases cost
+							if(bestNeighboursCosts[n] > curCost)
+								sameOrWorseCounter += neighbourhoodSize/5;
+							else
+								sameOrWorseCounter += neighbourhoodSize/10;
+						}
 					} else {
 						// Check if it has lower cost than current solution.
 						if(bestNeighboursCosts[n] < minCost) {
@@ -82,15 +93,20 @@ void TabuSearchAlgorithm::run() {
 							minCost = bestNeighboursCosts[n];
 							memcpy(bestSolution, neighbours[bestNeighboursIndexes[n]], sizeof(unsigned int) * problemSize);
 						} else {
-							sameOrWorseCounter++;
-							if(!isTabu(bestNeighboursIndexes[n])) {
+							if(!isTabu(n)) {
 								nextSolutionFound = true;
+								if(bestNeighboursCosts[n] > curCost)
+									sameOrWorseCounter += neighbourhoodSize/5;
+								else
+									sameOrWorseCounter += neighbourhoodSize/10;
 							}
+							else
+								sameOrWorseCounter += neighbourhoodSize/10;
 						}
 					}
 				}
 				if(nextSolutionFound) {
-					addTabuSolution(bestNeighboursIndexes[n]);
+					addTabuSolution(n);
 					curCost = bestNeighboursCosts[n];
 					memcpy(curSolution, neighbours[bestNeighboursIndexes[n]], sizeof(unsigned int) * problemSize);
 					historicalCosts[i] = curCost;
@@ -102,7 +118,7 @@ void TabuSearchAlgorithm::run() {
 					break;
 				}
 			}
-			if(sameOrWorseCounter > 10*neighbourhoodSize) {
+			if(sameOrWorseCounter > neighbourhoodSize*10) {
 				numberOfSteps = i+1;
 				break;
 			}
@@ -141,7 +157,7 @@ void TabuSearchAlgorithm::repeatedRun(unsigned int repetitions) {
 
 void TabuSearchAlgorithm::findBestNeighbours() {
 	for(unsigned int i = 0; i < bestNeighboursNumber; ++i) {
-		bestNeighboursCosts[i] = 1e10;
+		bestNeighboursCosts[i] = 1e8;
 	}
 	for(unsigned int n = 0; n < neighbourhoodSize; ++n) {
 		for(unsigned int i = 0; i < bestNeighboursNumber; ++i) {
@@ -162,23 +178,27 @@ void TabuSearchAlgorithm::insertGoodNeighbour(unsigned int solutionIndex, unsign
 	bestNeighboursIndexes[pos] = solutionIndex;
 }
 
-void TabuSearchAlgorithm::addTabuSolution(unsigned int solutionIndex) {
-	for(unsigned int i = 0; i < tabuSolutionsNumber - 1; ++i) {
-		memcpy(tabuSolutions[i+1], tabuSolutions[i], sizeof(unsigned int) * problemSize);
-	}
-	memcpy(tabuSolutions[0], neighbours[solutionIndex], sizeof(unsigned int) * problemSize);
+void TabuSearchAlgorithm::addTabuSolution(unsigned int index) {
+//	for(unsigned int i = 0; i < tabuSolutionsNumber - 1; ++i) {
+//		memcpy(tabuSolutions[i+1], tabuSolutions[i], sizeof(unsigned int) * problemSize);
+//	}
+	memcpy(tabuSolutions[oldestTabuSolution], neighbours[bestNeighboursIndexes[index]], sizeof(unsigned int) * problemSize);
+	oldestTabuSolution = (oldestTabuSolution + 1) % tabuSolutionsNumber;
 }
 
-bool TabuSearchAlgorithm::isTabu(unsigned int solutionIndex) {
+bool TabuSearchAlgorithm::isTabu(unsigned int index) {
 	bool inTabu = false;
 	for(unsigned int n = 0; n < tabuSolutionsNumber; ++n) {
 		unsigned int identicalElementCounter = 0;
 		for(unsigned int i = 0; i < problemSize; ++i) {
-			if(neighbours[solutionIndex][i] == tabuSolutions[n][i])
+			if(neighbours[bestNeighboursIndexes[index]][i] == tabuSolutions[n][i])
 				identicalElementCounter++;
+			else
+				break;
 		}
 		if(identicalElementCounter == problemSize) {
 			inTabu = true;
+			break;
 		}
 	}
 	return inTabu;

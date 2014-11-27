@@ -18,6 +18,10 @@ private:
 	stopCondition cond;
 	int stopVal;
 	/**
+	 * Index of oldest tabu solution in tabuSolutions
+	 */
+	unsigned int oldestTabuSolution;
+	/**
 	 * Number of best neighbours to take into account.
 	 */
 	unsigned int bestNeighboursNumber;

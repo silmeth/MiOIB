@@ -40,7 +40,7 @@ public:
     /**
      * Number of repetitions to run algorithms.
      */
-    int repetitions = 200;
+    int repetitions = 30;
     std::vector<std::string> problemNames;
     /**
      * Runs all four algorithms and collects data needen for plotting charts listed below.

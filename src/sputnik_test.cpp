@@ -274,10 +274,10 @@ int main() {
 //    testInstances();
 //    testLab();
 
-    testTabuSearch();
-    testSimulatedAnnealing();
-//    Lab1 lab;
-//    lab.task();
+//    testTabuSearch();
+//    testSimulatedAnnealing();
+    Lab1 lab;
+    lab.task();
     std::cout << "--- End of tests ---";
 
     for(int i = 0; i < 12; i++) {
