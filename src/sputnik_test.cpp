@@ -199,8 +199,8 @@ void testLab() {
 }
 
 void testTabuSearch() {
-	ProblemInstance inst("./qapdatsol/lipa20a.dat");
-	TabuSearchAlgorithm alg(inst.problemSize, inst.A, inst.B, DEFINITE_NUM_OF_STEPS, 200);
+	ProblemInstance inst("./qapdatsol/chr12a.dat");
+	TabuSearchAlgorithm alg(inst.problemSize, inst.A, inst.B, DEFINITE_NUM_OF_STEPS, 1000);
 
 	alg.run();
 	std::cout << "Tabu solution: " << std::endl;
@@ -217,7 +217,7 @@ void testTabuSearch() {
 }
 
 void testSimulatedAnnealing() {
-	ProblemInstance inst("./qapdatsol/lipa20a.dat");
+	ProblemInstance inst("./qapdatsol/chr12a.dat");
 	SimmulatedAnnealing alg(inst.problemSize, inst.A, inst.B, DEFINITE_NUM_OF_STEPS, 100000);
 
 	alg.run();

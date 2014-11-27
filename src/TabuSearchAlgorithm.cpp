@@ -75,19 +75,17 @@ void TabuSearchAlgorithm::run() {
                             sameOrWorseCounter = 0;
 					} else {
 						// Check if it has lower cost than current solution.
-						if(bestNeighboursCosts[n] < curCost) {
-                            if(bestNeighboursCosts[n] < minCost) {
-                                nextSolutionFound = true;
-                                sameOrWorseCounter = 0;
-                                minCost = bestNeighboursCosts[n];
-                                memcpy(bestSolution, neighbours[bestNeighboursIndexes[n]], sizeof(unsigned int) * problemSize);
-                            } else if(!isTabu(bestNeighboursIndexes[n])) {
-                                nextSolutionFound = true;
-                                sameOrWorseCounter++;
-                            }
-						} else if(!isTabu(bestNeighboursIndexes[n])) {
+						if(bestNeighboursCosts[n] < minCost) {
+							// Accept even if it's in Tabu.
 							nextSolutionFound = true;
+							sameOrWorseCounter = 0;
+							minCost = bestNeighboursCosts[n];
+							memcpy(bestSolution, neighbours[bestNeighboursIndexes[n]], sizeof(unsigned int) * problemSize);
+						} else {
 							sameOrWorseCounter++;
+							if(!isTabu(bestNeighboursIndexes[n])) {
+								nextSolutionFound = true;
+							}
 						}
 					}
 				}
