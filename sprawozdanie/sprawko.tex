@@ -109,7 +109,9 @@ Algorytm jest w~pełni deterministyczny.
 
 \subsubsection{Random}
 Algorytm generuje losową permutację, z~równomiernym rozkładem prawdopodobieństwa~-- każde możliwe rozwiązanie
-ma~jednakowe prawdopodobieństwo wylosowania. Czas jego działania zależny jedynie od~wielkości problemu.
+ma~jednakowe prawdopodobieństwo wylosowania. 
+Czas jego działania zależny jedynie od~wielkości problemu.
+
 
 \subsubsection{Greedy}
 Algorytm Greedy wybiera losowego sąsiada i oblicza jego koszt.
@@ -123,6 +125,26 @@ Algorytm działa podobnie jak Greedy, z tym, że~sprawdza wszystkich sąsiadów,
 o~najniższej wartości funkcji celu.
 Aby zapobiec zapętleniu (przechodzieniu pomiędzy dwiema permutacjami o~równej ocenie),
 stosujemy ograniczenie do~3 przejść do~sąsiada o~równym koszcie.
+
+\subsubsection{Simulated Annealing}
+Algorytm symulowanego wyżarzania działa podobnie do algorytmu Greedy.
+Różnica polega na tym, że~rozwiązanie zostanie zaakceptowane z~prawdopodobieństwem zależnym od jego kosztu i~aktualnej temperatury.
+Funkcja prawdopodobieństwa wyboru rozwiązania ma postać $P(koszt, T) = e^{\frac{minKoszt-koszt}{T}}$.
+Dla każdego rozwiązania losowana jest liczba z przedziału~0-1.
+Jeżeli ma ona wartość mniejszą od prawodopodobieństwa, rozwiązanie jest akceptowane.
+W przeciwnym wypadku sprawdzany jest kolejny sąsiad.
+Kształt tej funkcji gwarantuje wybór rozwiązania o~mniejszym koszcie z~prawdopodobieństwem równym~100\%.
+Warunkami stopu są maksymalna liczba kroków i~brak poprawy wyniku przez liczbę kroków równą dziesięciokrotności rozmiaru sądziedztwa.
+
+\subsubsection{Tabu Search}
+Algorytm Tabu Search ocenia wszystkich sąsiadów, a~następnie wybiera spośród nich $\frac{rozmiarProblemu}{10}$ rozwiązań. 
+Zdecydowaliśmy się dla mniejszych problemów (rozmiar poniżej 40)~na stałe wpisać wartość~3.
+Najlepsi sąsiedzi są sortowani,~a następnie porównywani (w porządku rosnącym względem kosztu)~z aktualnym najlepszym rozwiązaniem.
+Jeżeli nowe rozwiązanie jest lepsze, to~jest ono zapisywane jako najlepsze i~aktualne oraz dodawane do listy tabu.
+Jeżeli rozwiązanie jest gorsze i~nie jest w liście tabu, to~jest zapisywane jako aktualne i~dodawane do listy tabu.
+Jeżeli żadne z rozwiązań nie było lepsze od najlepszego i~wszystkie były~w tabu, to algorytm kończy działanie.
+Warunkami stopu są maksymalna liczba iteracji, liczba iteracji bez znalezienia lepszego rozwiązania lub brak możliwości ruchu z powodu ograniczeń tabu.
+Rozmiar tabu dobierany jest jako $\frac{rozmiarProblemu}{4}$.
 
 \section{Eksperymenty}
 \subsection{Instancje problemów}
@@ -142,15 +164,18 @@ Eksperymenty uruchamialiśmy na następujących problemach:
 \item esc32
 \item kra30a
 \item nug21
+\item tai35b
+\item ste36c
+\item lipa40a
+\item lipa50a
 \end{tightenum}
 Problemy te posiadają obliczone optimum, co ułatwiło uzyskanie jakości uzyskanych przez nas rozwiązań.
 
 Problemy pochodzą z repozytorium QAPLIB\footnote{\url{http://www.opt.math.tu-graz.ac.at/qaplib/}}.
 Źródłem danych są m.in. czas pisania stenotypisty, macierze sąsiedztwa drzew czy testy układów elektronicznych.
 
-Algorytmy Greedy oraz Steepest descent zostały uruchomione 200 razy, a~wyniki i~parametry działania zagregowane. 
-Algorytm losowy został uruchomiony tyle razy, by~czas jego działania odpowiadał rządem wielkości czasowi działania algorytmów Greedy
-i~Steepest descent.
+Algorytmy metaheurystyczne zostały uruchomione 30 razy, a~wyniki i~parametry działania zagregowane. 
+Algorytm losowy został uruchomiony tyle razy, by~czas jego działania odpowiadał rządem wielkości czasowi działania algorytmów Greedy i~Steepest descent.
 Poniższe wykresy przedstawiają anlizę pracy i~sprawności algorytmów.
 \subsection{Jakość działania jako funkcja rozmiaru problemu}
 \subsubsection{Średnia jakość rozwiązania}
