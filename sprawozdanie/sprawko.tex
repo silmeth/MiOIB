@@ -21,7 +21,6 @@
 \usepackage{pdfpages}
 
 %\usepackage{minted}
-
 \usepackage{graphicx}
 
 \usepackage{booktabs}
@@ -120,7 +119,7 @@ Jeżeli nie, algorytm sprawdza kolejnego sąsiada.
 Jeżeli żaden sąsiad nie ma kosztu równego lub niższego, algorytm kończy działanie.
 Aby zapobiec zapętleniu (przechodzieniu pomiędzy dwiema permutacjami o~równej ocenie), stosujemy ograniczenie do 3 przejść do sąsiada o~równym koszcie.
 
-\subsubsection{Steepest descent}
+\subsubsection{Steepest Descent}
 Algorytm działa podobnie jak Greedy, z tym, że~sprawdza wszystkich sąsiadów, i~spośród nich wybiera tego
 o~najniższej wartości funkcji celu.
 Aby zapobiec zapętleniu (przechodzieniu pomiędzy dwiema permutacjami o~równej ocenie),
@@ -175,7 +174,7 @@ Problemy pochodzą z repozytorium QAPLIB\footnote{\url{http://www.opt.math.tu-gr
 Źródłem danych są m.in. czas pisania stenotypisty, macierze sąsiedztwa drzew czy testy układów elektronicznych.
 
 Algorytmy metaheurystyczne zostały uruchomione 30 razy, a~wyniki i~parametry działania zagregowane. 
-Algorytm losowy został uruchomiony tyle razy, by~czas jego działania odpowiadał rządem wielkości czasowi działania algorytmów Greedy i~Steepest descent.
+Algorytm losowy został uruchomiony tyle razy, by~czas jego działania odpowiadał rządem wielkości czasowi działania algorytmów Greedy i~Steepest Descent.
 Poniższe wykresy przedstawiają anlizę pracy i~sprawności algorytmów.
 \subsection{Jakość działania jako funkcja rozmiaru problemu}
 \subsubsection{Średnia jakość rozwiązania}
@@ -193,18 +192,31 @@ Dla problemu esc32 wynika to ze skupienia jakości rozwiązań w okolicy rozwią
 \end{center}
 \end{figure}
 
-Z wykresu odczytujemy, że średnia jakość działania algorytmu Random jest dla większości problemów niska i nie przekracza wartości \num{0.9}.  
-Dla 8 z 14 przypadków wartość średnia nie przekracza \num{0.5}, więc znalezione rozwiązania mają co najmniej dwa razy większy koszt.
+Z wykresu z~Rys.~\ref{fig:qualityvssizemean} odczytujemy, że średnia jakość działania algorytmu Random jest dla większości problemów niska i nie przekracza wartości \num{0.9}.  
+Dla 9 z 18 przypadków wartość średnia nie przekracza \num{0.5}, więc znalezione rozwiązania mają co najmniej dwa razy większy koszt.
 Dwa najlepsze rozwiązania są dla problemów o rozmiarach 14 i 26.
-Widoczne jest jednak, że są to bardzo proste problemy~-- algorytmy Greedy i Steepest descent mają wartości średnie prawie równe optimum,
+Widoczne jest jednak, że są to bardzo proste problemy~-- algorytmy Greedy i Steepest Descent mają wartości średnie prawie równe optimum,
 z~niewidocznym odchyleniem standardowym.
+%TODO Uzupełnić jak się wyjaśni problem z lipa40a i lipa50a
 
 Algorytm korzystający z heurystyki w~każdym przypadku znajduje lepsze lub równie dobre rozwiązanie, co~średnie rozwiązanie algorytmu losowego.
 
-Średnie rozwiązania dla~200 uruchomień dla~algorytmów Steepest descent oraz Greeedy mają bardzo podobne, nierozróżnialne wartości.
+Średnie rozwiązania dla~30 uruchomień dla~algorytmów Steepest Descent oraz Greeedy mają bardzo podobne, nierozróżnialne wartości.
+
+\begin{figure}[!htpb]
+\begin{center}
+\input{./plotQualitySizeMeanMETA.tex}
+\caption{Wykres uśrednionej jakości rozwiązania od~rozmiaru problemu}
+\label{fig:qualityvssizemeanmeta}
+\end{center}
+\end{figure}
+
+Z wykresu z~Rys.~\ref{fig:qualityvssizemeanmeta} odczytujemy, że~ Tabu Search  osiąga wyniki porównywalne ze Steepest Descent oraz Greedy.
+Zdecydowanie gorszy okazuje się algorytm Simulated Annealing, którego wyniki są podobne do działania algorytmu losowego.
+Może to wynikać ze źle dobranych parametrów symulacji. 
 
 \subsubsection{Jakość najlepszego znalezionego rozwiązania}
-Wykres z~Rys.~\ref{fig:qualityvssizemax} przedstawia jakość najlepszego rozwiązania, znalezionego przez algorytmy, dla~poszczególnych instancji.
+Wykresy z~Rys.~\ref{fig:qualityvssizemax} i z~Rys.~\ref{fig:qualityvssizemaxmeta} przedstawiają jakość najlepszego rozwiązania, znalezionego przez algorytmy, dla~poszczególnych instancji.
 
 \begin{figure}[!htpb]
 \begin{center}
@@ -214,18 +226,26 @@ Wykres z~Rys.~\ref{fig:qualityvssizemax} przedstawia jakość najlepszego rozwi�
 \end{center}
 \end{figure}
 
-Algorytmy Greedy i Steepest descent zwracają bardzo podobne wyniki.
+\begin{figure}[!htpb]
+\begin{center}
+\input{./plotQualitySizeMaxMETA.tex}
+\caption{Wykres jakości najlepszego znalezionego rozwiązania od~rozmiaru problemu}
+\label{fig:qualityvssizemax}
+\end{center}
+\end{figure}
+
+Algorytmy Greedy i Steepest Descent zwracają bardzo podobne wyniki.
 Jeżeli udało się znaleźć optymalne rozwiązanie, to oba algorytmy je znajdowały.
-Dla problemów, gdzie nie udało się znaleźć optymalnego rozwiązania, Steepest descent osiągał lepsze rezultaty (np.~instancje o wielkości 15, 22, 25).
-W jednym przypadku (problem chr20a) najlepsze rozwiązanie znalezione przez algorytm Greedy miało lepszą jakość. 
+Dla problemów, gdzie nie udało się znaleźć optymalnego rozwiązania, Steepest Descent osiągał lepsze rezultaty (np.~instancje o wielkości 15, 22, 25).
+Algorytm Tabu działa porównywalnie do Steepest Descent i Greedy.
 
 \section{Czas działania w zależności od rozmiaru problemu}
-\subsection{Random, Greedy i Steepest descent}
-Na wykresie z~Rys.~\ref{fig:timesize} przedstawiona jest średnia wartość czasu potrzebnego na~znalezienie rozwiązania dla~200 uruchomień algorytmów Random, Greedy i~Steepest descent i~wartość jednego odchylenia standardowego dla~wszystkich uruchomień.
+\subsection{Random, Greedy, Steepest Descent i Simulated Annealing}
+Na wykresie z~Rys.~\ref{fig:timesize} przedstawiona jest średnia wartość czasu potrzebnego na~znalezienie rozwiązania dla~30 uruchomień algorytmów Random, Greedy, Steepest Descent i Simulated Annealing oraz~wartość jednego odchylenia standardowego dla~wszystkich uruchomień.
 
 Do~wyników dopasowaliśmy krzywe kwadratowe w~postaci $ax^2+bx+c$.
 
-W~regresji pominęliśmy problem o rozmiarze 32, ponieważ Greedy i Steepest descent ze względu na bardzo dużą liczbę zer
+W~regresji pominęliśmy problem o rozmiarze 32, ponieważ algorytmy ze względu na bardzo dużą liczbę zer
 w~macierzach zatrzymywały się po kilku krokach i~wyniki dla~tego problemu bardzo odstawały od~pozostałych.
 
 %TODO: ustalić rzeczywisty charakter krzywej. Dopasowanie jest do kwadratowej.
@@ -234,8 +254,8 @@ w~macierzach zatrzymywały się po kilku krokach i~wyniki dla~tego problemu bard
 Problemy posiadają różne krajobrazy rozwiązań.
 Ich charakter może być powodem, dla którego średnie rozwiązania nie układają się dokładnie na przybliżonej charakterystyce,
 a~odchylenia standardowe mają duże wartości.
-%TODO Dopisać jakie są parametry dopasowanej krzywej?
-%TODO Uzuepłnić rozważaniami o złożoności obliczeniowej?
+%%TODO Dopisać jakie są parametry dopasowanej krzywej?
+%%TODO Uzuepłnić rozważaniami o złożoności obliczeniowej?
 
 \begin{figure}[!htpb]
 \begin{center}
@@ -267,6 +287,18 @@ wartości wewnątrz~instrukcji warunkowych i~czas działania jest krótszy).
 % Po zwiększeniu czasu Randoma jest na wykresie plotTimeSize
 %\input{./plotTimeSizeRandom.tex}
 
+\subsection{Tabu Search}
+Implementacja Tabu Search wymagała oceny każdego z sąsiadów przy każdej iteracji, co okazało się bardzo kosztowne.
+Algorytm wykonywał się wielokrotnie dłużej niż pozostałe, co czyni go w obecnej implementacji dużo mniej przydatnym niż "zwykły" local search, bowiem na analizowanych przykładach nie widać znaczącej poprawy jakości rozwiązania.
+
+\begin{figure}[!htpb]
+\begin{center} 
+\input{./plotTimeSizeMETA.tex}
+\caption{Wykres czasu wykonywania alg.~Tabu Search od~rozmiaru problemu}
+\label{fig:timesizemeta}
+\end{center}
+\end{figure}
+
 \section{Jakość rozwiązania w zależności od czasu działania}
 Na~Rys.~\ref{fig:qualitytime} i~\ref{fig:qualitytimefull} przedstawiamy dwa wykresy,
 które pozwalają porównać algorytmy na~podstawie czasu ich pracy i~osiąganych rozwiązań.
@@ -277,10 +309,12 @@ Algorytm heurystyczny jest zdecydowanie najszybszy, ale jakość jego rozwiąza�
 Tylko w przypadku problemu oznaczonego wypełnioną kropką jakość rozwiązania przekroczyła poziom \num{0.9}.
 Algorytm losowy osiąga gorszcze wyniki niż~heurystyczny, pomimo zdecydowanie dłuższego czasu pracy.
 
-Algorytmy Greedy i~Steepest osiągają porównywalne wyniki pod~względem jakości.
-Rozwiązania oznaczone kolorem czerwonym znajdują się zawsze na~lewo od odznaczonych na~zielono,
+Wykres z Rys.\ref{fig:qualitytimefullMETA} pozwala na ocenę algorytmów SA i TS.
+Algorytmy Greedy, Steepest i Tabu Search osiągają porównywalne wyniki pod~względem jakości.
 Greedy potrzebuje więc mniej czasu na osiągnięcie podobnego, co~Steepest, rezultatu.
-%TODO Dopisać conieco o froncie pareto
+Tabu Search pracuje kilkadziesiąt do kilkuset razy wolniej.
+Rozwiązania znajdowane przez Symulowane Wyżarzanie są zdecydowanie gorsze niż~przez pozostałe algorytmy.
+W porównaniu z Greedy czy~Steepest Descent rozwiązania znajdowane przez SA nie są atrakcyjne (ze~względu na~czas pracy).
 
 \begin{figure}[!htpb]
 \begin{center}
@@ -298,20 +332,35 @@ Greedy potrzebuje więc mniej czasu na osiągnięcie podobnego, co~Steepest, rez
 \end{center}
 \end{figure}
 
+\begin{figure}
+\begin{center}
+\input{./plotQualityTimeFullMETA.tex}
+\caption{Wykres jakości rozwiązania w~funkcji czasu rozwiązania dla~różnych problemów}
+\label{fig:qualitytimefullMETA}
+\end{center}
+\end{figure}
+
 \section{Średnia liczba kroków w zależności od rozmiaru problemu}
+%TODO Uaktualnić o TS i SA jak będą wykresy
 Średnia liczba kroków wykonywanych przez algorytmy zależy bardzo od~krajobrazu rozwiązań.
-Z wykresu z~Rys.~\ref{fig:stepssize} wywnioskowaliśmy, że~można by dla algorytmu Steepest descent dopasować zależność między liczbą kroków
+Z wykresu z~Rys.~\ref{fig:stepssize} wywnioskowaliśmy, że~można by dla algorytmu Steepest Descent dopasować zależność między liczbą kroków
 a~rozmiarem problemu (poza ekstremalnym przypadkiem problemu esc32).
 
 Dla algorytmu Greedy zależność nie jest tak łatwa do zbudowania.
-Wszystkie problemy wymagają większej liczby kroków niż w~przypadku Steepest descent. 
+Wszystkie problemy wymagają większej liczby kroków niż w~przypadku Steepest Descent. 
 Niektóre instancje, jak np.~had14, els19 czy~bur26a wymagały dużo więcej przejść pomiędzy sąsiadami.
 Algorytm dłużej więc ,,podróżował'' po~przestrzeni rozwiązań.
 
 Biorąc pod uwagę, że~dla tych problemów znalezione zostały rozwiązania optymalne (had14 i~bur26a)
 lub~bardzo bliskie optimum (els19), a~odchylenia standardowe liczby kroków są bardzo małe, wnioskujemy,
 że~krajobraz zawiera mniej lokalnych wypłaszczeń czy lokalnych minimów i~bliższy jest sytuacji z~globalną wypukłością.
-%TODO zastanowić się nad tą globalną wypukłością
+
+Wyniki działania algorytmów TS i SA przedstawione są na wykresie z Rys.\ref{fig:stepssizeMETA}.
+Liczba kroków potrzebnych przez algorytm SA do zgłoszenia rozwiązania jest liniowo zależna od rozmiaru problemu. 
+Może to wynikać z~faktu, że~temperatura spada po liczbie kroków zależnej od rozmiaru problemu.
+Przy pewnej temperaturze prawdopodobieństwo przejścia jest niewielkie i algorytm zatrzymuje się.
+Tabu Search praktycznie zawsze osiągał maksymalną liczbę (5000) kroków. 
+Może to~wynikać z~narzuconych warunków - brak poprawy przez liczbę kroków równą dziesięciokrotności rozmiaru sąsiedztwa. 
 
 \begin{figure}[!htpb]
 \begin{center}
@@ -321,9 +370,17 @@ lub~bardzo bliskie optimum (els19), a~odchylenia standardowe liczby kroków są 
 \end{center}
 \end{figure}
 
+\begin{figure}[!htpb]
+\begin{center}
+\input{./plotStepsSizeMETA.tex}
+\caption{Wykres liczby kroków od~rozmiaru problemu}
+\label{fig:stepssizeMETA}
+\end{center}
+\end{figure}
+
 \section{Jakość rozwiązania najlepszego w~zależności od~początkowego}
 %TODO dopisać nazwy opisywanych problemów
-%TODO poprawić tę sekcję, nie jestem pewien poprawności wniosków (ani ich sformułowania)
+%TODO Dopisac komentarz do TS i SA jak wykres będzie aktualny
 Z wykresów przedstawionych na~Rys.~\ref{fig:initendquality} i~\ref{fig:initendqualityall} widać, że~występuje pewna zależność
 między jakością rozwiązania początkowego oraz ostatecznie znalezionego rozwiązania. Widać również, że~punkty dotyczące
 danej instancji problemu skupiają się na~niewielkim obszarze na~wykresie. Oznacza to, że~jakość początkowego, losowego
@@ -354,18 +411,18 @@ wynika tylko z~ich charakteru.
 
 \section{Poprawa jakości znalezionego rozwiązania w~kolejnych krokach}
 Wykres na~Rys.~\ref{fig:steephistkra30a} przedstawia jaką wielkość miary jakości miały rozwiązania w~kolejnych krokach
-algorytmu Steepest descent dla~problemu kra30a. Wykres z~Rys.~\ref{fig:greedyhistkra30a} przedstawia analogiczne dane
-dla~algorytmu Greedy. Oba~algorytmy zostały uruchomione 200 razy.
+algorytmu Steepest Descent dla~problemu kra30a. Wykres z~Rys.~\ref{fig:greedyhistkra30a} przedstawia analogiczne dane
+dla~algorytmu Greedy. Oba~algorytmy zostały uruchomione 30 razy.
 
 \begin{figure}[!htpb]
 \begin{center}
 \input{./plotSteepestHistorical-kra30a.tex}
-\caption{Wykres jakości rozwiązania w~kolejnych krokach 200 przebiegów algorytmu Steepest descent}
+\caption{Wykres jakości rozwiązania w~kolejnych krokach 30 przebiegów algorytmu Steepest Descent}
 \label{fig:steephistkra30a}
 \end{center}
 \end{figure}
 
-Z~wykresu \ref{fig:steephistkra30a} widać, że~Steepest descent dość szybko dochodzi do~rozwiązania (liczba kroków bliska wielkości problemu),
+Z~wykresu \ref{fig:steephistkra30a} widać, że~Steepest Descent dość szybko dochodzi do~rozwiązania (liczba kroków bliska wielkości problemu),
 krzywa poprawy jakości ma~charakter eksponencjalny~-- jakość wyraźnie, coraz wolniej z~czasem,
 poprawia się do~pewnej wartości granicznej bliskiej optimum. Nie~zdarza się raczej, by~algorytm zatrzymał się dłużej
 na~jednej wartości i~,,podróżował'' po~rozwiązaniach o~jednakowej ocenie. Dopiero pod~koniec działania algorytmu, gdy~ów
@@ -375,14 +432,14 @@ wartości jakości.
 \begin{figure}[!htpb]
 \begin{center}
 \input{./plotGreedyHistorical-kra30a.tex}
-\caption{Wykres jakości rozwiązania w~kolejnych krokach 200 przebiegów algorytmu Greedy}
+\caption{Wykres jakości rozwiązania w~kolejnych krokach 30 przebiegów algorytmu Greedy}
 \label{fig:greedyhistkra30a}
 \end{center}
 \end{figure}
 
-Z~wykresu \ref{fig:steephistkra30a} widać, że~Greedy, w~przeciwieństwie do algorytmu Steepest descent, często
+Z~wykresu \ref{fig:steephistkra30a} widać, że~Greedy, w~przeciwieństwie do algorytmu Steepest Descent, często
 zatrzymuje się na~kilka kroków na~jednej wartości jakości, a~kształt poprawy, choć również przypomina krzywą wykładniczą, jest o~wiele
-bardziej nieregularny. Liczba kroków wykonanych przez Greedy'ego jest kilkakrotnie większa od~liczby kroków algorytmu Steepest descent.
+bardziej nieregularny. Liczba kroków wykonanych przez Greedy'ego jest kilkakrotnie większa od~liczby kroków algorytmu Steepest Descent.
 Jednak obliczenie przejścia w~algorytmie Greedy jest mniej czasochłonne, więc, jak było widać we~wcześniejszych sekcjach sprawozdania,
 ogólny czas wykonywania Greedy'ego jest krótszy.
 
@@ -394,7 +451,7 @@ w~analizowanym przypadku wartości między \num{0.9} a~\num{0.95}, różnica \nu
 \begin{figure}[!htpb]
 \begin{center}
 \input{./plotQualityRunNo.tex}
-\caption{Wykres maksymalnej jakości rozwiązania dla~kolejnych 200 uruchomień algorytmów Greedy i~Steepest descent na~problemie ste36c}
+\caption{Wykres maksymalnej jakości rozwiązania dla~kolejnych 30 uruchomień algorytmów Greedy i~Steepest Descent na~problemie ste36c}
 \label{fig:qualityrunno}
 \end{center}
 \end{figure}
@@ -406,65 +463,22 @@ Głównym pytaniem, jakie zadaliśmy sobie po~wykonaniu doświadczeń było:~kt�
 Problem z~odpowiedzią polega na~tym, że~nie~można określić pojedynczego kryterium oceny algorytmów.
 W~naszej analizie weźmiemy pod~uwagę dwa kryteria: jakość średniego i~najlepszego rozwiązania oraz~czas pracy.
 
-Algorytm heurystyczny pracuje wielokrotnie szybciej niż~algorytmy Steepest~descent i~Greedy.
+Algorytm heurystyczny pracuje wielokrotnie szybciej niż~algorytmy Steepest~Descent i~Greedy.
 Otrzymywane rozwiązania mają koszt średnio dwa razy większy od~minimalnego dla testowanych instancji.
 Jeżeli priorytetem jest krótki i~przewidywalny czas pracypotrzebny na znalezienie rozwiązania przed rozpoczęciem pracy, to~algorytm heurystyczny jest najlepszym wyborem.
 
-Algorytm losowy pracował w~czasie podobnym do~czasu pracy algorytmów Steepest descent oraz Greedy, ale~otrzymywał średnio gorsze
+Algorytm losowy pracował w~czasie podobnym do~czasu pracy algorytmów Steepest Descent oraz Greedy, ale~otrzymywał średnio gorsze
 rezultaty niż~o~wiele szybszy heurystyczny.
-Wyjątkami od~tej reguły są zadania o~wielkościach 14 i~26, jednak Steepest descent i~Greedy na~tych zadaniach osiągają prawie zawsze optymalne rozwiązania.
+Wyjątkami od~tej reguły są zadania o~wielkościach 14 i~26, jednak Steepest Descent i~Greedy na~tych zadaniach osiągają prawie zawsze optymalne rozwiązania.
 Podsumowując, uważamy, że~algorytm losowy może służyć jako baza do~porównania jakości działania bardziej rozbudowanych algorytmów,
 bowiem dobrze obrazuje rodzaj przestrzeni rozwiązań.
 Jeżeli znalezienie rozwiązania jest proste, to~jego wartość średnia jest wyższa niż dla~bardziej skomplikowanych krajobrazów funkcji
 kosztu.
 
-Algorytmy Greedy i~Steepest descent zachowują się bardzo podobnie.
+Algorytmy Greedy i~Steepest Descent zachowują się bardzo podobnie.
 Zauważyliśmy, że~Greedy wykonuje wielokrotnie więcej kroków, ale~jego czas pracy jest zawsze krótszy.
-Jakość osiąganych przez niego rozwiązań jest porównywalna z~jakością wyników algorytmu Steepest descent.
+Jakość osiąganych przez niego rozwiązań jest porównywalna z~jakością wyników algorytmu Steepest Descent.
 Z~uwagi na~te wyniki uważamy, że~należy uznać algorytm Greedy za~lepszy od~algorytmu Steepest, ponieważ osiąga praktycznie jednakowe
 wyniki w~znacząco krótszym czasie.
-
-\section{METAHEURYSTYKI}
-%TODO: Wszystko.
-
-\begin{figure}[!htpb]
-\begin{center}
-\input{./plotQualitySizeMeanMETA.tex}
-\caption{Wykres uśrednionej jakości rozwiązania od~rozmiaru problemu}
-\label{fig:qualityvssizemeanMETA}
-\end{center}
-\end{figure}
-
-\begin{figure}[!htpb]
-\begin{center}
-\input{./plotQualitySizeMaxMETA.tex}
-\caption{Wykres jakości najlepszego znalezionego rozwiązania od~rozmiaru problemu}
-\label{fig:qualityvssizemaxMETA}
-\end{center}
-\end{figure}
-
-\begin{figure}[!htpb]
-\begin{center}
-\input{./plotTimeSizeMETA.tex}
-\caption{Wykres uśrednionego czasu wykonywania od~rozmiaru problemu}
-\label{fig:timesizeMETA}
-\end{center}
-\end{figure}
-
-\begin{figure}
-\begin{center}
-\input{./plotQualityTimeFullMETA.tex}
-\caption{Wykres jakości rozwiązania w~funkcji czasu rozwiązania dla~różnych problemów}
-\label{fig:qualitytimefullMETA}
-\end{center}
-\end{figure}
-
-\begin{figure}[!htpb]
-\begin{center}
-\input{./plotStepsSizeMETA.tex}
-\caption{Wykres liczby kroków od~rozmiaru problemu}
-\label{fig:stepssizeMETA}
-\end{center}
-\end{figure}
 
 \end{document}
