@@ -33,7 +33,7 @@ replot
 
 #------------------------------
 # Quality vs Size mean META
-set term qt 0 persist
+set term qt 1 persist
 
 set format x "$%g$"
 set format y "\\num{%.1f}"
@@ -60,7 +60,7 @@ replot
 #------------------------------
 # Quality vs Size max
 
-set term qt 1 persist
+set term qt 2 persist
 
 set ylabel "maks. jakość"
 
@@ -78,7 +78,7 @@ replot
 #------------------------------
 # Quality vs Size max META
 
-set term qt 1 persist
+set term qt 3 persist
 
 set ylabel "maks. jakość"
 
@@ -95,7 +95,7 @@ replot
 
 #------------------------------
 # Time vs Size
-set term qt 2 persist
+set term qt 4 persist
 
 set key inside top left
 
@@ -139,7 +139,7 @@ replot
 
 #------------------------------
 # Time vs Size META
-set term qt 2 persist
+set term qt 5 persist
 
 set key inside bottom
 
@@ -175,7 +175,7 @@ unset logscale y
 
 #------------------------------
 # SAME FOR HEURISTIC ONLY
-set term qt 3 persist
+set term qt 6 persist
 
 set yrange [0:2.2e-4]
 set ytics 2e-5
@@ -197,7 +197,7 @@ replot
 
 #------------------------------
 # QUALITY vs TIME chosen only
-set term qt 5 persist
+set term qt 7 persist
 
 set key inside bottom right
 
@@ -249,7 +249,7 @@ unset logscale x
 
 #------------------------------
 # QUALITY vs TIME !!!ALL!!!
-set term qt 6 persist
+set term qt 8 persist
 
 set key below
 
@@ -340,7 +340,7 @@ plot "<(sed -n '1,1p' /tmp/randomData)" using 5:3 title "" linecolor rgb "black"
      "<(sed -n '14,14p' /tmp/randomData)" using 5:3 title "" linecolor rgb "black" pointtype 14, \
      "<(sed -n '14,14p' /tmp/greedyData)" using 5:3 title "" linecolor rgb "red" pointtype 14, \
      "<(sed -n '14,14p' /tmp/steepestData)" using 5:3 title "" linecolor rgb "green" pointtype 14, \
-     "<(sed -n '14,14p' /tmp/heuristicData)" using 3:2 title "" with points linecolor rgb "blue" pointtype 14, \
+     "<(sed -n '14,14p' /tmp/heuristicData)" using 3:2 title "" with points linecolor rgb "blue" pointtype 14
 
 set term epslatex color size 16.5cm, 13cm
 set output "./plotQualityTimeFull.tex"
@@ -351,7 +351,7 @@ unset logscale x
 
 #------------------------------
 # QUALITY vs TIME META !!!ALL!!!
-set term qt 6 persist
+set term qt 9 persist
 
 set key below
 
@@ -442,7 +442,7 @@ plot "<(sed -n '1,1p' /tmp/simulatedData)" using 5:3 title "" linecolor rgb "bla
      "<(sed -n '14,14p' /tmp/simulatedData)" using 5:3 title "" linecolor rgb "black" pointtype 14, \
      "<(sed -n '14,14p' /tmp/greedyData)" using 5:3 title "" linecolor rgb "red" pointtype 14, \
      "<(sed -n '14,14p' /tmp/steepestData)" using 5:3 title "" linecolor rgb "green" pointtype 14, \
-     "<(sed -n '14,14p' /tmp/tabuData)" using 3:2 title "" with points linecolor rgb "blue" pointtype 14, \
+     "<(sed -n '14,14p' /tmp/tabuData)" using 3:2 title "" with points linecolor rgb "blue" pointtype 14
 
 set term epslatex color size 16.5cm, 13cm
 set output "./plotQualityTimeFullMETA.tex"
@@ -453,7 +453,7 @@ unset logscale x
 
 #------------------------------
 #Number of steps vs instance size
-set term qt 7 persist
+set term qt 10 persist
 
 set key inside top left
 set yrange [0:120]
@@ -477,7 +477,7 @@ replot
 
 #------------------------------
 #Number of steps vs instance size META
-set term qt 7 persist
+set term qt 11 persist
 
 set key inside top left
 set yrange [0:5000]
@@ -504,7 +504,7 @@ replot
 #------------------------------
 # END QUALITY vs INIT QUALITY 1 INSTANCE
 # !!! problems' sizes: 12 and 16 !!!
-set term qt 8 persist
+set term qt 12 persist
 
 set key inside bottom right
 
@@ -538,7 +538,7 @@ replot
 #------------------------------
 # END QUALITY vs INIT QUALITY 1 INSTANCE
 # !!! problems' sizes: many !!!
-set term qt 9 persist
+set term qt 13 persist
 
 set key inside bottom right
 
@@ -583,7 +583,7 @@ unset pointsize
 # max quality vs run no
 # problem ste36
 
-set term qt persist
+set term qt 14 persist
 set pointsize 1
 set key bottom right
 set xlabel "liczba uruchomień"
