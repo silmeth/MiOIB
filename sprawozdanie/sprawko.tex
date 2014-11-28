@@ -128,21 +128,21 @@ stosujemy ograniczenie do~3 przejść do~sąsiada o~równym koszcie.
 \subsubsection{Simulated Annealing}
 Algorytm symulowanego wyżarzania działa podobnie do algorytmu Greedy.
 Różnica polega na tym, że~rozwiązanie zostanie zaakceptowane z~prawdopodobieństwem zależnym od jego kosztu i~aktualnej temperatury.
-Funkcja prawdopodobieństwa wyboru rozwiązania ma postać $P(koszt, T) = e^{\frac{minKoszt-koszt}{T}}$.
-Dla każdego rozwiązania losowana jest liczba z przedziału~0-1.
-Jeżeli ma ona wartość mniejszą od prawodopodobieństwa, rozwiązanie jest akceptowane.
+Funkcja prawdopodobieństwa wyboru rozwiązania ma postać $P(koszt, T) = e^{\frac{minKoszt-koszt}{T}}$, gdzie $minKoszt$ to koszt najlepszego znalezionego rozwiązania, a~$koszt$ to koszt aktualanie ocenianego rozwiązania.
+Dla każdego rozwiązania losowana jest liczba z~przedziału~0-1.
+Jeżeli ma ona wartość mniejszą od obliczonego prawodopodobieństwa, rozwiązanie jest akceptowane.
 W przeciwnym wypadku sprawdzany jest kolejny sąsiad.
 Kształt tej funkcji gwarantuje wybór rozwiązania o~mniejszym koszcie z~prawdopodobieństwem równym~100\%.
 Warunkami stopu są maksymalna liczba kroków i~brak poprawy wyniku przez liczbę kroków równą dziesięciokrotności rozmiaru sądziedztwa.
 
 \subsubsection{Tabu Search}
 Algorytm Tabu Search ocenia wszystkich sąsiadów, a~następnie wybiera spośród nich $\frac{rozmiarProblemu}{10}$ rozwiązań. 
-Zdecydowaliśmy się dla mniejszych problemów (rozmiar poniżej 40)~na stałe wpisać wartość~3.
-Najlepsi sąsiedzi są sortowani,~a następnie porównywani (w porządku rosnącym względem kosztu)~z aktualnym najlepszym rozwiązaniem.
+Zdecydowaliśmy się dla mniejszych problemów (rozmiar poniżej 40)~na stałe wpisać wartość~3 jako liczbę najlepszych sąsiadów branych pod uwagę.
+Najlepsi sąsiedzi są sortowani,~a następnie porównywani (w~porządku rosnącym względem kosztu) z~aktualnym najlepszym rozwiązaniem.
 Jeżeli nowe rozwiązanie jest lepsze, to~jest ono zapisywane jako najlepsze i~aktualne oraz dodawane do listy tabu.
 Jeżeli rozwiązanie jest gorsze i~nie jest w liście tabu, to~jest zapisywane jako aktualne i~dodawane do listy tabu.
 Jeżeli żadne z rozwiązań nie było lepsze od najlepszego i~wszystkie były~w tabu, to algorytm kończy działanie.
-Warunkami stopu są maksymalna liczba iteracji, liczba iteracji bez znalezienia lepszego rozwiązania lub brak możliwości ruchu z powodu ograniczeń tabu.
+Warunkami stopu są także maksymalna liczba iteracji, liczba iteracji bez znalezienia lepszego rozwiązania lub brak możliwości ruchu z powodu ograniczeń tabu.
 Rozmiar tabu dobierany jest jako $\frac{rozmiarProblemu}{4}$.
 
 \section{Eksperymenty}
@@ -175,15 +175,16 @@ Problemy pochodzą z repozytorium QAPLIB\footnote{\url{http://www.opt.math.tu-gr
 
 Algorytmy metaheurystyczne zostały uruchomione 30 razy, a~wyniki i~parametry działania zagregowane. 
 Algorytm losowy został uruchomiony tyle razy, by~czas jego działania odpowiadał rządem wielkości czasowi działania algorytmów Greedy i~Steepest Descent.
-Poniższe wykresy przedstawiają anlizę pracy i~sprawności algorytmów.
+
 \subsection{Jakość działania jako funkcja rozmiaru problemu}
 \subsubsection{Średnia jakość rozwiązania}
 Jakość działania liczona jest jako stosunek kosztu rozwiązania optymalnego do~kosztu rozwiązania znalezionego przez
 algorytm.
-Wykres z~Rys.~\ref{fig:qualityvssizemean} przedstawia wartości średnie jakości (punkty) oraz wartość 1 odchylenia standardowego (linie pionowe).
+Wykresy z~Rys.~\ref{fig:qualityvssizemean} i Rys. ~\ref{fig:qualityvssizemeanmeta} przedstawiają wartości średnie jakości (punkty) oraz wartość 1~odchylenia standardowego (linie pionowe).
 Wyniki nie mają rozkładu normalnego, dlatego do interpretacji odchylenia standardowego powinniśmy podchodzić ostrożnie.
 Zakresy odchylenia standardowego mogą przekraczać wartość \num{1.0}.
 Dla problemu esc32 wynika to ze skupienia jakości rozwiązań w okolicy rozwiązania optymalnego i niewielu rozwiązań o znacznie odbiegającej jakości.
+
 \begin{figure}[!htpb]
 \begin{center}
 \input{./plotQualitySizeMean.tex}
@@ -197,7 +198,7 @@ Dla 9 z 18 przypadków wartość średnia nie przekracza \num{0.5}, więc znalez
 Dwa najlepsze rozwiązania są dla problemów o rozmiarach 14 i 26.
 Widoczne jest jednak, że są to bardzo proste problemy~-- algorytmy Greedy i Steepest Descent mają wartości średnie prawie równe optimum,
 z~niewidocznym odchyleniem standardowym.
-%TODO Uzupełnić jak się wyjaśni problem z lipa40a i lipa50a
+Problemy lipa40a i lipa50a mają jedną z macierzy wypełnioną w większości jedynkami, a pozostałe liczby to 0 i 2, co sprawia, że nawet algorytmy losowy i heurystyczny znajdują tam bardzo dobre rozwiązania.
 
 Algorytm korzystający z heurystyki w~każdym przypadku znajduje lepsze lub równie dobre rozwiązanie, co~średnie rozwiązanie algorytmu losowego.
 
@@ -230,7 +231,7 @@ Wykresy z~Rys.~\ref{fig:qualityvssizemax} i z~Rys.~\ref{fig:qualityvssizemaxmeta
 \begin{center}
 \input{./plotQualitySizeMaxMETA.tex}
 \caption{Wykres jakości najlepszego znalezionego rozwiązania od~rozmiaru problemu}
-\label{fig:qualityvssizemax}
+\label{fig:qualityvssizemaxmeta}
 \end{center}
 \end{figure}
 
@@ -288,8 +289,8 @@ wartości wewnątrz~instrukcji warunkowych i~czas działania jest krótszy).
 %\input{./plotTimeSizeRandom.tex}
 
 \subsection{Tabu Search}
-Implementacja Tabu Search wymagała oceny każdego z sąsiadów przy każdej iteracji, co okazało się bardzo kosztowne.
-Algorytm wykonywał się wielokrotnie dłużej niż pozostałe, co czyni go w obecnej implementacji dużo mniej przydatnym niż "zwykły" local search, bowiem na analizowanych przykładach nie widać znaczącej poprawy jakości rozwiązania.
+Implementacja Tabu Search wymagała oceny każdego z sąsiadów przy każdej iteracji, co okazało się bardzo kosztowne (ilustruje to wykres z Rys.~\ref{fig:timesizemeta}).
+Algorytm wykonywał się wielokrotnie dłużej niż pozostałe, co czyni go w obecnej implementacji dużo mniej przydatnym niż zwykły local search, bowiem na analizowanych przykładach nie widać znaczącej poprawy jakości rozwiązania.
 
 \begin{figure}[!htpb]
 \begin{center} 
@@ -301,19 +302,18 @@ Algorytm wykonywał się wielokrotnie dłużej niż pozostałe, co czyni go w ob
 
 \section{Jakość rozwiązania w zależności od czasu działania}
 Na~Rys.~\ref{fig:qualitytime} i~\ref{fig:qualitytimefull} przedstawiamy dwa wykresy,
-które pozwalają porównać algorytmy na~podstawie czasu ich pracy i~osiąganych rozwiązań.
-Na~pierwszym wykresie dla~czytelności przedstawiliśmy tylko 4 instancje problemów, drugi wykres zawiera punkty dla~wszystkich instancji. 
+które pozwalają porównać algorytmy na~podstawie czasu ich pracy i~osiąganych rozwiązań dla 4~instancji problemów
+Wykresy z~Rys.~\ref{fig:qualitytimefull} i~Rys.~\ref{fig:qualitytimefullMETA} zawierają punkty dla~wszystkich instancji. 
 Problemowi przypisany jest kształt znacznika, kolor indentyfikuje natomiast algorytm, który osiągnął dany wynik.
 
 Algorytm heurystyczny jest zdecydowanie najszybszy, ale jakość jego rozwiązań jest niska. 
 Tylko w przypadku problemu oznaczonego wypełnioną kropką jakość rozwiązania przekroczyła poziom \num{0.9}.
 Algorytm losowy osiąga gorszcze wyniki niż~heurystyczny, pomimo zdecydowanie dłuższego czasu pracy.
 
-Wykres z Rys.\ref{fig:qualitytimefullMETA} pozwala na ocenę algorytmów SA i TS.
 Algorytmy Greedy, Steepest i Tabu Search osiągają porównywalne wyniki pod~względem jakości.
-Greedy potrzebuje więc mniej czasu na osiągnięcie podobnego, co~Steepest, rezultatu.
+Greedy potrzebuje więc mniej czasu na osiągnięcie podobnego co~Steepest rezultatu.
 Tabu Search pracuje kilkadziesiąt do kilkuset razy wolniej.
-Rozwiązania znajdowane przez Symulowane Wyżarzanie są zdecydowanie gorsze niż~przez pozostałe algorytmy.
+Rozwiązania znajdowane przez Simulated Annealing są zdecydowanie gorsze niż~przez pozostałe algorytmy.
 W porównaniu z Greedy czy~Steepest Descent rozwiązania znajdowane przez SA nie są atrakcyjne (ze~względu na~czas pracy).
 
 \begin{figure}[!htpb]
@@ -360,7 +360,7 @@ Liczba kroków potrzebnych przez algorytm SA do zgłoszenia rozwiązania jest li
 Może to wynikać z~faktu, że~temperatura spada po liczbie kroków zależnej od rozmiaru problemu.
 Przy pewnej temperaturze prawdopodobieństwo przejścia jest niewielkie i algorytm zatrzymuje się.
 Tabu Search praktycznie zawsze osiągał maksymalną liczbę (5000) kroków. 
-Może to~wynikać z~narzuconych warunków - brak poprawy przez liczbę kroków równą dziesięciokrotności rozmiaru sąsiedztwa. 
+Może to~wynikać z~narzuconych warunków - brak poprawy przez liczbę kroków równą dziesięciokrotności rozmiaru sąsiedztwa, która to liczba przewyższała odgórne ograniczenie na 5000 kroków.
 
 \begin{figure}[!htpb]
 \begin{center}
@@ -480,5 +480,14 @@ Zauważyliśmy, że~Greedy wykonuje wielokrotnie więcej kroków, ale~jego czas 
 Jakość osiąganych przez niego rozwiązań jest porównywalna z~jakością wyników algorytmu Steepest Descent.
 Z~uwagi na~te wyniki uważamy, że~należy uznać algorytm Greedy za~lepszy od~algorytmu Steepest, ponieważ osiąga praktycznie jednakowe
 wyniki w~znacząco krótszym czasie.
+
+Wyniki zwracane przez algorytm Tabu Search są bardzo podobne do wyników działania Greedy i Steepest Descent.
+Ze~względu na dobór funkcji jakości jako~ilorazu $\frac{koszt Optymalnego Rozwiązania}{koszt Znalezionego Rozwiązania}$ na~podstawie wykresów trudno ocenić różnicę pomiędzy znajdowanymi rozwiązaniami.
+Czas działania jest zdecydowanie dłuższy ze~względu na~konieczność oceny wszystkich sąsiadów.
+Żaden z~analizowanych przypadków nie był na~tyle ,,interesujący'', aby Tabu Search znalazł lepszy wynik od podstawowych algorytmów local search.
+
+Algorytm Simulated Annealing zwracał rozwiązania z~kosztem przewyższającym algorytmy Greedy oraz~Steepest, a~czasami nawet rozwiązania znalezione przez algorytm losowy były lepsze.
+Winą obciążamy zły dobór parametrów.
+Trudno ocenić, która część zawiniła: inicjacja temperatury, prędkość wygaszania czy sama funkcja oceny prawdopodobieństwa.
 
 \end{document}
