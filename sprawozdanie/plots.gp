@@ -100,7 +100,7 @@ set term qt 4 persist
 set key inside top left
 
 set yrange [0:0.02]
-set ytics 1e-3
+set ytics 2e-3
 set mytics 2
 
 set ylabel "$t$ [s]"
@@ -124,6 +124,10 @@ fheuristic(x) = ah*x**2+bh*x+ch
 ah=1e-15; bh=1e-10; ch=1e-10;
 fit fheuristic(x) "<(sed -n -e '1,9p' -e '11,18p' /tmp/heuristicData)" using 1:3 via ah, bh, ch
 
+fsimulated(x) = asim*x**2+bsim*x+csim
+asim=2.4e-6; bsim=1e-10; csim=1e-10;
+fit fsimulated(x) "<(sed -n -e '1,9p' -e '11,18p' /tmp/simulatedData)" using 1:5 via asim, bsim, csim
+
 plot "/tmp/randomData" using 1:5:6 title "random" with yerrorbars linecolor rgb "black" pointtype 7 linetype 1, \
      frandom(x) title "" with lines linecolor rgb "black" linetype 2, \
      "/tmp/greedyData" using 1:5:6 title "greedy" with yerrorbars linecolor rgb "red" pointtype 7 linetype 1, \
@@ -131,7 +135,10 @@ plot "/tmp/randomData" using 1:5:6 title "random" with yerrorbars linecolor rgb 
      "/tmp/steepestData" using 1:5:6 title "steepest" with yerrorbars linecolor rgb "green" pointtype 7 linetype 1, \
      fsteepest(x) title "" with lines linecolor rgb "green" linetype 2, \
      "/tmp/heuristicData" using 1:3 title "heuristic" with points linecolor rgb "blue" pointtype 7, \
-     fheuristic(x) title "" with lines linecolor rgb "blue" linetype 2
+     fheuristic(x) title "" with lines linecolor rgb "blue" linetype 2, \
+     "/tmp/simulatedData" using 1:5:6 title "simulated ann." with yerrorbars linecolor rgb "magenta" pointtype 7 linetype 1, \
+     fsimulated(x) title "" with lines linecolor rgb "magenta" linetype 2, \
+
 
 set term epslatex color size 15cm, 10cm
 set output "./plotTimeSize.tex"
@@ -143,9 +150,7 @@ set term qt 5 persist
 
 set key inside bottom
 
-set logscale y 10
-
-set yrange [1e-5:1]
+set yrange [0:50]
 set ytics 10
 set mytics 5
 
@@ -154,24 +159,16 @@ set format y "\\num{%g}"
 
 set grid xtics ytics mxtics mytics ls 1 lw 1.7 linecolor rgbcolor "#8b8989", lw 0.7 lc rgbcolor "#8b8989"
 
-fsimulated(x) = asim*x**2+bsim*x+csim
-asim=2.4e-6; bsim=1e-10; csim=1e-10;
-fit fsimulated(x) "<(sed -n -e '1,9p' -e '11,18p' /tmp/simulatedData)" using 1:5 via asim, bsim, csim
-
 ftabu(x) = atabu*x**2+btabu*x+ctabu
 atabu = 2.4e-6; btabu=1e-10; ctabu=1e-10;
 fit ftabu(x) "<(sed -n -e '1,9p' -e '11,18p' /tmp/tabuData)" using 1:5 via atabu, btabu, ctabu
 
-plot "/tmp/simulatedData" using 1:5:6 title "simulated ann." with yerrorbars linecolor rgb "black" pointtype 7 linetype 1, \
-     fsimulated(x) title "" with lines linecolor rgb "black" linetype 2, \
-     "/tmp/tabuData" using 1:5:6 title "tabu" with yerrorbars linecolor rgb "blue" pointtype 7 linetype 1, \
+plot "/tmp/tabuData" using 1:5:6 title "tabu" with yerrorbars linecolor rgb "blue" pointtype 7 linetype 1, \
      ftabu(x) title "" with lines linecolor rgb "blue" linetype 2
 
 set term epslatex color size 15cm, 10cm
 set output "./plotTimeSizeMETA.tex"
 replot
-
-unset logscale y
 
 #------------------------------
 # SAME FOR HEURISTIC ONLY
@@ -479,7 +476,7 @@ replot
 #Number of steps vs instance size META
 set term qt 11 persist
 
-set key inside top left
+set key below
 set yrange [0:5000]
 set ytics 1000
 set mytics 5
@@ -526,10 +523,10 @@ set grid xtics ytics mxtics mytics ls 1 lw 1.7 linecolor rgbcolor "#8b8989", lw 
 set pointsize 1
 
 # problems' sizes: 12 and 16
-plot "<(sed -n '1,15p' /tmp/initCostsData)" using 2:3 title "steepest" linecolor rgb "green" pointtype 1, \
-     "<(sed -n '1,15p' /tmp/initCostsData)" using 4:5 title "greedy" linecolor rgb "red" pointtype 1, \
-     "<(sed -n '1601,1615p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 15, \
-     "<(sed -n '1601,1615p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 15
+plot "<(sed -n -e '/^12/p' /tmp/initCostsData)" using 2:3 title "steepest" linecolor rgb "green" pointtype 1, \
+     "<(sed -n -e '/^12/p' /tmp/initCostsData)" using 4:5 title "greedy" linecolor rgb "red" pointtype 1, \
+     "<(sed -n -e '/^16/p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 15, \
+     "<(sed -n -e '/^16/p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 15
 
 set term epslatex color size 16.5cm, 13cm
 set output "./plotInitEndQuality.tex"
@@ -560,18 +557,24 @@ set grid xtics ytics mxtics mytics ls 1 lw 1.7 linecolor rgbcolor "#8b8989", lw 
 set pointsize 1
 
 
-plot "<(sed -n '1,15p' /tmp/initCostsData)" using 2:3 title "steepest" linecolor rgb "green" pointtype 1, \
-     "<(sed -n '1,15p' /tmp/initCostsData)" using 4:5 title "greedy" linecolor rgb "red" pointtype 1, \
-     "<(sed -n '201,215p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 4, \
-     "<(sed -n '201,215p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 4, \
-     "<(sed -n '401,415p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 10, \
-     "<(sed -n '401,415p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 10, \
-     "<(sed -n '601,615p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 19, \
-     "<(sed -n '601,615p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 19, \
-     "<(sed -n '801,815p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 2, \
-     "<(sed -n '801,815p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 2, \
-     "<(sed -n '1601,1615p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 15, \
-     "<(sed -n '1601,1615p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 15
+plot "<(sed -n -e '/^12/p' /tmp/initCostsData)" using 2:3 title "steepest" linecolor rgb "green" pointtype 1, \
+     "<(sed -n -e '/^12/p' /tmp/initCostsData)" using 4:5 title "greedy" linecolor rgb "red" pointtype 1, \
+     "<(sed -n -e '/^14/p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 4, \
+     "<(sed -n -e '/^14/p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 4, \
+     "<(sed -n -e '/^16/p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 10, \
+     "<(sed -n -e '/^16/p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 10, \
+     "<(sed -n -e '/^17/p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 19, \
+     "<(sed -n -e '/^17/p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 19, \
+     "<(sed -n -e '/^18/p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 2, \
+     "<(sed -n -e '/^18/p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 2, \
+     "<(sed -n -e '/^19/p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 15, \
+     "<(sed -n -e '/^19/p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 15, \
+     "<(sed -n -e '/^20/p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 15, \
+     "<(sed -n -e '/^20/p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 15, \
+     "<(sed -n -e '/^30/p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 15, \
+     "<(sed -n -e '/^30/p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 15, \
+     "<(sed -n -e '/^50/p' /tmp/initCostsData)" using 2:3 title "" linecolor rgb "green" pointtype 15, \
+     "<(sed -n -e '/^50/p' /tmp/initCostsData)" using 4:5 title "" linecolor rgb "red" pointtype 15
 
 set term epslatex color size 16.5cm, 13cm
 set output "./plotInitEndQualityAll.tex"
@@ -595,7 +598,7 @@ set xtics 20
 unset mxtics
 unset mytics
 
-set xrange [0:200]
+set xrange [0:30]
 set yrange [0.9:1]
 
 plot "/tmp/steepSte36.dat" title "Steepest" with linespoints linetype 1 linecolor rgb "green", \
